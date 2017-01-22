@@ -3,6 +3,8 @@ package domain
 // import java.sql.Connection
 // import Status._
 // import com.github.nscala_time.time.Imports._
+import javax.inject.Inject
+
 import play.api.db.Database
 import anorm._
 import anorm.JodaParameterMetaData._
@@ -10,7 +12,6 @@ import anorm.SqlParser._
 // import play.api.libs.json._
 import play.api.Logger
 import org.joda.time.DateTime
-
 
 case class ItemDeMenu(
   id: Long,
@@ -22,7 +23,7 @@ case class ItemDeMenu(
   fechaCreacion: DateTime,
   fechaUltimaModificacion: DateTime)
 
-class ItemDeMenuRepo(db: Database) {
+class ItemDeMenuRepo @Inject()(db: Database) {
 
   val tableName = "ItemDeMenu"
 
@@ -52,6 +53,15 @@ class ItemDeMenuRepo(db: Database) {
     val selectQuery = s"SELECT * FROM $tableName WHERE id = {id}"
     db.withConnection { implicit connection =>
       SQL(selectQuery).on('id -> id).as(parser.singleOpt)
+    }
+  }
+
+  def findByMenu(idMenu: Long): List[ItemDeMenu] = {
+    val selectQuery = s"SELECT i.* FROM $tableName i " +
+                      s"JOIN Menu_ItemDeMenu mim ON mim.id_item_de_menu = i.id " +
+                      s"WHERE id_menu = {idMenu}"
+    db.withConnection { implicit connection =>
+      SQL(selectQuery).on('idMenu -> idMenu).as(parser.*)
     }
   }
 

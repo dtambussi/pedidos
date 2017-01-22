@@ -1,8 +1,14 @@
 package domain
 
-import org.joda.time.DateTime
+import javax.inject.Inject
 
-case class Menu(id: Long,
+import anorm._
+import anorm.SqlParser._
+import org.joda.time.DateTime
+import play.api.db.Database
+
+case class Menu(
+  id: Long,
   status: Status,
   nombre: String,
   fechaCreacion: DateTime,
@@ -10,4 +16,27 @@ case class Menu(id: Long,
   vigente: Boolean,
   items: Seq[ItemDeMenu] = Nil)
 
-case class MenuItemDeMenu(idMenu: Long, idItemDeMenu: Long)
+class MenuRepo @Inject()(db: Database, itemDeMenuRepo: ItemDeMenuRepo) {
+
+  val tableName = "Menu"
+
+  val parser: RowParser[Menu] = {
+      long("id") ~
+      int("status") ~
+      str("nombre") ~
+      get[DateTime]("fecha_creacion") ~
+      get[DateTime]("fecha_ultima_modificacion") ~
+      bool("vigente") map {
+      case id ~ status ~ nombre ~ fechaCreacion ~ fechaUltimaModificacion ~ vigente =>
+        Menu(id, Status.valueOf(status), nombre, fechaCreacion, fechaUltimaModificacion, vigente, itemDeMenuRepo.findByMenu(id))
+    }
+  }
+
+  def findById(id: Long): Option[Menu] = {
+    val selectQuery = s"SELECT * FROM $tableName WHERE id = {id}"
+    db.withConnection { implicit connection =>
+      SQL(selectQuery).on('id -> id).as(parser.singleOpt)
+    }
+  }
+
+}

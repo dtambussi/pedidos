@@ -70,16 +70,16 @@ CREATE TABLE Pedido (
 	estado INT NOT NULL,
 	id_menu BIGINT NOT NULL,
 	fecha_creacion DATETIME NOT NULL,
-    fecha_ultima_modificacion DATETIME NOT NULL,
-    comentario VARCHAR(250) DEFAULT '',
-    abonado bit DEFAULT 0,
-    id_usuario BIGINT NOT NULL,
-    id_usuario_ultima_modificacion BIGINT,
-    mesa VARCHAR(50),
-    PRIMARY KEY (id),
-    FOREIGN KEY (status) REFERENCES Status(id),
-    FOREIGN KEY (estado) REFERENCES EstadoPedido(id),
-    FOREIGN KEY (id_menu) REFERENCES Menu(id)
+  fecha_ultima_modificacion DATETIME NOT NULL,
+  comentario VARCHAR(250) DEFAULT '',
+  abonado bit DEFAULT 0,
+  id_usuario BIGINT NOT NULL,
+  id_usuario_ultima_modificacion BIGINT,
+  mesa VARCHAR(50),
+  PRIMARY KEY (id),
+  FOREIGN KEY (status) REFERENCES Status(id),
+  FOREIGN KEY (estado) REFERENCES EstadoPedido(id),
+  FOREIGN KEY (id_menu) REFERENCES Menu(id)
 );	
 	
 CREATE TABLE ItemDePedido (

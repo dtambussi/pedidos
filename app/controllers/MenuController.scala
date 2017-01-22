@@ -5,15 +5,13 @@ import play.api.mvc.{Action, AnyContent, Controller}
 import javax.inject._
 
 import org.joda.time.{DateTime, DateTimeZone}
-import play.api.db._
 
-class MenuController  @Inject()(db: Database) extends Controller {
+class MenuController @Inject()(repo: ItemDeMenuRepo) extends Controller {
 
   def saveItemDeMenu(): Action[AnyContent] = Action {
     println("saveItemDeMenu() _")
-    val repo = new ItemDeMenuRepo(db)
     val now = DateTime.now(DateTimeZone.UTC)
-    repo.save(domain.Status.Active, Categoria.Bebidas, "nombre", "desc", 10, now, now)
+    repo.save(domain.Status.Active, Categoria.Cafeteria, "nombre-2", "desc", 10, now, now)
     Ok("")
   }
 

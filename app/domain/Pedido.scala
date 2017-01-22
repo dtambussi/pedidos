@@ -1,10 +1,16 @@
 package domain
 
-import org.joda.time.DateTime
+import javax.inject.Inject
 
-case class Pedido(id: Option[Long],
+import anorm._
+import anorm.SqlParser._
+import org.joda.time.DateTime
+import play.api.db.Database
+
+case class Pedido(
+  id: Long,
   status: Status,
-  idMenu: Long,
+  menu: Menu,
   estado: EstadoPedido,
   comentario: String = "",
   abonado: Boolean,
@@ -13,6 +19,35 @@ case class Pedido(id: Option[Long],
   idUsuario: Long,
   idUsuarioUltimaModificacion: Long,
   items: Seq[ItemDePedido] = Nil,
-  mesa: Option[String] = None)
+  mesa: String = "")
 
-case class PedidoItemDePedido(idPedido: Long, idItemDePedido: Long)
+
+class PedidoRepo @Inject()(db: Database, menuRepo: MenuRepo) {
+
+  val tableName = "Pedido"
+
+  val parser: RowParser[Pedido] = {
+      long("id") ~
+      int("status") ~
+      long("id_menu") ~
+      int("estado") ~
+      str("comentario") ~
+      bool("abonado") ~
+      get[DateTime]("fecha_creacion") ~
+      get[DateTime]("fecha_ultima_modificacion") ~
+      long("id_usuario") ~
+      long("id_usuario_ultima_modificacion")  map {
+      case id ~ status ~ idMenu ~ estado ~ comentario ~ abonado ~ fechaCreacion ~ fechaUltimaModificacion ~ idUsuario ~ idUsuarioUltimaModificacion =>
+        Pedido(id, Status.valueOf(status), menuRepo.findById(idMenu).getOrElse(throw new RuntimeException("menu reference not found")),
+               EstadoPedido.valueOf(estado), comentario, abonado, fechaCreacion, fechaUltimaModificacion, idUsuario, idUsuarioUltimaModificacion)
+    }
+  }
+
+  def findById(id: Long): Option[Pedido] = {
+    val selectQuery = s"SELECT * FROM $tableName WHERE id = {id}"
+    db.withConnection { implicit connection =>
+      SQL(selectQuery).on('id -> id).as(parser.singleOpt)
+    }
+  }
+
+}
