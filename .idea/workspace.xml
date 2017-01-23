@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a3b7c653-900a-4607-8895-422c560c8122" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/services/MenuService.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/MenuController.scala" afterPath="$PROJECT_DIR$/app/controllers/MenuController.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/domain/Menu.scala" afterPath="$PROJECT_DIR$/app/domain/Menu.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/domain/Rol.scala" afterPath="$PROJECT_DIR$/app/domain/Rol.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/domain/Usuario.scala" afterPath="$PROJECT_DIR$/app/domain/Usuario.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/services/MenuService.scala" afterPath="$PROJECT_DIR$/app/services/MenuService.scala" />
     </list>
     <ignored path="pedidos.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -86,10 +82,22 @@
       <file leaf-file-name="MenuService.scala" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/services/MenuService.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+            <state relative-caret-position="288">
+              <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
               <folding>
                 <element signature="e#18#44#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Menu.scala" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/domain/Menu.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="374">
+              <caret line="40" column="0" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+              <folding>
+                <element signature="e#16#42#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -124,8 +132,8 @@
         <option value="$PROJECT_DIR$/app/domain/ItemDePedido.scala" />
         <option value="$PROJECT_DIR$/app/domain/Rol.scala" />
         <option value="$PROJECT_DIR$/app/domain/Usuario.scala" />
-        <option value="$PROJECT_DIR$/app/domain/Menu.scala" />
         <option value="$PROJECT_DIR$/app/controllers/MenuController.scala" />
+        <option value="$PROJECT_DIR$/app/domain/Menu.scala" />
         <option value="$PROJECT_DIR$/app/services/MenuService.scala" />
       </list>
     </option>
@@ -803,12 +811,12 @@
       <workItem from="1471293928518" duration="5862000" />
       <workItem from="1472484275617" duration="91000" />
       <workItem from="1484608468190" duration="6530000" />
-      <workItem from="1484615239825" duration="16274000" />
+      <workItem from="1484615239825" duration="19409000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="29473000" />
+    <option name="totallyTimeSpent" value="32608000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1440" y="24" width="1358" height="736" extended-state="6" />
@@ -1107,16 +1115,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/domain/Menu.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="149">
-          <caret line="16" column="33" selection-start-line="16" selection-start-column="33" selection-end-line="16" selection-end-column="33" />
-          <folding>
-            <element signature="e#16#42#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/domain/ItemDeMenu.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1098">
@@ -1179,10 +1177,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/domain/Menu.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="40" column="0" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+          <folding>
+            <element signature="e#16#42#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/services/MenuService.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+        <state relative-caret-position="288">
+          <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
           <folding>
             <element signature="e#18#44#0" expanded="true" />
           </folding>

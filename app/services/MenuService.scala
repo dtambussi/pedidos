@@ -7,21 +7,12 @@ import org.joda.time.DateTime
 
 class MenuService @Inject()(menuRepo: MenuRepo) {
 
-  def getLatestMenu(lastKnownModificationDate: Option[DateTime]): Either[String, Menu] = {
-/*
-    for {
-      menu
-
-    }
-
-    val menu = menuRepo.getLatestActiveMenu()
-
-    if (lastKnownModificationDate.isDefined && menu.lastModificationDate == lastKnownModificationDate) {
-        return Left("NO_CONTENT")
-    } else {
-      return Right(menu)
-    }*/
-    Left("")
+  def getLatestMenu(fechaUltimaModificacionRef: Option[DateTime]): Either[String, Option[Menu]] = {
+    (for {
+        latestActiveMenu <- menuRepo.findLatestActiveMenu().toRight("").right
+        alreadyUpToDate <- Right(fechaUltimaModificacionRef.exists(_.equals(latestActiveMenu.fechaUltimaModificacion))).right
+        result <- Right(if (!alreadyUpToDate) Some(latestActiveMenu) else None).right
+     } yield result).fold(error => Left(error), Right(_))
   }
 
 }

@@ -39,4 +39,11 @@ class MenuRepo @Inject()(db: Database, itemDeMenuRepo: ItemDeMenuRepo) {
     }
   }
 
+  def findLatestActiveMenu(): Option[Menu] = {
+    val selectQuery = s"SELECT * FROM $tableName WHERE status = {status} ORDER BY id DESC limit 1"
+    db.withConnection { implicit connection =>
+      SQL(selectQuery).on('status -> Status.Active.value).as(parser.singleOpt)
+    }
+  }
+
 }
