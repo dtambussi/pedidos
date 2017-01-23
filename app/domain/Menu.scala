@@ -14,7 +14,7 @@ case class Menu(
   fechaCreacion: DateTime,
   fechaUltimaModificacion: DateTime,
   vigente: Boolean,
-  items: Seq[ItemDeMenu] = Nil)
+  items: Seq[ItemDeMenu] = Seq())
 
 class MenuRepo @Inject()(db: Database, itemDeMenuRepo: ItemDeMenuRepo) {
 

@@ -8,6 +8,11 @@ import org.joda.time.{DateTime, DateTimeZone}
 
 class MenuController @Inject()(repo: ItemDeMenuRepo) extends Controller {
 
+  def getLatestMenu(lastKnownModificationDate: Option[DateTime]): Action[AnyContent] = Action {
+
+    Ok("")
+  }
+
   def saveItemDeMenu(): Action[AnyContent] = Action {
     println("saveItemDeMenu() _")
     val now = DateTime.now(DateTimeZone.UTC)
