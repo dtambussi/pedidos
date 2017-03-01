@@ -4,15 +4,21 @@ import javax.inject.Inject
 
 import domain.{Menu, MenuRepo}
 import org.joda.time.DateTime
+import com.github.nscala_time.time.Imports._
+
+sealed trait NoMenuResult
+case class MenuNotFound() extends NoMenuResult
+case class NoNewMenuContentFound() extends NoMenuResult
 
 class MenuService @Inject()(menuRepo: MenuRepo) {
 
-  def getLatestMenu(fechaUltimaModificacionRef: Option[DateTime]): Either[String, Option[Menu]] = {
+  def getLatestMenu(fechaUltimaModificacionRef: Option[String]): Either[NoMenuResult, Menu] = {
     (for {
-        latestActiveMenu <- menuRepo.findLatestActiveMenu().toRight("").right
+        fechaUltimaModificacionRef <- Right(fechaUltimaModificacionRef.map(DateTime.parse)).right
+        latestActiveMenu <- menuRepo.findLatestActiveMenu().toRight(MenuNotFound()).right
         alreadyUpToDate <- Right(fechaUltimaModificacionRef.exists(_.equals(latestActiveMenu.fechaUltimaModificacion))).right
-        result <- Right(if (!alreadyUpToDate) Some(latestActiveMenu) else None).right
-     } yield result).fold(error => Left(error), Right(_))
+        result <- if (!alreadyUpToDate) Right(latestActiveMenu).right else Left(NoNewMenuContentFound()).right
+     } yield result).fold(noNewMenu => Left(noNewMenu), Right(_))
   }
 
 }

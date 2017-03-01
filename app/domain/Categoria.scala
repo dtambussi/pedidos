@@ -1,19 +1,18 @@
 package domain
 
-sealed trait Categoria { val name: String; val value: Int }
+import play.api.libs.json.{Format, JsString, JsSuccess, JsValue}
 
-object Categoria {
-  case object Entradas extends Categoria { val name = "Entradas"; val value = 1 }
-  case object PlatosPrincipales extends Categoria { val name = "PlatosPrincipales"; val value = 2 }
-  case object Postres extends Categoria { val name = "Postres"; val value = 3 }
-  case object Bebidas extends Categoria { val name = "Bebidas"; val value = 4 }
-  case object Cafeteria extends Categoria { val name = "Cafeteria"; val value = 5 }
+object Categoria extends Enumeration {
 
-  def valueOf(value: Int): Categoria = value match {
-    case Entradas.value => Entradas
-    case PlatosPrincipales.value => PlatosPrincipales
-    case Postres.value => Postres
-    case Bebidas.value => Bebidas
-    case Cafeteria.value => Cafeteria
+  type Categoria = Value
+  val Entradas = Value(1, "Entradas")
+  val PlatosPrincipales = Value(2, "PlatosPrincipales")
+  val Postres = Value(3, "Postres")
+  val Bebidas = Value(4, "Bebidas")
+  val Cafeteria = Value(5, "Cafeteria")
+
+  implicit val myEnumFormat = new Format[Categoria] {
+    def reads(json: JsValue) = JsSuccess(Categoria.withName(json.as[String]))
+    def writes(myEnum: Categoria) = JsString(myEnum.toString)
   }
 }

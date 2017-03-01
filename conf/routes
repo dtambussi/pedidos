@@ -3,7 +3,11 @@
 GET     /ping                                                   controllers.PingController.ping
 HEAD    /ping                                                   controllers.PingController.ping
 
-GET     /saveItemDeMenu                                       controllers.MenuController.saveItemDeMenu
+GET     /estadosDePedido                                   controllers.ApplicationController.estadosDePedido
+GET     /estadosDeItemDePedido                             controllers.ApplicationController.estadosDeItemDePedido
+GET     /estadosDeSugerencia                               controllers.ApplicationController.estadosDeSugerencia
+
+GET     /menu                                              controllers.MenuController.menu(fechaUltimaModificacionRef: Option[String])
 
 # Assets
 GET     /assets/*file                                           controllers.Assets.versioned(path="/public", file: Asset)

@@ -1,5 +1,7 @@
 package domain
 
+import domain.EstadoSugerencia.EstadoSugerencia
+import domain.Status.Status
 import org.joda.time.DateTime
 
 case class Sugerencia(

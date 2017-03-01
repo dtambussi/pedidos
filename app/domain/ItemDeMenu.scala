@@ -1,17 +1,16 @@
 package domain
 
-// import java.sql.Connection
-// import Status._
-// import com.github.nscala_time.time.Imports._
 import javax.inject.Inject
 
-import play.api.db.Database
-import anorm._
 import anorm.JodaParameterMetaData._
 import anorm.SqlParser._
-// import play.api.libs.json._
-import play.api.Logger
+import anorm._
+import domain.Categoria.Categoria
+import domain.Status.Status
 import org.joda.time.DateTime
+import play.api.Logger
+import play.api.db.Database
+import play.api.libs.json.Json
 
 case class ItemDeMenu(
   id: Long,
@@ -22,6 +21,10 @@ case class ItemDeMenu(
   precio: Double,
   fechaCreacion: DateTime,
   fechaUltimaModificacion: DateTime)
+
+object ItemDeMenuRepo {
+  implicit val itemDeMenuFormat = Json.format[ItemDeMenu]
+}
 
 class ItemDeMenuRepo @Inject()(db: Database) {
 
@@ -37,7 +40,7 @@ class ItemDeMenuRepo @Inject()(db: Database) {
       get[DateTime]("fecha_creacion") ~
       get[DateTime]("fecha_ultima_modificacion") map {
       case id ~ status ~ categoria ~ nombre ~ descripcion ~ precio ~ fechaCreacion ~ fechaUltimaModificacion =>
-        ItemDeMenu(id, Status.valueOf(status), Categoria.valueOf(categoria), nombre, descripcion, precio, fechaCreacion, fechaUltimaModificacion)
+        ItemDeMenu(id, Status(status), Categoria(categoria), nombre, descripcion, precio, fechaCreacion, fechaUltimaModificacion)
     }
   }
 
@@ -70,11 +73,10 @@ class ItemDeMenuRepo @Inject()(db: Database) {
     db.withConnection { implicit connection =>
       val id: Option[Long]= SQL(s"insert into $tableName (status, categoria, nombre, descripcion, precio,  fecha_creacion, fecha_ultima_modificacion) " +
         s"values ({status}, {categoria}, {nombre}, {descripcion}, {precio}, {fechaCreacion}, {fechaUltimaModificacion})"
-      ).on('status -> status.value, 'categoria -> categoria.value, 'nombre -> nombre, 'descripcion -> descripcion,
+      ).on('status -> status.id, 'categoria -> categoria.id, 'nombre -> nombre, 'descripcion -> descripcion,
            'precio -> precio, 'fechaCreacion -> fechaCreacion, 'fechaUltimaModificacion -> fechaUltimaModificacion).
         executeInsert()
       id.flatMap(findById).toRight("error creating ItemDeMenu")
     }
   }
-
 }

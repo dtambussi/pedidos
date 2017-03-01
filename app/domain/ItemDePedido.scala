@@ -4,6 +4,8 @@ import javax.inject.Inject
 
 import anorm.{RowParser, ~}
 import anorm.SqlParser._
+import domain.EstadoItemDePedido.EstadoItemDePedido
+import domain.Status.Status
 import org.joda.time.DateTime
 import play.api.db.Database
 
@@ -35,8 +37,8 @@ class ItemDePedidoRepo @Inject()(db: Database, pedidoRepo: PedidoRepo, itemDeMen
       long("id_usuario_ultima_modificacion") ~
       long("id_item_de_menu")  map {
       case id ~ idPedido ~ status ~ estado ~ cantidad ~ comentario ~ abonado ~ fechaUltimaModificacion ~ idUsuarioUltimaModificacion ~ idItemDeMenu =>
-        ItemDePedido(id, pedidoRepo.findById(idPedido).getOrElse(throw new RuntimeException("Pedido reference not found")), Status.valueOf(status),
-                     EstadoItemDePedido.valueOf(estado), cantidad, comentario, abonado, fechaUltimaModificacion, idUsuarioUltimaModificacion,
+        ItemDePedido(id, pedidoRepo.findById(idPedido).getOrElse(throw new RuntimeException("Pedido reference not found")), Status(status),
+                     EstadoItemDePedido(estado), cantidad, comentario, abonado, fechaUltimaModificacion, idUsuarioUltimaModificacion,
                      itemDeMenuRepo.findById(idItemDeMenu).getOrElse(throw new RuntimeException("ItemDeMenu reference not found")))
     }
   }

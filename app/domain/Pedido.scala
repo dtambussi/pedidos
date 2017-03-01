@@ -4,6 +4,8 @@ import javax.inject.Inject
 
 import anorm._
 import anorm.SqlParser._
+import domain.EstadoPedido.EstadoPedido
+import domain.Status.Status
 import org.joda.time.DateTime
 import play.api.db.Database
 
@@ -21,7 +23,6 @@ case class Pedido(
   items: Seq[ItemDePedido] = Nil,
   mesa: String = "")
 
-
 class PedidoRepo @Inject()(db: Database, menuRepo: MenuRepo) {
 
   val tableName = "Pedido"
@@ -38,8 +39,8 @@ class PedidoRepo @Inject()(db: Database, menuRepo: MenuRepo) {
       long("id_usuario") ~
       long("id_usuario_ultima_modificacion")  map {
       case id ~ status ~ idMenu ~ estado ~ comentario ~ abonado ~ fechaCreacion ~ fechaUltimaModificacion ~ idUsuario ~ idUsuarioUltimaModificacion =>
-        Pedido(id, Status.valueOf(status), menuRepo.findById(idMenu).getOrElse(throw new RuntimeException("menu reference not found")),
-               EstadoPedido.valueOf(estado), comentario, abonado, fechaCreacion, fechaUltimaModificacion, idUsuario, idUsuarioUltimaModificacion)
+        Pedido(id, Status(status), menuRepo.findById(idMenu).getOrElse(throw new RuntimeException("menu reference not found")),
+               EstadoPedido(estado), comentario, abonado, fechaCreacion, fechaUltimaModificacion, idUsuario, idUsuarioUltimaModificacion)
     }
   }
 
@@ -49,5 +50,4 @@ class PedidoRepo @Inject()(db: Database, menuRepo: MenuRepo) {
       SQL(selectQuery).on('id -> id).as(parser.singleOpt)
     }
   }
-
 }

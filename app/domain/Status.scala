@@ -1,15 +1,16 @@
 package domain
 
-sealed trait Status { val name: String; val value: Int }
+import play.api.libs.json.{Format, JsString, JsSuccess, JsValue}
 
-object Status {
-  case object Inactive extends Status { val name = "Inactive"; val value = 1 }
-  case object Active extends Status { val name = "Active"; val value = 2 }
-  case object Deleted extends Status { val name = "Deleted"; val value = 3 }
+object Status extends Enumeration {
 
-  def valueOf(value: Int): Status = value match {
-    case Inactive.value => Inactive
-    case Active.value => Active
-    case Deleted.value => Deleted
+  type Status = Value
+  val Inactive = Value(1, "Inactive")
+  val Active = Value(2, "Active")
+  val Deleted = Value(3, "Deleted")
+
+  implicit val myEnumFormat = new Format[Status] {
+    def reads(json: JsValue) = JsSuccess(Status.withName(json.as[String]))
+    def writes(myEnum: Status) = JsString(myEnum.toString)
   }
 }

@@ -1,19 +1,18 @@
 package domain
 
-sealed trait EstadoItemDePedido { val name: String; val value: Int }
+import play.api.libs.json.{Format, JsString, JsSuccess, JsValue}
 
-object EstadoItemDePedido {
-  case object Generado extends EstadoItemDePedido { val name = "Generado"; val value = 1 }
-  case object Pendiente extends EstadoItemDePedido { val name = "Pendiente"; val value = 2 }
-  case object Confeccionado extends EstadoItemDePedido { val name = "Confeccionado"; val value = 3 }
-  case object Entregado extends EstadoItemDePedido { val name = "Entregado"; val value = 4 }
-  case object Cancelado extends EstadoItemDePedido { val name = "Cancelado"; val value = 5 }
+object EstadoItemDePedido extends Enumeration {
 
-  def valueOf(value: Int): EstadoItemDePedido = value match {
-    case Generado.value => Generado
-    case Pendiente.value => Pendiente
-    case Confeccionado.value => Confeccionado
-    case Entregado.value => Entregado
-    case Cancelado.value => Cancelado
+  type EstadoItemDePedido = Value
+  val Generado = Value(1, "Generado")
+  val Pendiente = Value(2, "Pendiente")
+  val Confeccionado = Value(3, "Confeccionado")
+  val Entregado = Value(4, "Entregado")
+  val Cancelado = Value(5, "Cancelado")
+
+  implicit val myEnumFormat = new Format[EstadoItemDePedido] {
+    def reads(json: JsValue) = JsSuccess(EstadoItemDePedido.withName(json.as[String]))
+    def writes(myEnum: EstadoItemDePedido) = JsString(myEnum.toString)
   }
 }

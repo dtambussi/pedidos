@@ -1,13 +1,15 @@
 package domain
 
-sealed trait Roles { val name: String; val value: Int }
+import play.api.libs.json.{Format, JsString, JsSuccess, JsValue}
 
-object Roles {
-  case object UsuarioRegistrado extends Roles { val name = "UsuarioRegistrado"; val value = 1 };
-  case object UsuarioNoRegistrado extends Roles { val name = "UsuarioNoRegistrado"; val value = 2 };
+object Roles extends Enumeration {
 
-  def valueOf(value: Int): Roles = value match {
-    case UsuarioRegistrado.value => UsuarioRegistrado
-    case UsuarioNoRegistrado.value => UsuarioNoRegistrado
+  type Roles = Value
+  val UsuarioRegistrado = Value("UsuarioRegistrado")
+  val UsuarioNoRegistrado = Value("UsuarioNoRegistrado")
+
+  implicit val myEnumFormat = new Format[Roles] {
+    def reads(json: JsValue) = JsSuccess(Roles.withName(json.as[String]))
+    def writes(myEnum: Roles) = JsString(myEnum.toString)
   }
 }

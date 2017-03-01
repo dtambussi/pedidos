@@ -4,6 +4,7 @@ import javax.inject.Inject
 
 import anorm.{RowParser, ~}
 import anorm.SqlParser._
+import domain.Status.Status
 import play.api.db.Database
 
 case class Usuario(
@@ -16,10 +17,10 @@ class UsuarioRepo @Inject()(db: Database, rolRepo: RolRepo) {
 
   val parser: RowParser[Usuario] = {
       long("id") ~
-      int("status") ~
+      str("status") ~
       str("nickname") map {
       case id ~ status ~ nickname =>
-        Usuario(id, Status.valueOf(status), nickname, rolRepo.findByUsuario(id))
+        Usuario(id, Status.withName(status), nickname, rolRepo.findByUsuario(id))
     }
   }
 

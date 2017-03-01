@@ -4,6 +4,7 @@ import javax.inject.Inject
 
 import anorm._
 import anorm.SqlParser._
+import domain.Status.Status
 import org.joda.time.DateTime
 import play.api.db.Database
 
@@ -27,7 +28,7 @@ class RolRepo @Inject()(db: Database) {
       get[DateTime]("fecha_creacion") ~
       get[DateTime]("fecha_ultima_modificacion") map {
       case id ~ status ~ nombre ~ descripcion ~ fechaCreacion ~ fechaUltimaModificacion =>
-        Rol(id, Status.valueOf(status), nombre, descripcion, fechaCreacion, fechaUltimaModificacion)
+        Rol(id, Status(status), nombre, descripcion, fechaCreacion, fechaUltimaModificacion)
     }
   }
 
@@ -46,6 +47,4 @@ class RolRepo @Inject()(db: Database) {
       SQL(selectQuery).on('idUsuario -> idUsuario).as(parser.*)
     }
   }
-
-
 }
