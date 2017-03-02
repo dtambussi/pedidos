@@ -11,6 +11,7 @@ import MenuRepo.menuFormat
 class MenuController @Inject()(menuService: MenuService) extends Controller {
 
   def menu(fechaUltimaModificacionRef: Option[String]): Action[AnyContent] = Action {
+
     menuService.getLatestMenu(fechaUltimaModificacionRef) match {
       case Right(menu: Menu) => Ok(Json.toJson(menu))
       case Left(MenuNotFound()) => NotFound

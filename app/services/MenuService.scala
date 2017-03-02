@@ -6,19 +6,33 @@ import domain.{Menu, MenuRepo}
 import org.joda.time.DateTime
 import com.github.nscala_time.time.Imports._
 
+import scala.util.Try
+
 sealed trait NoMenuResult
+case class InvalidLatestMenuUpdateRefDate() extends NoMenuResult
 case class MenuNotFound() extends NoMenuResult
 case class NoNewMenuContentFound() extends NoMenuResult
 
 class MenuService @Inject()(menuRepo: MenuRepo) {
 
   def getLatestMenu(fechaUltimaModificacionRef: Option[String]): Either[NoMenuResult, Menu] = {
-    (for {
-        fechaUltimaModificacionRef <- Right(fechaUltimaModificacionRef.map(DateTime.parse)).right
-        latestActiveMenu <- menuRepo.findLatestActiveMenu().toRight(MenuNotFound()).right
-        alreadyUpToDate <- Right(fechaUltimaModificacionRef.exists(_.equals(latestActiveMenu.fechaUltimaModificacion))).right
-        result <- if (!alreadyUpToDate) Right(latestActiveMenu).right else Left(NoNewMenuContentFound()).right
-     } yield result).fold(noNewMenu => Left(noNewMenu), Right(_))
+    val latestActiveMenu = menuRepo.findLatestActiveMenu()
+    val findLatestActiveMenuResult = latestActiveMenu.toRight(MenuNotFound())
+    fechaUltimaModificacionRef.toRight()
+      .fold(
+        justGetLatestMenuScenario => findLatestActiveMenuResult,
+        noContentUnlessShouldUpdateScenario => {
+          val parseRefDateResult = fechaUltimaModificacionRef.map(tryParseLatestUpdateRefDate).getOrElse(throw new Exception("refDateParamExpected"))
+          parseRefDateResult.map { date =>
+            latestActiveMenu.filter(_.fechaUltimaModificacion.isEqual(date))
+              .map(_ => Left(NoNewMenuContentFound())).getOrElse(findLatestActiveMenuResult)
+          }.getOrElse(Left(InvalidLatestMenuUpdateRefDate()))
+        }
+      )
+  }
+
+  def tryParseLatestUpdateRefDate(fechaUltimaModificacionRef: String): Try[DateTime] = {
+    Try(DateTime.parse(fechaUltimaModificacionRef))
   }
 
 }
