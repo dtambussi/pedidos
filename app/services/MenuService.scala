@@ -22,7 +22,7 @@ class MenuService @Inject()(menuRepo: MenuRepo) {
       .fold(
         justGetLatestMenuScenario => findLatestActiveMenuResult,
         noContentUnlessShouldUpdateScenario => {
-          val parseRefDateResult = fechaUltimaModificacionRef.map(tryParseLatestUpdateRefDate).getOrElse(throw new Exception("refDateParamExpected"))
+          val parseRefDateResult = fechaUltimaModificacionRef.map(tryParseLatestUpdateRefDate).getOrElse(throw new Exception("fechaUltimaModificacionRef.param.expected"))
           parseRefDateResult.map { date =>
             latestActiveMenu.filter(_.fechaUltimaModificacion.isEqual(date))
               .map(_ => Left(NoNewMenuContentFound())).getOrElse(findLatestActiveMenuResult)

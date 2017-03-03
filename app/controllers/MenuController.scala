@@ -2,11 +2,12 @@ package controllers
 
 import javax.inject._
 
+import com.github.nscala_time.time.Imports._
+import domain.MenuRepo.menuFormat
 import domain._
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, Controller}
 import services.{MenuNotFound, MenuService, NoNewMenuContentFound}
-import MenuRepo.menuFormat
 
 class MenuController @Inject()(menuService: MenuService) extends Controller {
 
@@ -19,12 +20,4 @@ class MenuController @Inject()(menuService: MenuService) extends Controller {
       case _ => InternalServerError
     }
   }
-
-//  def saveItemDeMenu(): Action[AnyContent] = Action {
-//    println("saveItemDeMenu() _")
-//    val now = DateTime.now(DateTimeZone.UTC)
-//    repo.save(domain.Status.Active, Categoria.Cafeteria, "nombre-2", "desc", 10, now, now)
-//    Ok("")
-//  }
-
 }

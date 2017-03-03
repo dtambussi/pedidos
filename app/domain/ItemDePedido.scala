@@ -37,9 +37,9 @@ class ItemDePedidoRepo @Inject()(db: Database, pedidoRepo: PedidoRepo, itemDeMen
       long("id_usuario_ultima_modificacion") ~
       long("id_item_de_menu")  map {
       case id ~ idPedido ~ status ~ estado ~ cantidad ~ comentario ~ abonado ~ fechaUltimaModificacion ~ idUsuarioUltimaModificacion ~ idItemDeMenu =>
-        ItemDePedido(id, pedidoRepo.findById(idPedido).getOrElse(throw new RuntimeException("Pedido reference not found")), Status(status),
+        ItemDePedido(id, pedidoRepo.findById(idPedido).getOrElse(throw new RuntimeException("pedido.reference.not.found")), Status(status),
                      EstadoItemDePedido(estado), cantidad, comentario, abonado, fechaUltimaModificacion, idUsuarioUltimaModificacion,
-                     itemDeMenuRepo.findById(idItemDeMenu).getOrElse(throw new RuntimeException("ItemDeMenu reference not found")))
+                     itemDeMenuRepo.findById(idItemDeMenu).getOrElse(throw new RuntimeException("itemDeMenu.reference.not.found")))
     }
   }
 

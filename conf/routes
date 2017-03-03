@@ -1,8 +1,11 @@
 # Routes
 
-GET     /ping                                                   controllers.PingController.ping
-HEAD    /ping                                                   controllers.PingController.ping
+GET     /ping                                              controllers.PingController.ping
+HEAD    /ping                                              controllers.PingController.ping
 
+GET     /testData/create                                   controllers.TestDataController.createTestData
+
+GET     /categorias                                        controllers.ApplicationController.categorias
 GET     /estadosDePedido                                   controllers.ApplicationController.estadosDePedido
 GET     /estadosDeItemDePedido                             controllers.ApplicationController.estadosDeItemDePedido
 GET     /estadosDeSugerencia                               controllers.ApplicationController.estadosDeSugerencia
