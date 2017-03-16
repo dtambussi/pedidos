@@ -38,7 +38,7 @@ public class ApplicationController {
 		return new ResponseEntity<List<CategoriaItemDeMenu>>(Arrays.asList(CategoriaItemDeMenu.values()), HttpStatus.OK);
 	}
 	
-	@GetMapping(value = "/menu")
+	@GetMapping("/menu")
 	public ResponseEntity<Menu> menu() {
 		return new ResponseEntity<Menu>(this.menuService.getCurrentMenu(), HttpStatus.OK);
 	}	
