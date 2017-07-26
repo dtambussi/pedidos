@@ -20,5 +20,4 @@ public class ExceptionControllerAdvice {
 		final ResponseStatus annotation = findMergedAnnotation(ex.getClass(), ResponseStatus.class);
 		return annotation != null ? annotation.value() : HttpStatus.INTERNAL_SERVER_ERROR;
 	}
-
 }
