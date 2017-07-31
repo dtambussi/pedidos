@@ -13,5 +13,5 @@ public class CambiarEstadoDePedidoRequest {
 	private EstadoPedido estadoPedido;
 	private String comentario;
 	private Boolean abonado;
-	private List<CambiarEstadoItemDePedidoRequest> cambiosEstadoItems;
+	private List<CambiarEstadoItemDePedidoRequest> cambiosDeEstadoSobreItems;
 }

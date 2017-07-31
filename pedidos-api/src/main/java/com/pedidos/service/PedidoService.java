@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
+import com.pedidos.dto.CambiarEstadoDePedidoRequest;
 import com.pedidos.dto.GenerarPedidoRequest;
 import com.pedidos.dto.RecibirPedidoRequest;
 import com.pedidos.model.EstadoItemDePedido;
@@ -66,9 +67,27 @@ public class PedidoService {
 		final Pedido pedido = pedidoRepository.findOne(request.getIdPedido());
 		pedido.setEstado(EstadoPedido.Pendiente);
 		pedido.setMesa(request.getMesa());
-		pedido.setComentario(request.getComentario()); // maybe concat previous value
+		pedido.agregarComentario(request.getComentario());
 		pedido.setFechaUltimaModificacion(now());
 		final Pedido pedidoRecibido = pedidoRepository.save(pedido);
 		return pedidoRecibido;
+	}
+	
+	public Pedido cambiarEstadoDePedido(final CambiarEstadoDePedidoRequest request) {
+		final Pedido pedido = pedidoRepository.findOne(request.getIdPedido());
+		pedido.agregarComentario(request.getComentario());
+		pedido.setAbonado(request.getAbonado());
+		pedido.setEstado(request.getEstadoPedido());
+		// modificar únicamente los items para los que se solicitó cambio de estado
+		request.getCambiosDeEstadoSobreItems().stream()
+			.map(cambio -> pedido.obtenerItem(cambio.getIdItemDePedido())
+							.map(item -> cambiarEstadoDeItemDePedido(item, cambio.getEstadoItemDePedido())))
+			.collect(Collectors.toList());
+		return pedidoRepository.save(pedido);
+	}
+	
+	private ItemDePedido cambiarEstadoDeItemDePedido(final ItemDePedido itemDePedido, final EstadoItemDePedido estado) {
+		itemDePedido.setEstado(estado);
+		return itemDePedido;
 	}
 }

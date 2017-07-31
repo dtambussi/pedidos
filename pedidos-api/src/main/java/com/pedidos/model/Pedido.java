@@ -2,6 +2,7 @@ package com.pedidos.model;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -41,4 +42,15 @@ public class Pedido {
 	private List<ItemDePedido> items;
 	private Date fechaCreacion;
 	private Date fechaUltimaModificacion;
+	
+	public String agregarComentario(final String nuevoComentario) {
+		final String comentarioAgregado = nuevoComentario != null ? nuevoComentario : "";
+		this.comentario = this.comentario != null ? this.comentario + " " + comentarioAgregado : comentarioAgregado;
+		return this.comentario;
+	}
+	
+	public Optional<ItemDePedido> obtenerItem(final Long itemId) {
+		return this.items != null ? this.items.stream()
+				.filter(item -> item.getId() == itemId).findFirst() : Optional.empty();
+	}
 }
