@@ -37,9 +37,9 @@ public class MenuFixture {
 	
 	private ItemDeMenu itemDeMenu(final String nombre, final CategoriaItemDeMenu categoria, final Double precio) {
 		return ItemDeMenu.builder()
-				.nombre("Milanesa con Puré")
+				.nombre(nombre)
 				.categoria(categoria)
-				.precio(100D)
+				.precio(precio)
 				.fechaCreacion(now())
 				.fechaUltimaModificacion(now())
 				.status(Status.Active)
