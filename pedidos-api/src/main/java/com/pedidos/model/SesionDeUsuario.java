@@ -20,7 +20,7 @@ public class SesionDeUsuario {
 	
 	@Id
 	private String id;
-	private Date fechaCreacion;
 	@OneToOne
 	private Usuario usuario;
+	private Date fechaCreacion;
 }
