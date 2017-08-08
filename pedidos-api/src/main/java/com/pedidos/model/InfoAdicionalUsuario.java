@@ -19,7 +19,7 @@ public class InfoAdicionalUsuario {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private String id;
+	private Long id;
 	private String nombre;
 	private String apellido;
 	private String email;

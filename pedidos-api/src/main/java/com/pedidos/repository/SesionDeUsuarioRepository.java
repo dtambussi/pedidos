@@ -7,6 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 import com.pedidos.model.SesionDeUsuario;
 
 @Transactional
-public interface SesionDeUsuarioRepository extends CrudRepository<SesionDeUsuario, Long> {
+public interface SesionDeUsuarioRepository extends CrudRepository<SesionDeUsuario, String> {
 
 }
