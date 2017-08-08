@@ -3,11 +3,13 @@ package com.pedidos;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 
+// @SpringBootApplication(exclude= HibernateJpaAutoConfiguration.class)
 @SpringBootApplication
 public class Application {
 

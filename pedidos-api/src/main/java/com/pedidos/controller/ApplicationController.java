@@ -12,12 +12,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pedidos.dto.CambiarEstadoDePedidoRequest;
 import com.pedidos.dto.GenerarPedidoRequest;
+import com.pedidos.dto.LoginUsuarioNoRegistradoRequest;
+import com.pedidos.dto.LoginUsuarioRegistradoRequest;
 import com.pedidos.dto.RecibirPedidoRequest;
 import com.pedidos.model.CategoriaItemDeMenu;
 import com.pedidos.model.EstadoItemDePedido;
 import com.pedidos.model.EstadoPedido;
 import com.pedidos.model.Menu;
 import com.pedidos.model.Pedido;
+import com.pedidos.model.SesionDeUsuario;
+import com.pedidos.service.LoginService;
 import com.pedidos.service.MenuService;
 import com.pedidos.service.PedidoService;
 
@@ -26,10 +30,15 @@ public class ApplicationController {
 	
 	private MenuService menuService;
 	private PedidoService pedidoService;
+	private LoginService loginService;
 
-	public ApplicationController(final MenuService menuService, final PedidoService pedidoService) {
+	public ApplicationController(
+			final LoginService loginService,
+			final MenuService menuService, 
+			final PedidoService pedidoService) {
 		this.menuService = menuService;
 		this.pedidoService = pedidoService;
+		this.loginService = loginService;
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
@@ -77,6 +86,18 @@ public class ApplicationController {
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/pedido/{id}/cambiarEstadoDePedidoRequest")
 	public Pedido cambiarEstadoDePedido(@PathVariable("id") Long id, final CambiarEstadoDePedidoRequest cambiarEstadoDePedidoRequest) {
-		return null;
+		return pedidoService.cambiarEstadoDePedido(cambiarEstadoDePedidoRequest);
+	}
+	
+	@ResponseStatus(HttpStatus.OK)
+	@PostMapping("/loginUsuarioNoRegistrado")
+	public SesionDeUsuario loginUsuarioNoRegistrado(final LoginUsuarioNoRegistradoRequest loginUsuarioNoRegistradoRequest) {
+		return loginService.loginUsuarioNoRegistrado(loginUsuarioNoRegistradoRequest);
+	}
+	
+	@ResponseStatus(HttpStatus.OK)
+	@PostMapping("/loginUsuarioRegistrado")
+	public SesionDeUsuario loginUsuarioRegistrado(final LoginUsuarioRegistradoRequest loginUsuarioRegistradoRequest) {
+		return loginService.loginUsuarioRegistrado(loginUsuarioRegistradoRequest);
 	}
 }

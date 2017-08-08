@@ -13,6 +13,7 @@ public class ExceptionControllerAdvice {
 	
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorResponse> exceptionHandler(final Exception ex) {
+		ex.printStackTrace();
 		return new ResponseEntity<ErrorResponse>(new ErrorResponse(ex.getMessage()), resolveAnnotatedResponseStatus(ex));
 	}
 	

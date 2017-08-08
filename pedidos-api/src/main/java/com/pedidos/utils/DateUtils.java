@@ -4,5 +4,5 @@ import java.util.Date;
 
 public class DateUtils {
 	
-	public static Date now() { return new Date(); }
+	public static Date currentDate() { return new Date(); }
 }

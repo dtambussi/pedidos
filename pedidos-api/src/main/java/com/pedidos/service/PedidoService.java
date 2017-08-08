@@ -17,7 +17,7 @@ import com.pedidos.repository.ItemDeMenuRepository;
 import com.pedidos.repository.MenuRepository;
 import com.pedidos.repository.PedidoRepository;
 
-import static com.pedidos.utils.DateUtils.now;
+import static com.pedidos.utils.DateUtils.currentDate;
 
 @Component
 public class PedidoService {
@@ -46,7 +46,7 @@ public class PedidoService {
 					.cantidad(itemPedido.getCantidad())
 					.comentario(itemPedido.getComentario())
 					.abonado(false)
-					.fechaUltimaModificacion(now())
+					.fechaUltimaModificacion(currentDate())
 					.status(Status.Active)
 					.build())
 			.collect(Collectors.toList());
@@ -56,8 +56,8 @@ public class PedidoService {
 				.estado(EstadoPedido.Generado)
 				.comentario(request.getComentario())
 				.abonado(false)
-				.fechaCreacion(now())
-				.fechaUltimaModificacion(now())
+				.fechaCreacion(currentDate())
+				.fechaUltimaModificacion(currentDate())
 				.status(Status.Active)
 				.build();		
 		return pedidoRepository.save(pedidoGenerado);
@@ -68,7 +68,7 @@ public class PedidoService {
 		pedido.setEstado(EstadoPedido.Pendiente);
 		pedido.setMesa(request.getMesa());
 		pedido.agregarComentario(request.getComentario());
-		pedido.setFechaUltimaModificacion(now());
+		pedido.setFechaUltimaModificacion(currentDate());
 		final Pedido pedidoRecibido = pedidoRepository.save(pedido);
 		return pedidoRecibido;
 	}

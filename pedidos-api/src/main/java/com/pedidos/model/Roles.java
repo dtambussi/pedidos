@@ -1,7 +1,9 @@
 package com.pedidos.model;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Roles {
 	
@@ -44,5 +46,41 @@ public class Roles {
 				GenerarReporteDePedidos,
 				CrearSugerencia,
 				CambiarEstadoDeSugerencia);
+	}
+	
+	public static final Set<Rol> rolesDefaultUsuarioNoRegistrado() {
+		return roles(UsuarioNoRegistrado);
+	}
+	
+	public static final Set<Rol> rolesDefaultClienteRegistrado() {
+		return roles(UsuarioRegistrado, Cliente);
+	}
+	
+	public static final Set<Rol> rolesDefaultCamarera() {
+		return roles(UsuarioRegistrado, Camarera);
+	}
+
+	public static final Set<Rol> rolesDefaultBarman() {
+		return roles(UsuarioRegistrado, Barman);
+	}
+	
+	public static final Set<Rol> rolesDefaultCocinero() {
+		return roles(UsuarioRegistrado, Cocinero);
+	}
+
+	public static final Set<Rol> rolesDefaultCajero() {
+		return roles(UsuarioRegistrado, Cajero);
+	}
+	
+	public static final Set<Rol> rolesDefaultDueño() {
+		return roles(UsuarioRegistrado, Dueño);
+	}
+	
+	public static final Set<Rol> rolesDefaultCliente() {
+		return roles(UsuarioRegistrado, Cliente);
+	}
+	
+	private static Set<Rol> roles(final Rol...roles) {
+		return new HashSet<>(Arrays.asList(roles));
 	}
 }
