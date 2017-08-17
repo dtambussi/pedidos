@@ -1,7 +1,6 @@
 package com.pedidos.model.fixture;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -11,6 +10,8 @@ import com.pedidos.model.ItemDeMenu;
 import com.pedidos.model.Menu;
 import com.pedidos.model.Status;
 
+import static com.pedidos.utils.DateUtils.currentDate;
+
 @Component
 public class MenuFixture {
 	
@@ -19,8 +20,8 @@ public class MenuFixture {
 				.nombre("Menú 2017")
 				.status(Status.Active)
 				.vigente(true)
-				.fechaCreacion(now())
-				.fechaUltimaModificacion(now())
+				.fechaCreacion(currentDate())
+				.fechaUltimaModificacion(currentDate())
 				.items(itemsMenuDefault())
 				.build();
 	}
@@ -40,11 +41,9 @@ public class MenuFixture {
 				.nombre(nombre)
 				.categoria(categoria)
 				.precio(precio)
-				.fechaCreacion(now())
-				.fechaUltimaModificacion(now())
+				.fechaCreacion(currentDate())
+				.fechaUltimaModificacion(currentDate())
 				.status(Status.Active)
 				.build();
 	}
-	
-	private Date now() { return new Date(); }
 }
