@@ -62,7 +62,7 @@ public class InitializationController {
 		this.itemDeMenuRepository.save(menuDefault.getItems());
 		this.menuRepository.save(menuDefault);
 		// Persist default roles
-		Roles.all().stream().map(rol -> this.rolRepository.save(rol));
+		Roles.all().stream().map(rol -> this.rolRepository.save(rol)).collect(Collectors.toList());
 		// Persist default users
 		this.crearUsuario(this.usuarioFixture.camarera_sabrina_mesa());
 		this.crearUsuario(this.usuarioFixture.barman_esteban_copas());

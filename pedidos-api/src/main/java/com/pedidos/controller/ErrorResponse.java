@@ -1,15 +1,13 @@
 package com.pedidos.controller;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor @NoArgsConstructor
 public class ErrorResponse {
 	
 	private String message;
-		
-	public ErrorResponse() {}
-	
-	public ErrorResponse(final String message) {
-		this.message = message;
-	}
+	private String additionalInfo;
 }
