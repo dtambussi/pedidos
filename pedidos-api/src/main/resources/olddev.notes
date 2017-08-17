@@ -202,19 +202,18 @@ CambiarEstadoDeSugerencia
 
 Faltan:
 ======
-En el login devolver los permisos de cada usuario (crear los usuarios)
-Renombrar proyecto
+Filtro de login en todos los servicios, leer el session id de los headers
 Listar pedidos con filtros por usuario [GET]
 Validaciones de permisos, casos de error
 Reporte (¿exportar?)
-Logout
+Logout, ver si hacer expirar o borrar sesión de usuario
 Archivo de log, etc.
-Transaccionalidad
+los items de menu, etc, traer los active
 
 Probar:
 ======
 
-Que traiga sugerencias vigentess
+Que traiga sugerencias vigentes
 
 Deseable:
 ========
