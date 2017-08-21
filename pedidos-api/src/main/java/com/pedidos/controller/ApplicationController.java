@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pedidos.dto.CambiarEstadoDePedidoRequest;
+import com.pedidos.dto.CambiarEstadoDeSugerenciaRequest;
 import com.pedidos.dto.GenerarPedidoRequest;
+import com.pedidos.dto.GenerarSugerenciaRequest;
 import com.pedidos.dto.LoginUsuarioNoRegistradoRequest;
 import com.pedidos.dto.LoginUsuarioRegistradoRequest;
 import com.pedidos.dto.RecibirPedidoRequest;
@@ -21,9 +23,11 @@ import com.pedidos.model.EstadoPedido;
 import com.pedidos.model.Menu;
 import com.pedidos.model.Pedido;
 import com.pedidos.model.SesionDeUsuario;
+import com.pedidos.model.Sugerencia;
 import com.pedidos.service.LoginService;
 import com.pedidos.service.MenuService;
 import com.pedidos.service.PedidoService;
+import com.pedidos.service.SugerenciaService;
 
 @RestController
 public class ApplicationController {
@@ -31,14 +35,17 @@ public class ApplicationController {
 	private MenuService menuService;
 	private PedidoService pedidoService;
 	private LoginService loginService;
+	private SugerenciaService sugerenciaService;
 
 	public ApplicationController(
 			final LoginService loginService,
 			final MenuService menuService, 
-			final PedidoService pedidoService) {
+			final PedidoService pedidoService,
+			final SugerenciaService sugerenciaService) {
 		this.menuService = menuService;
 		this.pedidoService = pedidoService;
 		this.loginService = loginService;
+		this.sugerenciaService = sugerenciaService;
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
@@ -62,42 +69,60 @@ public class ApplicationController {
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/menu")
 	public Menu menu() {
-		return menuService.getCurrentMenu();
+		return this.menuService.getCurrentMenu();
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/pedidos")
 	public List<Pedido> pedidos() {
-		return pedidoService.findAll();
+		return this.pedidoService.findAll();
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/pedidos")
 	public Pedido generarPedido(final GenerarPedidoRequest generarPedidoRequest) {
-		return pedidoService.generarPedido(generarPedidoRequest);
+		return this.pedidoService.generarPedido(generarPedidoRequest);
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/pedido/{id}/recibirPedidoRequest")
 	public Pedido recibirPedido(@PathVariable("id") Long id, final RecibirPedidoRequest recibirPedidoRequest) {
-		return pedidoService.recibirPedido(recibirPedidoRequest);
+		return this.pedidoService.recibirPedido(recibirPedidoRequest);
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/pedido/{id}/cambiarEstadoDePedidoRequest")
 	public Pedido cambiarEstadoDePedido(@PathVariable("id") Long id, final CambiarEstadoDePedidoRequest cambiarEstadoDePedidoRequest) {
-		return pedidoService.cambiarEstadoDePedido(cambiarEstadoDePedidoRequest);
+		return this.pedidoService.cambiarEstadoDePedido(cambiarEstadoDePedidoRequest);
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/loginUsuarioNoRegistrado")
 	public SesionDeUsuario loginUsuarioNoRegistrado(final LoginUsuarioNoRegistradoRequest loginUsuarioNoRegistradoRequest) {
-		return loginService.loginUsuarioNoRegistrado(loginUsuarioNoRegistradoRequest);
+		return this.loginService.loginUsuarioNoRegistrado(loginUsuarioNoRegistradoRequest);
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/loginUsuarioRegistrado")
 	public SesionDeUsuario loginUsuarioRegistrado(final LoginUsuarioRegistradoRequest loginUsuarioRegistradoRequest) {
-		return loginService.loginUsuarioRegistrado(loginUsuarioRegistradoRequest);
+		return this.loginService.loginUsuarioRegistrado(loginUsuarioRegistradoRequest);
+	}
+	
+	@ResponseStatus(HttpStatus.OK)
+	@PostMapping("/sugerencias")
+	public Sugerencia generarSugerencia(final GenerarSugerenciaRequest generarSugerenciaRequest) {
+		return this.sugerenciaService.generarSugerencia(generarSugerenciaRequest);
+	}
+	
+	@ResponseStatus(HttpStatus.OK)
+	@PostMapping("/estadoDeSugerencia")
+	public Sugerencia cambiarEstadoDeSugerencia(final CambiarEstadoDeSugerenciaRequest cambiarEstadoDeSugerenciaRequest) {
+		return this.sugerenciaService.cambiarEstadoDeSugerencia(cambiarEstadoDeSugerenciaRequest);
+	}
+	
+	@ResponseStatus(HttpStatus.OK)
+	@GetMapping("/sugerenciasVigentes")
+	public List<Sugerencia> obtenerSugerenciasVigentes() {
+		return this.sugerenciaService.obtenerSugerenciasVigentes();
 	}
 }

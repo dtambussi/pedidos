@@ -209,6 +209,8 @@ Reporte (¿exportar?)
 Logout, ver si hacer expirar o borrar sesión de usuario
 Archivo de log, etc.
 los items de menu, etc, traer los active
+los servicios de cambio de estado deberían ser PATCH
+revisar singular/plural en los servicios REST
 
 Probar:
 ======
