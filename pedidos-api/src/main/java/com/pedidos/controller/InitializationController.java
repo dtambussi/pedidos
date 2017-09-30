@@ -77,13 +77,11 @@ public class InitializationController {
 		if (!CollectionUtils.isEmpty(usuario.getRoles())) {
 			final List<String> nombresDeRolesAsociadosAUsuario = usuario.getRoles().stream().map(rol -> rol.getNombre())
 					.collect(Collectors.toList());
-			final List<Rol> rolesAsociadosAUsuario = this.rolRepository
-					.findAllByNombreIn(nombresDeRolesAsociadosAUsuario);
+			final List<Rol> rolesAsociadosAUsuario = this.rolRepository.findAllByNombreIn(nombresDeRolesAsociadosAUsuario);
 			usuario.setRoles(new HashSet<>(rolesAsociadosAUsuario));
 		}
 		if (usuario.getInfoAdicional() != null) {
-			final InfoAdicionalUsuario infoAdicionalUsuario = this.infoAdicionalUsuarioRepository
-					.save(usuario.getInfoAdicional());
+			final InfoAdicionalUsuario infoAdicionalUsuario = this.infoAdicionalUsuarioRepository.save(usuario.getInfoAdicional());
 			usuario.setInfoAdicional(infoAdicionalUsuario);
 		}
 		return this.usuarioRepository.save(usuario);

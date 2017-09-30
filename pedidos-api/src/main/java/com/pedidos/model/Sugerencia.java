@@ -12,9 +12,10 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@Builder @AllArgsConstructor
+@Builder @NoArgsConstructor @AllArgsConstructor
 @Entity
 @Table(name = "sugerencia")
 public class Sugerencia {

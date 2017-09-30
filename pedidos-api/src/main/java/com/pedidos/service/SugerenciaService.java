@@ -2,6 +2,8 @@ package com.pedidos.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.pedidos.dto.CambiarEstadoDeSugerenciaRequest;
 import com.pedidos.dto.GenerarSugerenciaRequest;
 import com.pedidos.model.EstadoSugerencia;
@@ -12,6 +14,7 @@ import com.pedidos.repository.SugerenciaRepository;
 
 import static com.pedidos.utils.DateUtils.currentDate;
 
+@Component
 public class SugerenciaService {
 
 	private ItemDeMenuRepository itemDeMenuRepository;
@@ -46,7 +49,7 @@ public class SugerenciaService {
 	}
 	
 	public List<Sugerencia> obtenerSugerenciasVigentes() {
-		return this.sugerenciaRepository.findAllByEstadoSugerenciaAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(
+		return this.sugerenciaRepository.findAllByEstadoAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(
 				EstadoSugerencia.Publicado, currentDate(), currentDate());
 	}
 }
