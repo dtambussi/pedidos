@@ -1,0 +1,3 @@
+pedidos_homepage:
+    path:     /
+    defaults: { _controller: PedidosBundle:Default:index }
