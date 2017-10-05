@@ -5,3 +5,7 @@ services:
     pedidosapi_http_client:
         class: PedidosBundle\Service\PedidosApiHttpClient
         arguments: ["@logger", "%pedidosapi_hostname%", "@serializer"]
+
+    pedidos_service:
+        class: PedidosBundle\Service\PedidosService
+        arguments: ["@logger", "@pedidosapi_http_client"]

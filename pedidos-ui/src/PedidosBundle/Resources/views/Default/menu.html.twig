@@ -1,0 +1,14 @@
+{% extends 'PedidosBundle:layout:layout.html.twig' %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <ul>
+                {% for item in itemsByCategoriaDto.platoPrincipalItems %}
+                    <li>item.nombre</li>
+                {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}

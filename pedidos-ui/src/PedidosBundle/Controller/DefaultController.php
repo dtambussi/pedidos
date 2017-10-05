@@ -2,7 +2,9 @@
 
 namespace PedidosBundle\Controller;
 
+use PedidosBundle\Dto\ItemsByCategoriaDto;
 use PedidosBundle\Service\PedidosApiHttpClient;
+use PedidosBundle\Service\PedidosService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,14 +21,27 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/menu", name="_get_menu")
+     * @Route("/menu_items", name="_get_menu_items")
      */
-    public function getMenuAction()
+    public function getMenuItemsAction()
     {
         /** @var PedidosApiHttpClient $client */
         $client = $this->container->get(PedidosApiHttpClient::SERVICE_NAME);
 
-        $result = $client->getMenu();
+        $result = $client->findMenu();
         return new Response($result->getNombre() . ", status:" . $result->getStatus());
+    }
+
+    /**
+     * @Route("/menu", name="_get_menu")
+     */
+    public function getMenuAction()
+    {
+        /** @var PedidosService $pedidosService */
+        $pedidosService = $this->container->get(PedidosService::SERVICE_NAME);
+
+        /** @var ItemsByCategoriaDto $itemsByCategoria */
+        $itemsByCategoria = $pedidosService->findMenuItemsByCategoria();
+        return $this->render("@Pedidos/default/menu.html.twig", array("itemsByCategoriaDto" => $itemsByCategoria));
     }
 }

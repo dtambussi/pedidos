@@ -11,22 +11,47 @@ use JMS\Serializer\Annotation\Type;
 class MenuDto
 {
     /**
-     * @var string
-     * @Type("string")
+     * @var int
+     * @Type("int")
      */
-    private $id;
+    public $id;
 
     /**
      * @var string
      * @Type("string")
      */
-    private $status;
+    public $status;
 
     /**
      * @var string
      * @Type("string")
      */
-    private $nombre;
+    public $nombre;
+
+    /**
+     * @var array
+     * @Type("array<PedidosBundle\Dto\MenuItemDto>")
+     */
+    public $items;
+
+
+    /**
+     * @var boolean
+     * @Type("boolean")
+     */
+    public $vigente;
+
+    /**
+     * @var string
+     * @Type("string")
+     */
+    public $fechaCreacion;
+
+    /**
+     * @var string
+     * @Type("string")
+     */
+    public $fechaUltimaModificacion;
 
     /**
      * @return string
@@ -74,5 +99,69 @@ class MenuDto
     public function setNombre($nombre)
     {
         $this->nombre = $nombre;
+    }
+
+    /**
+     * @return string
+     */
+    public function getItems()
+    {
+        return $this->items;
+    }
+
+    /**
+     * @param string $items
+     */
+    public function setItems($items)
+    {
+        $this->items = $items;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isVigente()
+    {
+        return $this->vigente;
+    }
+
+    /**
+     * @param boolean $vigente
+     */
+    public function setVigente($vigente)
+    {
+        $this->vigente = $vigente;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFechaCreacion()
+    {
+        return $this->fechaCreacion;
+    }
+
+    /**
+     * @param string $fechaCreacion
+     */
+    public function setFechaCreacion($fechaCreacion)
+    {
+        $this->fechaCreacion = $fechaCreacion;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFechaUltimaModificacion()
+    {
+        return $this->fechaUltimaModificacion;
+    }
+
+    /**
+     * @param string $fechaUltimaModificacion
+     */
+    public function setFechaUltimaModificacion($fechaUltimaModificacion)
+    {
+        $this->fechaUltimaModificacion = $fechaUltimaModificacion;
     }
 }
