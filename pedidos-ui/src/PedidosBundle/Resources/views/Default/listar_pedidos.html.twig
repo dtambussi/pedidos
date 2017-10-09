@@ -1,0 +1,34 @@
+{% import _self as menuMacro %}
+{% extends 'PedidosBundle:layout:layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h1>Mis Pedidos</h1>
+            </div>
+        </div>
+        {% for pedido in pedidos %}
+        <div class="row">
+            <div class="col-xs-12">
+                 Id: {{ pedido.id }} - Comentario: {{ pedido.comentario }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+

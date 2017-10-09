@@ -53,6 +53,16 @@ class PedidosApiHttpClient
         return $response[0];
     }
 
+
+    /**
+     * @return array<PedidoDto>
+     */
+    public function findPedidos() {
+        $url = "http://" . $this->pedidosapiHostname . "/pedidos";
+        $response = $this->doGet($url, "array<" . PedidoDto::class . ">");
+        return $response[0];
+    }
+
     /**
      * @return PedidoRequestDto
      */

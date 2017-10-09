@@ -143,6 +143,20 @@ class DefaultController extends Controller
         return $this->redirectToRoute("_get_menu");
     }
 
+
+    /**
+     * @Route("/pedido_listar", name="_pedido_listar")
+     * @param Request $request
+     * @return Response
+     */
+    public function pedidoListarAction(Request $request) {
+        $pedidos = $this->getPedidosService()->findPedidos();
+
+        return $this->render(
+            "PedidosBundle:default:listar_pedidos.html.twig",
+            array("pedidos" => $pedidos));
+    }
+
     /**
      * @param Request $request
      * @return PedidoRequestDto

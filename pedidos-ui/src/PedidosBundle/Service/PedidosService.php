@@ -48,4 +48,8 @@ class PedidosService
     public function confirmarPedido(PedidoRequestDto $pedidoRequestDto) {
         $this->pedidosApiHttpClient->confirmarPedido($pedidoRequestDto);
     }
+
+    public function findPedidos() {
+        return $this->pedidosApiHttpClient->findPedidos();
+    }
 }
