@@ -1,5 +1,32 @@
 {% import _self as menuMacro %}
 {% extends 'PedidosBundle:layout:layout.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .menu-item-nombre {
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $("document").ready(function () {
+            $(".menu-item-nombre").bind("click", function () {
+                console.log("Clicked!");
+                var itemMenuId = this.id;
+                loadHTMLContentOn(
+                        "{{ path("_pedido_item") }}?pedido_item_id=" + itemMenuId,
+                        $("#pedido-item-modal-body-div"),
+                        function() {
+                            $("#pedidoItemModal").modal();
+                        }
+                );
+            });
+        });
+    </script>
+{% endblock %}
+
 {% block body %}
     <div class="container">
         <div class="row">
@@ -42,14 +69,29 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="pedidoItemModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                </div>
+                <div class="modal-body" id="pedido-item-modal-body-div">
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% macro generarListaItemsDeMenu(listaItems) %}
     {% for item in listaItems %}
         <div class="row">
-            <div class="col-xs-10">
+            <div class="col-xs-10 menu-item-nombre" id="{{ item.id }}">
                 {{ item.nombre }}<br>
-                {{ item.descripcion }}
+                <span style="color:grey;font-size: small">{{ item.descripcion }}</span>
             </div>
             <div class="col-xs-2 text-right">
                 ${{ item.precio }}
