@@ -1,14 +1,59 @@
+{% import _self as menuMacro %}
 {% extends 'PedidosBundle:layout:layout.html.twig' %}
 {% block body %}
     <div class="container">
         <div class="row">
-            <div class="col-sm-12">
-                <ul>
-                {% for item in itemsByCategoriaDto.platoPrincipalItems %}
-                    <li>item.nombre</li>
-                {% endfor %}
-                </ul>
+            <div class="col-xs-12">
+                <h1>Menú</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h2>Entradas</h2>
+                        {{ menuMacro.generarListaItemsDeMenu(itemsByCategoriaDto.entradaItems) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h2>Platos Principales</h2>
+                        {{ menuMacro.generarListaItemsDeMenu(itemsByCategoriaDto.platoPrincipalItems) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h2>Postres</h2>
+                        {{ menuMacro.generarListaItemsDeMenu(itemsByCategoriaDto.postreItems) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h2>Cafetería</h2>
+                        {{ menuMacro.generarListaItemsDeMenu(itemsByCategoriaDto.cafeteriaItems) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h2>Bebidas</h2>
+                        {{ menuMacro.generarListaItemsDeMenu(itemsByCategoriaDto.bebidaItems) }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 {% endblock %}
+
+{% macro generarListaItemsDeMenu(listaItems) %}
+    {% for item in listaItems %}
+        <div class="row">
+            <div class="col-xs-10">
+                {{ item.nombre }}<br>
+                {{ item.descripcion }}
+            </div>
+            <div class="col-xs-2 text-right">
+                ${{ item.precio }}
+            </div>
+        </div>
+    {% endfor %}
+{% endmacro %}

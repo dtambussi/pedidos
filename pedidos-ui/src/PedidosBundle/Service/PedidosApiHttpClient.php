@@ -46,7 +46,7 @@ class PedidosApiHttpClient
      * @return MenuDto
      */
     public function findMenu() {
-        $url = "http://" . $this->pedidosapiHostname . "/menu";
+        $url = "http://" . $this->pedidosapiHostname . "/menu?menu.status=Active";
         $response = $this->doGet($url, MenuDto::class);
         return $response[0];
     }
