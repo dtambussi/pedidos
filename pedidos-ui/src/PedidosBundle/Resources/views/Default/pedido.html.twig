@@ -1,0 +1,83 @@
+{% import _self as menuMacro %}
+{% extends 'PedidosBundle:layout:layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h1>Mi Pedido</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h2>Entradas</h2>
+                        {{ menuMacro.generarListaItemsDePedido(itemsByCategoriaDto.entradaItems, pedidoRequestDto) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h2>Platos Principales</h2>
+                        {{ menuMacro.generarListaItemsDePedido(itemsByCategoriaDto.platoPrincipalItems, pedidoRequestDto) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h2>Postres</h2>
+                        {{ menuMacro.generarListaItemsDePedido(itemsByCategoriaDto.postreItems, pedidoRequestDto) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h2>Cafetería</h2>
+                        {{ menuMacro.generarListaItemsDePedido(itemsByCategoriaDto.cafeteriaItems, pedidoRequestDto) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h2>Bebidas</h2>
+                        {{ menuMacro.generarListaItemsDePedido(itemsByCategoriaDto.bebidaItems, pedidoRequestDto) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% macro generarListaItemsDePedido(listaItems, pedidoRequestDto) %}
+    {% for pedidoItem in pedidoRequestDto.items %}
+        {% for menuItem in listaItems %}
+            {% if pedidoItem.idItemDeMenu == menuItem.id %}
+                {% set itemPresente = true %}
+
+                <div class="row">
+                    <div class="col-xs-10 menu-item-nombre" id="{{ menuItem.id }}">
+                        {{ menuItem.nombre }}<br>
+                        <span style="color:grey;font-size: small">{{ menuItem.descripcion }}</span>
+                    </div>
+                    <div class="col-xs-2 text-right" style="color: grey;">
+                        x{{ pedidoItem.cantidad }}&nbsp;{% if pedidoItem.comentario %}({{ pedidoItem.comentario }}){% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+    {% if itemPresente is not defined %}
+        No se han seleccionado.
+    {% endif %}
+{% endmacro %}

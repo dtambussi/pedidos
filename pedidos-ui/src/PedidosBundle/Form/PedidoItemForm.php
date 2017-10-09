@@ -12,6 +12,7 @@ namespace PedidosBundle\Form;
 use PedidosBundle\FormEntity\PedidoItemFormEntity;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -19,7 +20,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class PedidoItemForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options) {
-        $builder->add('cantidad', TextType::class, array('label' => 'Cantidad'));
+        $builder->add('cantidad', IntegerType::class, array('label' => 'Cantidad'));
         $builder->add('comentario', TextType::class, array('label' => 'Comentario'));
         $builder->add('id', HiddenType::class);
     }

@@ -10,6 +10,7 @@ namespace PedidosBundle\Service;
 
 
 use PedidosBundle\Dto\ItemsByCategoriaDto;
+use PedidosBundle\Dto\PedidoRequestDto;
 use Psr\Log\LoggerInterface;
 
 class PedidosService
@@ -42,5 +43,9 @@ class PedidosService
         $result = new ItemsByCategoriaDto($menuDto);
 
         return $result;
+    }
+
+    public function confirmarPedido(PedidoRequestDto $pedidoRequestDto) {
+        $this->pedidosApiHttpClient->confirmarPedido($pedidoRequestDto);
     }
 }

@@ -10,6 +10,7 @@ use PedidosBundle\Service\PedidosApiHttpClient;
 use PedidosBundle\Service\PedidosService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -42,8 +43,7 @@ class DefaultController extends Controller
      */
     public function getMenuAction()
     {
-        /** @var PedidosService $pedidosService */
-        $pedidosService = $this->container->get(PedidosService::SERVICE_NAME);
+        $pedidosService = $this->getPedidosService();
 
         /** @var ItemsByCategoriaDto $itemsByCategoria */
         $itemsByCategoria = $pedidosService->findMenuItemsByCategoria();
@@ -51,7 +51,21 @@ class DefaultController extends Controller
     }
 
     /**
+     * @Route("/pedido", name="_pedido")
+     */
+    public function pedidoAction()
+    {
+        $pedidosService = $this->getPedidosService();
+
+        /** @var ItemsByCategoriaDto $itemsByCategoria */
+        $itemsByCategoria = $pedidosService->findMenuItemsByCategoria();
+        return $this->render("@Pedidos/default/menu.html.twig", array("itemsByCategoriaDto" => $itemsByCategoria, "modoPedir" => true));
+    }
+
+    /**
      * @Route("/pedido_item", name="_pedido_item")
+     * @param Request $request
+     * @return Response
      */
     public function agregarItemDePedidoAction(Request $request)
     {
@@ -85,9 +99,48 @@ class DefaultController extends Controller
         );
     }
 
-    public function enviarPedido()
+    /**
+     * @Route("/pedido_preview", name="_pedido_preview")
+     * @param Request $request
+     * @return Response
+     */
+    public function pedidoPreviewAction(Request $request)
     {
+        /** @var ItemsByCategoriaDto $itemsByCategoria */
+        $itemsByCategoria = $this->getPedidosService()->findMenuItemsByCategoria();
 
+        return $this->render(
+            "PedidosBundle:default:pedido.html.twig",
+            array("itemsByCategoriaDto" => $itemsByCategoria, "pedidoRequestDto" => $this->getPedidoRequestDto($request))
+        );
+    }
+
+    /**
+     * @deprecated Solo test TODO Borrar este action más adelante!
+     * @Route("/pedido_limpiar", name="_pedido_limpiar")
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function pedidoLimpiarAction(Request $request)
+    {
+        $pedidoRequestDto = new PedidoRequestDto();
+
+        // TODO DESHARCODEAR!!
+        $pedidoRequestDto->setIdMenu(1);
+        $this->savePedidoRequestDto($request, $pedidoRequestDto);
+        return $this->redirectToRoute("_get_menu");
+    }
+
+    /**
+     * @Route("/pedido_confirmar", name="_pedido_confirmar")
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function confirmarPedidoAction(Request $request)
+    {
+        $this->getPedidosService()->confirmarPedido($this->getPedidoRequestDto($request));
+        // TODO agregar algo para mostrar confirmacion de pedido
+        return $this->redirectToRoute("_get_menu");
     }
 
     /**
@@ -109,5 +162,12 @@ class DefaultController extends Controller
 
     private function savePedidoRequestDto(Request $request, PedidoRequestDto $pedidoRequestDto) {
         $request->getSession()->set(PedidoRequestDto::class, $pedidoRequestDto);
+    }
+
+    private function getPedidosService() {
+        /** @var PedidosService $pedidosService */
+        $pedidosService = $this->container->get(PedidosService::SERVICE_NAME);
+
+        return $pedidosService;
     }
 }

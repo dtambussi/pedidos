@@ -19,8 +19,11 @@
 						   aria-haspopup="true"
 						   aria-expanded="false">usuario@email.com<span class="caret"></span></a>
 						<ul class="dropdown-menu">
-							<li>Item1</li>
-							<li>Item2</li>
+							<li><a href="{{ path("_get_menu") }}">Ver menú</a></li>
+							<li><a href="{{ path("_pedido") }}">Realizar Pedido</a></li>
+							<li><a href="{{ path("_pedido_preview") }}">Ver pedido</a></li>
+							<li><a href="{{ path("_pedido_confirmar") }}">Confirmar pedido</a></li>
+							<li><a href="{{ path("_pedido_limpiar") }}">Limpiar pedido</a></li>
 						</ul>
 					</li>
 					<li role="separator" class="hidden-xs divider">|</li>

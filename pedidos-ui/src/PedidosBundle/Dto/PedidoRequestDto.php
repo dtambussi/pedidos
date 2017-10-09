@@ -105,6 +105,18 @@ class PedidoRequestDto
     }
 
     public function addItem(ItemDePedidoRequestDto $itemDePedidoRequestDto) {
-        array_push($this->items, $itemDePedidoRequestDto);
+        $esPrimerItemDeEseTipo = true;
+
+        /** @var ItemDePedidoRequestDto $item */
+        foreach ($this->items as $item) {
+            if ($item->getIdItemDeMenu() == $itemDePedidoRequestDto->getIdItemDeMenu()) {
+                $item->setCantidad($item->getCantidad() + $itemDePedidoRequestDto->getCantidad());
+                $esPrimerItemDeEseTipo = false;
+            }
+        }
+
+        if ($esPrimerItemDeEseTipo) {
+            array_push($this->items, $itemDePedidoRequestDto);
+        }
     }
 }
