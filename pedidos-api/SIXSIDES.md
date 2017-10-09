@@ -16,4 +16,4 @@
   JAVA_HOME=`/usr/libexec/java_home -v 1.8.0_05, x86_64` java -jar target/pedidos-api-0.0.1-SNAPSHOT.jar
  ```
 
- 6. Generar datos en db `GET http://localhost:8090/pedidos-api/initDB`
+ 6. Generar datos en db `GET http://localhost:8090/pedidos-api/initDB`. Salida: DB initialization with test data was successful
