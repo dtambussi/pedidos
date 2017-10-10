@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -86,37 +87,37 @@ public class ApplicationController {
 	
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/pedido/{id}/recibirPedidoRequest")
-	public Pedido recibirPedido(@PathVariable("id") Long id, final RecibirPedidoRequest recibirPedidoRequest) {
+	public Pedido recibirPedido(@PathVariable("id") Long id, final @RequestBody RecibirPedidoRequest recibirPedidoRequest) {
 		return this.pedidoService.recibirPedido(recibirPedidoRequest);
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/pedido/{id}/cambiarEstadoDePedidoRequest")
-	public Pedido cambiarEstadoDePedido(@PathVariable("id") Long id, final CambiarEstadoDePedidoRequest cambiarEstadoDePedidoRequest) {
+	public Pedido cambiarEstadoDePedido(@PathVariable("id") Long id, final @RequestBody CambiarEstadoDePedidoRequest cambiarEstadoDePedidoRequest) {
 		return this.pedidoService.cambiarEstadoDePedido(cambiarEstadoDePedidoRequest);
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/loginUsuarioNoRegistrado")
-	public SesionDeUsuario loginUsuarioNoRegistrado(final LoginUsuarioNoRegistradoRequest loginUsuarioNoRegistradoRequest) {
+	public SesionDeUsuario loginUsuarioNoRegistrado(final @RequestBody LoginUsuarioNoRegistradoRequest loginUsuarioNoRegistradoRequest) {
 		return this.loginService.loginUsuarioNoRegistrado(loginUsuarioNoRegistradoRequest);
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/loginUsuarioRegistrado")
-	public SesionDeUsuario loginUsuarioRegistrado(final LoginUsuarioRegistradoRequest loginUsuarioRegistradoRequest) {
+	public SesionDeUsuario loginUsuarioRegistrado(final @RequestBody LoginUsuarioRegistradoRequest loginUsuarioRegistradoRequest) {
 		return this.loginService.loginUsuarioRegistrado(loginUsuarioRegistradoRequest);
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/sugerencias")
-	public Sugerencia generarSugerencia(final GenerarSugerenciaRequest generarSugerenciaRequest) {
+	public Sugerencia generarSugerencia(final @RequestBody GenerarSugerenciaRequest generarSugerenciaRequest) {
 		return this.sugerenciaService.generarSugerencia(generarSugerenciaRequest);
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/estadoDeSugerencia")
-	public Sugerencia cambiarEstadoDeSugerencia(final CambiarEstadoDeSugerenciaRequest cambiarEstadoDeSugerenciaRequest) {
+	public Sugerencia cambiarEstadoDeSugerencia(final @RequestBody CambiarEstadoDeSugerenciaRequest cambiarEstadoDeSugerenciaRequest) {
 		return this.sugerenciaService.cambiarEstadoDeSugerencia(cambiarEstadoDeSugerenciaRequest);
 	}
 	
