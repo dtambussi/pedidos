@@ -1,0 +1,36 @@
+<header id="main-header">
+	<nav class="navbar navbar-default">
+		<div class="container">
+		
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+			
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-9" aria-expanded="false"><span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+                </button>
+                
+			</div>
+
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-9">
+				<ul class="nav navbar-nav navbar-right">
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+						   aria-haspopup="true"
+						   aria-expanded="false">usuario@email.com<span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="{{ path("_get_menu") }}">Ver menú</a></li>
+							<li><a href="{{ path("_pedido") }}">Realizar Pedido</a></li>
+							<li><a href="{{ path("_pedido_preview") }}">Ver pedido Actual</a></li>
+							<li><a href="{{ path("_pedido_confirmar") }}">Confirmar pedido</a></li>
+							<li><a href="{{ path("_pedido_listar") }}">Mis Pedidos</a></li>
+							<li><a href="{{ path("_pedido_limpiar") }}">Limpiar pedido</a></li>
+						</ul>
+					</li>
+					<li role="separator" class="hidden-xs divider">|</li>
+					<li><a href="/faq">Ayuda</a></li>
+				</ul>
+			</div><!-- .navbar-header -->
+		</div><!-- .container-fluid -->
+	</nav>
+</header>

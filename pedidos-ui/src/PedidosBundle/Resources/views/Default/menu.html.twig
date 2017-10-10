@@ -1,0 +1,110 @@
+{% import _self as menuMacro %}
+{% extends 'PedidosBundle:layout:layout.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .menu-item-clickeable {
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        {% if modoPedir is defined %}
+            $("document").ready(function () {
+                $(".menu-item-nombre").addClass("menu-item-clickeable");
+                $(".menu-item-nombre").bind("click", function () {
+                    var itemMenuId = this.id;
+                    var title = this.title;
+
+                    $("#pedido-item-modal-label").html(title);
+                    loadHTMLContentOn(
+                            "{{ path("_pedido_item") }}?pedido_item_id=" + itemMenuId,
+                            $("#pedido-item-modal-body-div"),
+                            function() {
+                                $("#pedidoItemModal").modal();
+                            }
+                    );
+                });
+            });
+        {% endif %}
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+            {% if modoPedir is defined %}
+                <h1>Nuevo Pedido</h1>
+            {% else %}
+                <h1>Menú</h1>
+            {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h2>Entradas</h2>
+                        {{ menuMacro.generarListaItemsDeMenu(itemsByCategoriaDto.entradaItems) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h2>Platos Principales</h2>
+                        {{ menuMacro.generarListaItemsDeMenu(itemsByCategoriaDto.platoPrincipalItems) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h2>Postres</h2>
+                        {{ menuMacro.generarListaItemsDeMenu(itemsByCategoriaDto.postreItems) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h2>Cafetería</h2>
+                        {{ menuMacro.generarListaItemsDeMenu(itemsByCategoriaDto.cafeteriaItems) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h2>Bebidas</h2>
+                        {{ menuMacro.generarListaItemsDeMenu(itemsByCategoriaDto.bebidaItems) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="pedidoItemModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header"">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="pedido-item-modal-label">Modal title</h4>
+                </div>
+                <div class="modal-body" id="pedido-item-modal-body-div">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% macro generarListaItemsDeMenu(listaItems) %}
+    {% for item in listaItems %}
+        <div class="row">
+            <div class="col-xs-10 menu-item-nombre" id="{{ item.id }}" title="{{ item.nombre }}">
+                {{ item.nombre }}<br>
+                <span style="color:grey;font-size: small">{{ item.descripcion }}</span>
+            </div>
+            <div class="col-xs-2 text-right">
+                ${{ item.precio }}
+            </div>
+        </div>
+    {% endfor %}
+{% endmacro %}

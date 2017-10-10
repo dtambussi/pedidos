@@ -1,0 +1,8 @@
+pedidos:
+    resource: "@PedidosBundle/Controller/"
+    type: annotation
+
+app:
+    resource: '@AppBundle/Controller/'
+    type: annotation
+    prefix: appbundle

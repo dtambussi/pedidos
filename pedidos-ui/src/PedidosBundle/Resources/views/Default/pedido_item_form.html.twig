@@ -1,0 +1,40 @@
+<script>
+    function agregearPedidoItem() {
+        submitForm2(
+                "{{ path('_pedido_item') }}",
+                "pedido-item-form",
+                "pedido-item-modal-body-div",
+                function () {
+                    $("#agregar-pedido-success-alert").show();
+                    setTimeout(function () {
+                        $("#pedidoItemModal").modal("hide");
+                    }, 2000);
+                }
+        );
+    }
+</script>
+
+{% form_theme form 'PedidosBundle:form:fields.html.twig' %}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="alert alert-success" id="agregar-pedido-success-alert" style="display: none;">
+            Item agregado
+        </div>
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'pedido-item-form'}}) }}
+        {{ form_errors(form) }}
+        <div class="form-group">
+            {{ form_label(form.cantidad) }}
+            {{ form_widget(form.cantidad) }}
+            {{ form_errors(form.cantidad) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(form.comentario) }}
+            {{ form_widget(form.comentario) }}
+            {{ form_errors(form.comentario) }}
+        </div>
+        {{ form_end(form) }}
+        <div class="form-group text-center">
+            <button type="button" class="btn btn-primary" onclick="agregearPedidoItem();">Agregar</button>
+        </div>
+    </div>
+</div>
