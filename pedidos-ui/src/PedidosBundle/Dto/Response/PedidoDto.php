@@ -6,10 +6,10 @@
  * Time: 4:14 PM
  */
 
-namespace PedidosBundle\Dto;
+namespace PedidosBundle\Dto\Response;
 use JMS\Serializer\Annotation\Type;
 
-
+// https://jsonutils.com/
 class PedidoDto
 {
     /**
@@ -42,8 +42,17 @@ class PedidoDto
      */
     public $abonado; //boolean
 
-    // public $mesa; //object TODO AGREGAR!
-    // public $items; //array(Item) TODO AGREGAR!
+    /**
+     * @var object
+     * @Type("object")
+     */
+    public $mesa;
+
+    /**
+     * @var array
+     * @Type("array<PedidosBundle\Dto\Response\PedidoItem>")
+     */
+    public $items; //array(Item)
 
     /**
      * @var string
@@ -167,5 +176,21 @@ class PedidoDto
     public function setFechaUltimaModificacion($fechaUltimaModificacion)
     {
         $this->fechaUltimaModificacion = $fechaUltimaModificacion;
+    }
+
+    /**
+     * @return object
+     */
+    public function getMesa()
+    {
+        return $this->mesa;
+    }
+
+    /**
+     * @param object $mesa
+     */
+    public function setMesa($mesa)
+    {
+        $this->mesa = $mesa;
     } //Date
 }

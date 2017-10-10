@@ -7,7 +7,7 @@
  */
 
 namespace PedidosBundle\FormEntity;
-use PedidosBundle\Dto\ItemDePedidoRequestDto;
+use PedidosBundle\Dto\Request\ItemDePedidoRequestDto;
 use Symfony\Component\Validator\Constraints as Assert;
 
 

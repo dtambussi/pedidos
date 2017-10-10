@@ -10,7 +10,7 @@ namespace PedidosBundle\Service;
 
 
 use PedidosBundle\Dto\ItemsByCategoriaDto;
-use PedidosBundle\Dto\PedidoRequestDto;
+use PedidosBundle\Dto\Request\PedidoRequestDto;
 use Psr\Log\LoggerInterface;
 
 class PedidosService

@@ -10,8 +10,8 @@ namespace PedidosBundle\Service;
 
 
 use PedidosBundle\Dto\MenuDto;
-use PedidosBundle\Dto\PedidoDto;
-use PedidosBundle\Dto\PedidoRequestDto;
+use PedidosBundle\Dto\Response\PedidoDto;
+use PedidosBundle\Dto\Request\PedidoRequestDto;
 use PedidosBundle\Exception\PedidosException;
 use Psr\Log\LoggerInterface;
 use JMS\Serializer\Serializer;

@@ -6,7 +6,7 @@
  * Time: 11:28 AM
  */
 
-namespace PedidosBundle\Dto;
+namespace PedidosBundle\Dto\Request;
 
 
 class PedidoRequestDto
@@ -109,7 +109,8 @@ class PedidoRequestDto
 
         /** @var ItemDePedidoRequestDto $item */
         foreach ($this->items as $item) {
-            if ($item->getIdItemDeMenu() == $itemDePedidoRequestDto->getIdItemDeMenu()) {
+            if ($item->getIdItemDeMenu() == $itemDePedidoRequestDto->getIdItemDeMenu() &&
+            $item->getComentario() == $itemDePedidoRequestDto->getComentario()) {
                 $item->setCantidad($item->getCantidad() + $itemDePedidoRequestDto->getCantidad());
                 $esPrimerItemDeEseTipo = false;
             }

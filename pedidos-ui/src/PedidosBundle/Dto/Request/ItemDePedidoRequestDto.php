@@ -6,7 +6,7 @@
  * Time: 12:11 PM
  */
 
-namespace PedidosBundle\Dto;
+namespace PedidosBundle\Dto\Request;
 
 
 class ItemDePedidoRequestDto

@@ -3,7 +3,7 @@
 namespace PedidosBundle\Controller;
 
 use PedidosBundle\Dto\ItemsByCategoriaDto;
-use PedidosBundle\Dto\PedidoRequestDto;
+use PedidosBundle\Dto\Request\PedidoRequestDto;
 use PedidosBundle\Form\PedidoItemForm;
 use PedidosBundle\FormEntity\PedidoItemFormEntity;
 use PedidosBundle\Service\PedidosApiHttpClient;
