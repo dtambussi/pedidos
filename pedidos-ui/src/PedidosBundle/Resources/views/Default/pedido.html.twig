@@ -11,7 +11,21 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-
+        function confirmarPedido() {
+            $.ajax({
+                type: "POST",
+                url: "{{ path("_pedido_confirmar") }}",
+                data: "comentario=" + $("#comentarioPedidoText").val()
+            }).then(function (view) {
+                $("#pedido-enviado-alert").show();
+                setTimeout(function () {
+                    window.location.href = "{{ path("_get_menu") }}"
+                }, 2000);
+                return true;
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                return false;
+            });
+        }
     </script>
 {% endblock %}
 
@@ -19,7 +33,7 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-12">
-                <h1>Mi Pedido</h1>
+                <h1>Pedido Actual<span class="pull-right"><button type="button" class="btn btn-primary" style="min-width: 80px;" onclick="$('#confirmarPedidoModal').modal();">Listo</button></span></h1>
             </div>
         </div>
         <div class="row">
@@ -57,6 +71,32 @@
             </div>
         </div>
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="confirmarPedidoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Confirmación de Pedido</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            <label for="comentarioPedidoText" class="control-label">Comentarios adicionales</label>
+                            <input class="form-control" id="comentarioPedidoText" type="text">
+                        </div>
+                        <div class="alert alert-success" id="pedido-enviado-alert" style="display: none;">
+                            ¡Pedido Enviado!
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="button" class="btn btn-primary" onclick="confirmarPedido();">Confirmar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% macro generarListaItemsDePedido(listaItems, pedidoRequestDto) %}
@@ -66,11 +106,11 @@
                 {% set itemPresente = true %}
 
                 <div class="row">
-                    <div class="col-xs-10 menu-item-nombre" id="{{ menuItem.id }}">
+                    <div class="col-xs-8 menu-item-nombre" id="{{ menuItem.id }}">
                         {{ menuItem.nombre }}<br>
                         <span style="color:grey;font-size: small">{{ menuItem.descripcion }}</span>
                     </div>
-                    <div class="col-xs-2 text-right" style="color: grey;">
+                    <div class="col-xs-4 text-right" style="color: grey;">
                         x{{ pedidoItem.cantidad }}&nbsp;{% if pedidoItem.comentario %}({{ pedidoItem.comentario }}){% endif %}
                     </div>
                 </div>

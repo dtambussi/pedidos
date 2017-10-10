@@ -22,10 +22,23 @@
                 <h1>Mis Pedidos</h1>
             </div>
         </div>
-        {% for pedido in pedidos %}
+        {% for pedidoDto in pedidos %}
         <div class="row">
             <div class="col-xs-12">
-                 Id: {{ pedido.id }} - Comentario: {{ pedido.comentario }}
+                <h3>
+                    Pedido #{{ pedidoDto.id }}<br>
+                    <small>{% if pedidoDto.comentario %}{{ pedidoDto.comentario }}&nbsp;{% endif %}({{ pedidoDto.estado }})</small>
+                </h3>
+                {% for pedidoItem in pedidoDto.items %}
+                    <div class="row">
+                        <div class="col-xs-8">
+                            {{ pedidoItem.itemDeMenu.nombre }}
+                        </div>
+                        <div class="col-xs-4 text-right" style="color: grey;">
+                            x{{ pedidoItem.cantidad }}&nbsp;{% if pedidoItem.comentario %}({{ pedidoItem.comentario }}){% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
         </div>
         {% endfor %}

@@ -138,7 +138,12 @@ class DefaultController extends Controller
      */
     public function confirmarPedidoAction(Request $request)
     {
-        $this->getPedidosService()->confirmarPedido($this->getPedidoRequestDto($request));
+        $pedidoRequestDto = $this->getPedidoRequestDto($request);
+        if (!$pedidoRequestDto->isEmpty()) {
+            $pedidoRequestDto->setComentario($request->get("comentario"));
+            $this->getPedidosService()->confirmarPedido($pedidoRequestDto);
+
+        }
         // TODO agregar algo para mostrar confirmacion de pedido
         return $this->redirectToRoute("_get_menu");
     }

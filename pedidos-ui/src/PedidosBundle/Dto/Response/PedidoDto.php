@@ -192,5 +192,21 @@ class PedidoDto
     public function setMesa($mesa)
     {
         $this->mesa = $mesa;
+    }
+
+    /**
+     * @return array
+     */
+    public function getItems()
+    {
+        return $this->items;
+    }
+
+    /**
+     * @param array $items
+     */
+    public function setItems($items)
+    {
+        $this->items = $items;
     } //Date
 }
