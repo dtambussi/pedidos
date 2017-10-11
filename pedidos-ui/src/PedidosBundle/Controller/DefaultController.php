@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
+    const HARDCODED_MENU_ID = 1;
 
     /**
      * @Route("/", name="_index")
@@ -123,11 +124,7 @@ class DefaultController extends Controller
      */
     public function pedidoLimpiarAction(Request $request)
     {
-        $pedidoRequestDto = new PedidoRequestDto();
-
-        // TODO DESHARCODEAR!!
-        $pedidoRequestDto->setIdMenu(1);
-        $this->savePedidoRequestDto($request, $pedidoRequestDto);
+        $this->generarNuevoPedidoRequestDto($request);
         return $this->redirectToRoute("_get_menu");
     }
 
@@ -138,7 +135,13 @@ class DefaultController extends Controller
      */
     public function confirmarPedidoAction(Request $request)
     {
-        $this->getPedidosService()->confirmarPedido($this->getPedidoRequestDto($request));
+        $pedidoRequestDto = $this->getPedidoRequestDto($request);
+
+        if (!$pedidoRequestDto->isEmpty()) {
+            $pedidoRequestDto->setComentario($request->get("comentario"));
+            $this->getPedidosService()->confirmarPedido($pedidoRequestDto);
+            $this->generarNuevoPedidoRequestDto($request);
+        }
         // TODO agregar algo para mostrar confirmacion de pedido
         return $this->redirectToRoute("_get_menu");
     }
@@ -165,12 +168,7 @@ class DefaultController extends Controller
         if ($request->getSession()->has(PedidoRequestDto::class)) {
             return $request->getSession()->get(PedidoRequestDto::class);
         } else {
-            $pedidoRequestDto = new PedidoRequestDto();
-
-            // TODO DESHARCODEAR!!
-            $pedidoRequestDto->setIdMenu(1);
-            $request->getSession()->set(PedidoRequestDto::class, $pedidoRequestDto);
-            return $pedidoRequestDto;
+            return $this->generarNuevoPedidoRequestDto($request);
         }
     }
 
@@ -183,5 +181,15 @@ class DefaultController extends Controller
         $pedidosService = $this->container->get(PedidosService::SERVICE_NAME);
 
         return $pedidosService;
+    }
+
+    private function generarNuevoPedidoRequestDto(Request $request) {
+        $pedidoRequestDto = new PedidoRequestDto();
+
+        // TODO DESHARCODEAR!!
+        $pedidoRequestDto->setIdMenu(self::HARDCODED_MENU_ID);
+        $this->savePedidoRequestDto($request, $pedidoRequestDto);
+
+        return $pedidoRequestDto;
     }
 }

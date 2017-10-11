@@ -120,4 +120,8 @@ class PedidoRequestDto
             array_push($this->items, $itemDePedidoRequestDto);
         }
     }
+
+    public function isEmpty() {
+        return empty($this->items);
+    }
 }
