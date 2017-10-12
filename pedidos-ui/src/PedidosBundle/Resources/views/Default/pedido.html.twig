@@ -36,7 +36,7 @@
                 <div class="col-sm-10 col-xs-6">
                     <h1>Mi Pedido</h1>
                 </div>
-                <div class="col-sm-2 col-xs-6">
+                <div class="col-sm-2 col-xs-6 text-right">
                     <a href="{{ path("_pedido") }}" type="button" class="btn btn-primary pedidos-btn">Volver</a>
                 </div>
             </div>
@@ -75,9 +75,10 @@
                 </div>
             </div>
             <div class="row text-center top-buffer">
-                <a href="#" onclick="$('#confirmarPedidoModal').modal();" class="btn btn-default btn-lg">Confirmar Pedido</a>
+                <a href="#" onclick="$('#confirmarPedidoModal').modal();" class="btn btn-default btn-lg"
+                {% if app.session.get("PedidosBundle\\Dto\\Request\\PedidoRequestDto").isEmpty %}disabled{% endif %}
+                >Confirmar Pedido</a>
             </div>
-
         </div>
     </section>
     </div>
@@ -92,15 +93,17 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-xs-12 form-group">
-                            <label for="comentarioPedidoText" class="control-label">Comentarios adicionales</label>
-                            <input class="form-control" id="comentarioPedidoText" type="text">
-                        </div>
-                        <div class="alert alert-success" id="pedido-enviado-alert" style="display: none;">
-                            ¡Pedido Enviado!
-                        </div>
-                        <div class="form-group text-center">
-                            <button type="button" class="btn btn-primary" onclick="confirmarPedido();">Confirmar</button>
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label for="comentarioPedidoText" class="control-label">Comentarios adicionales</label>
+                                <input class="form-control" id="comentarioPedidoText" type="text">
+                            </div>
+                            <div class="alert alert-success" id="pedido-enviado-alert" style="display: none;">
+                                ¡Pedido Enviado!
+                            </div>
+                            <div class="form-group text-center">
+                                <button type="button" class="btn btn-primary" onclick="confirmarPedido();">Confirmar</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -110,6 +113,7 @@
 {% endblock %}
 
 {% macro generarListaItemsDePedido(listaItems, pedidoRequestDto) %}
+    {% set itemPresente = false %}
     {% for pedidoItem in pedidoRequestDto.items %}
         {% for menuItem in listaItems %}
             {% if pedidoItem.idItemDeMenu == menuItem.id %}
@@ -127,7 +131,7 @@
             {% endif %}
         {% endfor %}
     {% endfor %}
-    {% if itemPresente is not defined %}
+    {% if not itemPresente %}
         No se han seleccionado.
     {% endif %}
 {% endmacro %}

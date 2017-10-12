@@ -16,12 +16,17 @@ h1, h2 {
 .btn-primary {
   background-color: @main-color;
   border-color: @main-color;
+  min-width: 120px;
 }
 
 .btn-default {
   background-color: @secondary-color;
   border-color: @secondary-color;
   color: white;
+}
+
+.btn-default[disabled] {
+  background-color: lightgray !important;
 }
 
 .btn-primary:hover, .btn-primary:focus,

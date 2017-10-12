@@ -25,11 +25,15 @@ h2 {
 .btn-primary {
   background-color: #ffc107;
   border-color: #ffc107;
+  min-width: 120px;
 }
 .btn-default {
   background-color: #e64a19;
   border-color: #e64a19;
   color: white;
+}
+.btn-default[disabled] {
+  background-color: lightgray !important;
 }
 .btn-primary:hover,
 .btn-primary:focus,

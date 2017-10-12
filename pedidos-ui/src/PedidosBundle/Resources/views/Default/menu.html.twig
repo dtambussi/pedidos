@@ -13,8 +13,8 @@
     <script>
         {% if modoPedir is defined %}
         $("document").ready(function () {
-            $(".menu-item-nombre").addClass("menu-item-clickeable");
-            $(".menu-item-nombre").bind("click", function () {
+            $(".menu-item").addClass("menu-item-clickeable");
+            $(".menu-item").bind("click", function () {
                 var itemMenuId = this.id;
                 var title = this.title;
 
@@ -55,12 +55,12 @@
                     {% endif %}
                 </div>
                 {% if modoPedir is not defined %}
-                    <div class="col-sm-2 col-xs-6">
+                    <div class="col-sm-2 col-xs-6 text-right">
                         <a href="{{ path("_pedido") }}" type="button" class="btn btn-primary pedidos-btn">Nuevo
                             Pedido</a>
                     </div>
                 {% else %}
-                    <div class="col-sm-2 col-xs-6">
+                    <div class="col-sm-2 col-xs-6 text-right">
                         <a href="{{ path("_pedido_limpiar") }}" type="button" class="btn btn-primary pedidos-btn"><span
                                     class="fa fa-trash" aria-hidden="true"></span>
                             Borrar Pedido</a>
@@ -128,8 +128,8 @@
 
 {% macro generarListaItemsDeMenu(listaItems) %}
     {% for item in listaItems %}
-        <div class="row menu-item">
-            <div class="col-xs-10 menu-item-nombre" id="{{ item.id }}" title="{{ item.nombre }}">
+        <div class="row menu-item" title="{{ item.nombre }}" id="{{ item.id }}">
+            <div class="col-xs-10 menu-item-nombre">
                 {{ item.nombre }}<br>
                 <span style="color:grey;font-size: small">{{ item.descripcion }}</span>
             </div>
