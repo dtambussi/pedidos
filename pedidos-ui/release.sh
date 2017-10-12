@@ -5,6 +5,7 @@ if [ "$#" -ne 1 ]; then
 	exit 1;
 fi
 
+composer install
 git checkout -b release-ui-$1
 ./less.sh
 git add web
