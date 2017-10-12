@@ -18,7 +18,7 @@ class PedidoItemFormEntity
      * @var string
      * @Assert\Range(
      *      min = 1,
-     *      max = 9,
+     *      max = 99,
      *      minMessage = "Seleccionar al menos {{ limit }} item",
      *      maxMessage = "No se pueden seleccionar más de {{ limit }} items"
      * )

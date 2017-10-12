@@ -20,7 +20,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class PedidoItemForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options) {
-        $builder->add('cantidad', IntegerType::class, array('label' => 'Cantidad'));
+        $builder->add('cantidad', TextType::class, array('label' => 'Cantidad'));
         $builder->add('comentario', TextType::class, array('label' => 'Comentario'));
         $builder->add('id', HiddenType::class);
     }
