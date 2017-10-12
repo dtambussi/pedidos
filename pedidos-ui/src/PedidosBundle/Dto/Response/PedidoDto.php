@@ -8,6 +8,8 @@
 
 namespace PedidosBundle\Dto\Response;
 use JMS\Serializer\Annotation\Type;
+use JMS\Serializer\Annotation\Exclude;
+use PedidosBundle\Dto\ItemsByCategoriaDto;
 
 // https://jsonutils.com/
 class PedidoDto
@@ -53,6 +55,12 @@ class PedidoDto
      * @Type("array<PedidosBundle\Dto\Response\PedidoItem>")
      */
     public $items; //array(Item)
+
+    /**
+     * @var ItemsByCategoriaDto
+     * @Exclude
+     */
+    public $itemsByCategoriaDto;
 
     /**
      * @var string
@@ -208,5 +216,21 @@ class PedidoDto
     public function setItems($items)
     {
         $this->items = $items;
+    }
+
+    /**
+     * @return ItemsByCategoriaDto
+     */
+    public function getItemsByCategoriaDto()
+    {
+        return $this->itemsByCategoriaDto;
+    }
+
+    /**
+     * @param ItemsByCategoriaDto $itemsByCategoriaDto
+     */
+    public function setItemsByCategoriaDto($itemsByCategoriaDto)
+    {
+        $this->itemsByCategoriaDto = $itemsByCategoriaDto;
     } //Date
 }

@@ -11,6 +11,7 @@ namespace PedidosBundle\Service;
 
 use PedidosBundle\Dto\ItemsByCategoriaDto;
 use PedidosBundle\Dto\Request\PedidoRequestDto;
+use PedidosBundle\Dto\Response\PedidoDto;
 use Psr\Log\LoggerInterface;
 
 class PedidosService
@@ -40,7 +41,7 @@ class PedidosService
 
     public function findMenuItemsByCategoria() {
         $menuDto = $this->pedidosApiHttpClient->findMenu();
-        $result = new ItemsByCategoriaDto($menuDto);
+        $result = new ItemsByCategoriaDto($menuDto->getItems());
 
         return $result;
     }
@@ -50,6 +51,15 @@ class PedidosService
     }
 
     public function findPedidos() {
-        return $this->pedidosApiHttpClient->findPedidos();
+        $pedidoDtoArray = $this->pedidosApiHttpClient->findPedidos();
+
+        // Esto es para llenar el campo con los items discriminados por categoría
+        /** @var PedidoDto $pedidoDto */
+        foreach ($pedidoDtoArray as $pedidoDto) {
+            $itemsByCategoriaDto = new ItemsByCategoriaDto($pedidoDto->getItems());
+            $pedidoDto->setItemsByCategoriaDto($itemsByCategoriaDto);
+        }
+
+        return $pedidoDtoArray;
     }
 }

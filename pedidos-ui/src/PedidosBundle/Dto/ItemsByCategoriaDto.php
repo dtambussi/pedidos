@@ -9,6 +9,9 @@
 namespace PedidosBundle\Dto;
 
 
+use PedidosBundle\Dto\Response\PedidoDto;
+use PedidosBundle\Dto\Response\PedidoItem;
+
 class ItemsByCategoriaDto
 {
     private $platoPrincipalItems;
@@ -19,34 +22,49 @@ class ItemsByCategoriaDto
 
     /**
      * ItemByCategoriaDto constructor.
-     * @param MenuDto $menuDto
+     * @param array<MenuItemDto|PedidoItem> $items
      */
-    public function __construct(MenuDto $menuDto)
+    public function __construct(array $items)
     {
-        $this->platoPrincipalItems = array_filter($menuDto->getItems(), array($this, "isPlatoPrincipal"));
-        $this->entradaItems = array_filter($menuDto->getItems(), array($this, "isEntrada"));
-        $this->bebidaItems = array_filter($menuDto->getItems(), array($this, "isBebida"));
-        $this->postreItems = array_filter($menuDto->getItems(), array($this, "isPostre"));
-        $this->cafeteriaItems = array_filter($menuDto->getItems(), array($this, "isCafeteria"));
+        $this->platoPrincipalItems = array_filter($items, array($this, "isPlatoPrincipal"));
+        $this->entradaItems = array_filter($items, array($this, "isEntrada"));
+        $this->bebidaItems = array_filter($items, array($this, "isBebida"));
+        $this->postreItems = array_filter($items, array($this, "isPostre"));
+        $this->cafeteriaItems = array_filter($items, array($this, "isCafeteria"));
     }
 
-    private function isPlatoPrincipal(MenuItemDto $itemDto) {
+    private function isPlatoPrincipal($itemDto) {
+        if ($itemDto instanceof PedidoItem) {
+            $itemDto = $itemDto->getItemDeMenu();
+        }
         return $itemDto->getCategoria() == CategoriaMenuItemType::PLATOS_PRINCIPALES;
     }
 
-    private function isBebida(MenuItemDto $itemDto) {
+    private function isBebida($itemDto) {
+        if ($itemDto instanceof PedidoItem) {
+            $itemDto = $itemDto->getItemDeMenu();
+        }
         return $itemDto->getCategoria() == CategoriaMenuItemType::BEBIDAS;
     }
 
-    private function isPostre(MenuItemDto $itemDto) {
+    private function isPostre($itemDto) {
+        if ($itemDto instanceof PedidoItem) {
+            $itemDto = $itemDto->getItemDeMenu();
+        }
         return $itemDto->getCategoria() == CategoriaMenuItemType::POSTRES;
     }
 
-    private function isCafeteria(MenuItemDto $itemDto) {
+    private function isCafeteria($itemDto) {
+        if ($itemDto instanceof PedidoItem) {
+            $itemDto = $itemDto->getItemDeMenu();
+        }
         return $itemDto->getCategoria() == CategoriaMenuItemType::CAFETERIA;
     }
 
-    private function isEntrada(MenuItemDto $itemDto) {
+    private function isEntrada($itemDto) {
+        if ($itemDto instanceof PedidoItem) {
+            $itemDto = $itemDto->getItemDeMenu();
+        }
         return $itemDto->getCategoria() == CategoriaMenuItemType::ENTRADAS;
     }
 
