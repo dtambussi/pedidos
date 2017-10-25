@@ -42,7 +42,7 @@ function submitForm2(url, formId, targetDivId, onSuccessCallback){
 }
 
 function submitData2(url, data, targetDivId, onSuccessCallback){
-    // $('.ip-loading').removeClass('hide');
+    $('.disableable').attr("disabled", true);
     $.ajax({
         type: "POST",
         url: url,
@@ -60,6 +60,10 @@ function submitData2(url, data, targetDivId, onSuccessCallback){
         // $('.ip-loading').addClass('hide');
         positionateOnError();
         return false;
+    }).always(function() {
+
+        // Every element with disableable class will be disabled
+        $('.disableable').attr("disabled", false);
     });
 }
 
