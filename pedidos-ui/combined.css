@@ -1,0 +1,21 @@
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/Roboto/Roboto-Regular.woff') format('woff');
+}
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/Roboto/Roboto-Bold.woff') format('woff');
+  font-weight: bold;
+}
+@font-face {
+  font-family: 'Circular';
+  src: url('../fonts/Circular/circular-pro-book.woff') format('woff');
+}
+@font-face {
+  font-family: 'Circular';
+  src: url('../fonts/Circular/circular-pro-bold.woff') format('woff');
+  font-weight: bold;
+}
+#header .body {
+  color: #59B7B4;
+}

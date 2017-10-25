@@ -11,47 +11,100 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-
+        function confirmarPedido() {
+            $.ajax({
+                type: "POST",
+                url: "{{ path("_pedido_confirmar") }}",
+                data: "comentario=" + $("#comentarioPedidoText").val()
+            }).then(function (view) {
+                $("#pedido-enviado-alert").show();
+                setTimeout(function () {
+                    window.location.href = "{{ path("_get_menu") }}"
+                }, 2000);
+                return true;
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                return false;
+            });
+        }
     </script>
 {% endblock %}
 
 {% block body %}
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12">
-                <h1>Mi Pedido</h1>
+    <section id="mi-pedido-page">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-10 col-xs-6">
+                    <h1>Mi Pedido</h1>
+                </div>
+                <div class="col-sm-2 col-xs-6 text-right">
+                    <a href="{{ path("_pedido") }}" type="button" class="btn btn-primary pedidos-btn">Volver</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h2>Entradas</h2>
+                            {{ menuMacro.generarListaItemsDePedido(itemsByCategoriaDto.entradaItems, pedidoRequestDto) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h2>Platos Principales</h2>
+                            {{ menuMacro.generarListaItemsDePedido(itemsByCategoriaDto.platoPrincipalItems, pedidoRequestDto) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h2>Postres</h2>
+                            {{ menuMacro.generarListaItemsDePedido(itemsByCategoriaDto.postreItems, pedidoRequestDto) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h2>Cafetería</h2>
+                            {{ menuMacro.generarListaItemsDePedido(itemsByCategoriaDto.cafeteriaItems, pedidoRequestDto) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h2>Bebidas</h2>
+                            {{ menuMacro.generarListaItemsDePedido(itemsByCategoriaDto.bebidaItems, pedidoRequestDto) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row text-center top-buffer">
+                <a href="#" onclick="$('#confirmarPedidoModal').modal();" class="btn btn-default btn-lg"
+                {% if app.session.get("PedidosBundle\\Dto\\Request\\PedidoRequestDto").isEmpty %}disabled{% endif %}
+                >Confirmar Pedido</a>
             </div>
         </div>
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <h2>Entradas</h2>
-                        {{ menuMacro.generarListaItemsDePedido(itemsByCategoriaDto.entradaItems, pedidoRequestDto) }}
-                    </div>
+    </section>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="confirmarPedidoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Confirmación de Pedido</h4>
                 </div>
-                <div class="row">
-                    <div class="col-xs-12">
-                        <h2>Platos Principales</h2>
-                        {{ menuMacro.generarListaItemsDePedido(itemsByCategoriaDto.platoPrincipalItems, pedidoRequestDto) }}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12">
-                        <h2>Postres</h2>
-                        {{ menuMacro.generarListaItemsDePedido(itemsByCategoriaDto.postreItems, pedidoRequestDto) }}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12">
-                        <h2>Cafetería</h2>
-                        {{ menuMacro.generarListaItemsDePedido(itemsByCategoriaDto.cafeteriaItems, pedidoRequestDto) }}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12">
-                        <h2>Bebidas</h2>
-                        {{ menuMacro.generarListaItemsDePedido(itemsByCategoriaDto.bebidaItems, pedidoRequestDto) }}
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label for="comentarioPedidoText" class="control-label">Comentarios adicionales</label>
+                                <input class="form-control" id="comentarioPedidoText" type="text">
+                            </div>
+                            <div class="alert alert-success" id="pedido-enviado-alert" style="display: none;">
+                                ¡Pedido Enviado!
+                            </div>
+                            <div class="form-group text-center">
+                                <button type="button" class="btn btn-primary" onclick="confirmarPedido();">Confirmar</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -60,24 +113,25 @@
 {% endblock %}
 
 {% macro generarListaItemsDePedido(listaItems, pedidoRequestDto) %}
+    {% set itemPresente = false %}
     {% for pedidoItem in pedidoRequestDto.items %}
         {% for menuItem in listaItems %}
             {% if pedidoItem.idItemDeMenu == menuItem.id %}
                 {% set itemPresente = true %}
 
                 <div class="row">
-                    <div class="col-xs-10 menu-item-nombre" id="{{ menuItem.id }}">
+                    <div class="col-xs-8 menu-item-nombre" id="{{ menuItem.id }}">
                         {{ menuItem.nombre }}<br>
                         <span style="color:grey;font-size: small">{{ menuItem.descripcion }}</span>
                     </div>
-                    <div class="col-xs-2 text-right" style="color: grey;">
+                    <div class="col-xs-4 text-right" style="color: grey;">
                         x{{ pedidoItem.cantidad }}&nbsp;{% if pedidoItem.comentario %}({{ pedidoItem.comentario }}){% endif %}
                     </div>
                 </div>
             {% endif %}
         {% endfor %}
     {% endfor %}
-    {% if itemPresente is not defined %}
-        No se han seleccionado.
+    {% if not itemPresente %}
+        <p style="color: gray;">No se han seleccionado.</p>
     {% endif %}
 {% endmacro %}

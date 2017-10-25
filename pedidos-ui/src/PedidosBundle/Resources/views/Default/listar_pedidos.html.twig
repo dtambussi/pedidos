@@ -1,4 +1,4 @@
-{% import _self as menuMacro %}
+{% import _self as pedidoListarMacro %}
 {% extends 'PedidosBundle:layout:layout.html.twig' %}
 
 {% block stylesheets %}
@@ -11,7 +11,9 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-
+        function mostrarDetallePedido($pedidoId) {
+            $("#pedido-detalle-" + $pedidoId).slideToggle();
+        }
     </script>
 {% endblock %}
 
@@ -22,13 +24,42 @@
                 <h1>Mis Pedidos</h1>
             </div>
         </div>
-        {% for pedido in pedidos %}
+        {% for pedidoDto in pedidos %}
         <div class="row">
             <div class="col-xs-12">
-                 Id: {{ pedido.id }} - Comentario: {{ pedido.comentario }}
+                <h3 onclick="mostrarDetallePedido({{ pedidoDto.id }})">
+                    Pedido #{{ pedidoDto.id }}<button type="button" class="btn btn-default btn-small pull-right">Detalle</button><br>
+                    <small>{% if pedidoDto.comentario %}{{ pedidoDto.comentario }}&nbsp;{% endif %}({{ pedidoDto.estado }})</small>
+                </h3>
+                <div style="display: none;" id="pedido-detalle-{{ pedidoDto.id }}">
+                    {{ pedidoListarMacro.generarListaItemsDePedido("Entradas", pedidoDto.itemsByCategoriaDto.entradaItems) }}
+                    {{ pedidoListarMacro.generarListaItemsDePedido("Platos Principales", pedidoDto.itemsByCategoriaDto.platoPrincipalItems) }}
+                    {{ pedidoListarMacro.generarListaItemsDePedido("Postres", pedidoDto.itemsByCategoriaDto.postreItems) }}
+                    {{ pedidoListarMacro.generarListaItemsDePedido("Cafetería", pedidoDto.itemsByCategoriaDto.cafeteriaItems) }}
+                    {{ pedidoListarMacro.generarListaItemsDePedido("Bebidas", pedidoDto.itemsByCategoriaDto.bebidaItems) }}
+                </div>
             </div>
         </div>
         {% endfor %}
     </div>
 {% endblock %}
 
+{% macro generarListaItemsDePedido(categoriaTitle, items) %}
+    {% if items|length > 0 %}
+        <div class="row">
+            <div class="col-xs-12">
+                <b>{{ categoriaTitle }}</b>
+                {% for pedidoItem in items %}
+                    <div class="row">
+                        <div class="col-xs-8">
+                            {{ pedidoItem.itemDeMenu.nombre }}
+                        </div>
+                        <div class="col-xs-4 text-right" style="color: grey;">
+                            x{{ pedidoItem.cantidad }}&nbsp;{% if pedidoItem.comentario %}({{ pedidoItem.comentario }}){% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+{% endmacro %}

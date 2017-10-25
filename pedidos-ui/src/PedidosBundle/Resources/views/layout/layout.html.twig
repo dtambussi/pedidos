@@ -17,10 +17,11 @@
     {% block stylesheets %}
         {% stylesheets
             'bundles/pedidos/vendor/bootstrap/css/bootstrap.css'
-            'bundles/pedidos/vendor/font-awesome/css/font-awesome.min.css'
+            'bundles/pedidos/fonts/font-awesome/css/font-awesome.min.css'
             'bundles/pedidos/vendor/bootstrap-datepicker/css/bootstrap-datepicker.min.css'
-        %}
-        <link rel="stylesheet" href="{{ asset_url }}" />
+            'bundles/pedidos/css/main.css'
+        filter='?uglifycss' filter='cssrewrite'  %}
+        <link rel="stylesheet" href="{{ asset_url }}" rel="stylesheet" type="text/css" />
         {% endstylesheets %}
     {% endblock %}
 
