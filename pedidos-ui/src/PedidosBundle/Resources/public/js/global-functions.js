@@ -58,7 +58,6 @@ function submitData2(url, data, targetDivId, onSuccessCallback){
     }).fail(function(jqXHR, textStatus, errorThrown) {
         $(targetDivId).html(jqXHR.responseText);
         // $('.ip-loading').addClass('hide');
-        positionateOnError();
         return false;
     }).always(function() {
 

@@ -12,6 +12,8 @@ use JMS\Serializer\Annotation\Type;
 
 class UsuarioDto
 {
+    const SESSION_NAME = "usuarioDto";
+
     /**
      * @var int
      * @Type("int")
@@ -100,7 +102,31 @@ class UsuarioDto
         $this->infoAdicional = $infoAdicional;
     }
 
+    public function puedeCrearSugerencia() {
+        return $this->roleExists(UsuarioRoleType::CREAR_SUGERENCIA);
+    }
 
+    public function puedeCrearPedido() {
+        return $this->roleExists(UsuarioRoleType::CREAR_PEDIDO);
+    }
 
+    public function puedeListarPedidos() {
+        return $this->roleExists(UsuarioRoleType::LISTAR_PEDIDOS);
+    }
 
+    public function puedeGenerarReporte() {
+        return $this->roleExists(UsuarioRoleType::GENERAR_REPORTE_PEDIDOS);
+    }
+
+    private function roleExists($roleNombre) {
+        if (empty($this->roles)) {
+            return false;
+        }
+
+        $roleNombres = array_map(function(RoleDto $role) {
+            return $role->getNombre();
+        }, $this->roles);
+
+        return in_array($roleNombre, $roleNombres);
+    }
 }
