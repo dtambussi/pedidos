@@ -248,11 +248,15 @@ class DefaultController extends Controller
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-
-                /** @var SessionDeUsuarioDto $sessionDeUsuarioDto */
-                $sessionDeUsuarioDto = $this->getPedidosService()->loginGuest($formEntity->getNickname());
-                $request->getSession()->set(UsuarioDto::SESSION_NAME, $sessionDeUsuarioDto->getUsuario());
-                $form = $this->createForm(LoginForm::class, new LoginFormEntity());
+                try {
+                    /** @var SessionDeUsuarioDto $sessionDeUsuarioDto */
+                    $sessionDeUsuarioDto = $this->getPedidosService()->loginGuest($formEntity->getNickname());
+                    $request->getSession()->set(UsuarioDto::SESSION_NAME, $sessionDeUsuarioDto->getUsuario());
+                    $form = $this->createForm(LoginGuestForm::class, new LoginGuestFormEntity());
+                } catch(PedidosException $e) {
+                    $response = new Response("", Response::HTTP_BAD_REQUEST);
+                    $form->get('nickname')->addError(new FormError('Ya existe un invitado con ese nickname'));
+                }
             } else {
                 $response = new Response("", Response::HTTP_BAD_REQUEST);
             }
