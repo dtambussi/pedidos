@@ -24,23 +24,27 @@
                 <h1>Mis Pedidos</h1>
             </div>
         </div>
-        {% for pedidoDto in pedidos %}
-        <div class="row">
-            <div class="col-xs-12">
-                <h3 onclick="mostrarDetallePedido({{ pedidoDto.id }})">
-                    Pedido #{{ pedidoDto.id }}<button type="button" class="btn btn-default btn-small pull-right">Detalle</button><br>
-                    <small>{% if pedidoDto.comentario %}{{ pedidoDto.comentario }}&nbsp;{% endif %}({{ pedidoDto.estado }})</small>
-                </h3>
-                <div style="display: none;" id="pedido-detalle-{{ pedidoDto.id }}">
-                    {{ pedidoListarMacro.generarListaItemsDePedido("Entradas", pedidoDto.itemsByCategoriaDto.entradaItems) }}
-                    {{ pedidoListarMacro.generarListaItemsDePedido("Platos Principales", pedidoDto.itemsByCategoriaDto.platoPrincipalItems) }}
-                    {{ pedidoListarMacro.generarListaItemsDePedido("Postres", pedidoDto.itemsByCategoriaDto.postreItems) }}
-                    {{ pedidoListarMacro.generarListaItemsDePedido("Cafetería", pedidoDto.itemsByCategoriaDto.cafeteriaItems) }}
-                    {{ pedidoListarMacro.generarListaItemsDePedido("Bebidas", pedidoDto.itemsByCategoriaDto.bebidaItems) }}
+        {% if pedidos is empty %}
+            Aún no realizó pedidos.
+        {% else %}
+            {% for pedidoDto in pedidos %}
+            <div class="row">
+                <div class="col-xs-12">
+                    <h3 onclick="mostrarDetallePedido({{ pedidoDto.id }})">
+                        Pedido #{{ pedidoDto.id }}<button type="button" class="btn btn-default btn-small pull-right">Detalle</button><br>
+                        <small>{% if pedidoDto.comentario %}{{ pedidoDto.comentario }}&nbsp;{% endif %}({{ pedidoDto.estado }})</small>
+                    </h3>
+                    <div style="display: none;" id="pedido-detalle-{{ pedidoDto.id }}">
+                        {{ pedidoListarMacro.generarListaItemsDePedido("Entradas", pedidoDto.itemsByCategoriaDto.entradaItems) }}
+                        {{ pedidoListarMacro.generarListaItemsDePedido("Platos Principales", pedidoDto.itemsByCategoriaDto.platoPrincipalItems) }}
+                        {{ pedidoListarMacro.generarListaItemsDePedido("Postres", pedidoDto.itemsByCategoriaDto.postreItems) }}
+                        {{ pedidoListarMacro.generarListaItemsDePedido("Cafetería", pedidoDto.itemsByCategoriaDto.cafeteriaItems) }}
+                        {{ pedidoListarMacro.generarListaItemsDePedido("Bebidas", pedidoDto.itemsByCategoriaDto.bebidaItems) }}
+                    </div>
                 </div>
             </div>
-        </div>
-        {% endfor %}
+            {% endfor %}
+        {% endif %}
     </div>
 {% endblock %}
 

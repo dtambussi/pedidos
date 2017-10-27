@@ -5,13 +5,18 @@ namespace PedidosBundle\Controller;
 use PedidosBundle\Dto\ItemsByCategoriaDto;
 use PedidosBundle\Dto\Request\LoginUsuarioRegistradoRequestDto;
 use PedidosBundle\Dto\Request\PedidoRequestDto;
+use PedidosBundle\Dto\SessionDeUsuarioDto;
 use PedidosBundle\Dto\UsuarioDto;
+use PedidosBundle\Exception\PedidosException;
+use PedidosBundle\Form\LoginForm;
 use PedidosBundle\Form\PedidoItemForm;
+use PedidosBundle\FormEntity\LoginFormEntity;
 use PedidosBundle\FormEntity\PedidoItemFormEntity;
 use PedidosBundle\Service\PedidosApiHttpClient;
 use PedidosBundle\Service\PedidosService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -167,6 +172,59 @@ class DefaultController extends Controller
         return $this->render(
             "PedidosBundle:default:listar_pedidos.html.twig",
             array("pedidos" => $pedidos));
+    }
+
+
+    /**
+     * @Route("/login", name="_login")
+     */
+    public function loginAction(Request $request) {
+        return $this->render("PedidosBundle:default:login.html.twig");
+    }
+
+    /**
+     * @Route("/logout", name="_logout")
+     */
+    public function logoutAction(Request $request) {
+        $request->getSession()->remove(UsuarioDto::SESSION_NAME);
+        $request->getSession()->invalidate(0);
+
+        return $this->render("PedidosBundle:default:login.html.twig");
+    }
+
+    /**
+     * @Route("/login_form", name="_login_form")
+     * @param Request $request
+     * @return Response
+     */
+    public function loginFormAction(Request $request) {
+        $formEntity = new LoginFormEntity();
+
+        $form = $this->createForm(LoginForm::class, $formEntity);
+        $form->handleRequest($request);
+
+        $response = new Response();
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+
+                    /** @var SessionDeUsuarioDto $sessionDeUsuarioDto */
+                    $sessionDeUsuarioDto = $this->getPedidosService()->login($formEntity->getEmail(), $formEntity->getPassword());
+                    $request->getSession()->set(UsuarioDto::SESSION_NAME, $sessionDeUsuarioDto->getUsuario());
+                    $form = $this->createForm(LoginForm::class, new LoginFormEntity());
+                } catch(PedidosException $e) {
+                    $response = new Response("", Response::HTTP_BAD_REQUEST);
+                    $form->get('password')->addError(new FormError('Usuario o contraseña incorrectos.'));
+                }
+            } else {
+                $response = new Response("", Response::HTTP_BAD_REQUEST);
+            }
+        }
+
+        return $this->render(
+            "PedidosBundle:default:login_form.html.twig", array("form" => $form->createView()), $response
+        );
     }
 
     /**

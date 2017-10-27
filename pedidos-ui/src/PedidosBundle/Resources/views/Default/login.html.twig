@@ -1,0 +1,31 @@
+{% extends 'PedidosBundle:layout:layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+    </script>
+{% endblock %}
+
+{% block body %}
+    <section id="login-page">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-xs-12">
+                    <h1>Ingreso de Usuarios</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12" id="loginFormDiv">
+                    {{ render(controller("PedidosBundle:Default:loginForm")) }}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

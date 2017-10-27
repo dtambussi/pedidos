@@ -58,3 +58,11 @@ sudo setfacl -dR -m u:www-data:rwx -m u:`whoami`:rwx var/cache var/logs var/sess
 ```
 
 5. Ir a la home de la aplicación `http://tambussi.local/menu`. Eso es todo
+
+# Usuarios de prueba
+```sql
+insert into info_adicional_usuario values (null, "Colu", "favioemiliano@gmail.com", null, "Favio", "asdfasdf");
+insert into usuario values (null, "favioemiliano@gmail.com", 6);
+insert into usuario_roles values (6, 1), (6,13), (6,12), (6,14), (6,9);
+```
+
