@@ -6,5 +6,6 @@ public enum CategoriaItemDeMenu {
 	PlatosPrincipales,
 	Postres,
 	Bebidas,
-	Cafeteria
+	Cafeteria,
+	Sugerencia
 }

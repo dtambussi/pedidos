@@ -23,7 +23,7 @@ public class UsuarioFactory {
 	public Usuario nuevoUsuarioNoRegistrado(final String nickname) {
 		return Usuario.builder()
 				.nickname(nickname)
-				.roles(Roles.rolesDefaultUsuarioNoRegistrado())
+				// .roles(Roles.rolesDefaultUsuarioNoRegistrado())
 				.build();
 	}
 }

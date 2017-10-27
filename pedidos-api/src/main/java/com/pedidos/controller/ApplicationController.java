@@ -81,7 +81,7 @@ public class ApplicationController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/pedidos")
-	public Pedido generarPedido(final GenerarPedidoRequest generarPedidoRequest) {
+	public Pedido generarPedido(@RequestBody final GenerarPedidoRequest generarPedidoRequest) {
 		return this.pedidoService.generarPedido(generarPedidoRequest);
 	}
 	

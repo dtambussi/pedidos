@@ -66,4 +66,8 @@ class PedidosService
     public function login($email, $password) {
         return $this->pedidosApiHttpClient->doLogin($email, $password);
     }
+
+    public function loginGuest($nickname) {
+        return $this->pedidosApiHttpClient->doLoginGuest($nickname);
+    }
 }

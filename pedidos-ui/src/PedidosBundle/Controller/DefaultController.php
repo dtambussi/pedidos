@@ -13,9 +13,11 @@ use PedidosBundle\Dto\SessionDeUsuarioDto;
 use PedidosBundle\Dto\UsuarioDto;
 use PedidosBundle\Exception\PedidosException;
 use PedidosBundle\Form\LoginForm;
+use PedidosBundle\Form\LoginGuestForm;
 use PedidosBundle\Form\PedidoItemForm;
 use PedidosBundle\Form\SugerenciaForm;
 use PedidosBundle\FormEntity\LoginFormEntity;
+use PedidosBundle\FormEntity\LoginGuestFormEntity;
 use PedidosBundle\FormEntity\PedidoItemFormEntity;
 use PedidosBundle\FormEntity\SugerenciaFormEntity;
 use PedidosBundle\Service\PedidosApiHttpClient;
@@ -227,7 +229,37 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/reportes", name="_reportes")
+     * @Route("/login_guest_form", name="_login_guest_form")
+     * @param Request $request
+     * @return Response
+     */
+    public function loginGuestFormAction(Request $request) {
+        $formEntity = new LoginGuestFormEntity();
+
+        $form = $this->createForm(LoginGuestForm::class, $formEntity);
+        $form->handleRequest($request);
+
+        $response = new Response();
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+
+                /** @var SessionDeUsuarioDto $sessionDeUsuarioDto */
+                $sessionDeUsuarioDto = $this->getPedidosService()->loginGuest($formEntity->getNickname());
+                $request->getSession()->set(UsuarioDto::SESSION_NAME, $sessionDeUsuarioDto->getUsuario());
+                $form = $this->createForm(LoginForm::class, new LoginFormEntity());
+            } else {
+                $response = new Response("", Response::HTTP_BAD_REQUEST);
+            }
+        }
+
+        return $this->render(
+            "PedidosBundle:default:login_guest_form.html.twig", array("form" => $form->createView()), $response
+        );
+    }
+
+    /*
+     * @Route("/reportes", name="_reporte_generar")
      * @param Request $request
      * @return Response
      */
