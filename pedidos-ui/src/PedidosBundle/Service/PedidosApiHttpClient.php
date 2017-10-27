@@ -10,6 +10,7 @@ namespace PedidosBundle\Service;
 
 
 use PedidosBundle\Dto\MenuDto;
+use PedidosBundle\Dto\Request\LoginGuestRequestDto;
 use PedidosBundle\Dto\Request\LoginRequestDto;
 use PedidosBundle\Dto\Request\LoginUsuarioRegistradoRequestDto;
 use PedidosBundle\Dto\Response\PedidoDto;
@@ -82,6 +83,16 @@ class PedidosApiHttpClient
     public function doLogin($userEmail, $password) {
         $url = "http://" . $this->pedidosapiHostname . "/loginUsuarioRegistrado";
         $loginRequest = new LoginRequestDto($userEmail, $password);
+        $response = $this->doPost($url, SessionDeUsuarioDto::class, $loginRequest);
+        return $response[0];
+    }
+
+    /**
+     * @return SessionDeUsuarioDto
+     */
+    public function doLoginGuest($nickname) {
+        $url = "http://" . $this->pedidosapiHostname . "/loginUsuarioNoRegistrado";
+        $loginRequest = new LoginGuestRequestDto($nickname);
         $response = $this->doPost($url, SessionDeUsuarioDto::class, $loginRequest);
         return $response[0];
     }
