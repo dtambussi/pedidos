@@ -3,7 +3,9 @@
 namespace PedidosBundle\Controller;
 
 use PedidosBundle\Dto\ItemsByCategoriaDto;
+use PedidosBundle\Dto\Request\LoginUsuarioRegistradoRequestDto;
 use PedidosBundle\Dto\Request\PedidoRequestDto;
+use PedidosBundle\Dto\UsuarioDto;
 use PedidosBundle\Form\PedidoItemForm;
 use PedidosBundle\FormEntity\PedidoItemFormEntity;
 use PedidosBundle\Service\PedidosApiHttpClient;
@@ -23,7 +25,14 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        return $this->render('PedidosBundle:Default:index.html.twig');
+
+        /** @var PedidosApiHttpClient $client */
+        $client = $this->container->get(PedidosApiHttpClient::SERVICE_NAME);
+
+        /* TODO Reemplazar por el login posta */
+        $sessionDto = $client->doLogin("esteban_copas@pedidos.com","esteban");
+
+        return $this->render('PedidosBundle:Default:index.html.twig',array("usuarioDto"=>$sessionDto->getUsuario()));
     }
 
     /**

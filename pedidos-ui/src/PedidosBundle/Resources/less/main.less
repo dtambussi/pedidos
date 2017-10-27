@@ -167,3 +167,55 @@ h1, h2 {
     border-radius: 7px;
   }
 }
+#main-page{
+  text-align: center;
+
+  .menu-principal-item{
+    color: black;
+    width: 20rem;
+    padding: 20px;
+    margin-bottom:20px;
+    border-style: solid;
+    border-radius: 30px;
+    border-color: @menu-principal-color;
+    text-align: center;
+  }
+
+  .menu-principal-item:hover{
+    background-color: @menu-principal-color;
+  }
+
+
+
+  @media only screen and (max-width: 500px) {
+    body {
+      background-color: lightblue;
+    }
+  }
+
+  .menu-icon{
+    font-size:40px;
+  }
+
+  .btn-primary {
+    background-color: inherit;
+    border-color: inherit;
+    border-style:none;
+    color:black;
+  }
+
+  .disabled{
+    a{
+      cursor:not-allowed;
+    }
+    .menu-principal-item{
+      background-color: #dfdfdf;
+      border-color:#dfdfdf;
+    }
+  }
+
+
+}
+
+
+

@@ -10,8 +10,10 @@ namespace PedidosBundle\Service;
 
 
 use PedidosBundle\Dto\MenuDto;
+use PedidosBundle\Dto\Request\LoginUsuarioRegistradoRequestDto;
 use PedidosBundle\Dto\Response\PedidoDto;
 use PedidosBundle\Dto\Request\PedidoRequestDto;
+use PedidosBundle\Dto\SessionDeUsuarioDto;
 use PedidosBundle\Exception\PedidosException;
 use Psr\Log\LoggerInterface;
 use JMS\Serializer\Serializer;
@@ -71,6 +73,17 @@ class PedidosApiHttpClient
         $response = $this->doPost($url, PedidoDto::class, $pedidoRequestDto);
         return $response[0];
     }
+
+
+    /**
+     * @return SessionDeUsuarioDto
+     */
+    public function doLogin($userEmail, $password) {
+        $url = "http://" . $this->pedidosapiHostname . "/loginUsuarioRegistrado";
+        $response = $this->doPost($url, SessionDeUsuarioDto::class, "email=$userEmail&password=$password");
+        return $response[0];
+    }
+
 
     /**
      * @param $url
