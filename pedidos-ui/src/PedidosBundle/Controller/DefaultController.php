@@ -6,7 +6,6 @@ use JMS\Serializer\Serializer;
 use PedidosBundle\Dto\BootstrapTableDto;
 use PedidosBundle\Dto\ItemsByCategoriaDto;
 use PedidosBundle\Dto\MenuItemDto;
-use PedidosBundle\Dto\Request\LoginUsuarioRegistradoRequestDto;
 use PedidosBundle\Dto\Request\PedidoRequestDto;
 use PedidosBundle\Dto\Response\ReporteResponseDto;
 use PedidosBundle\Dto\SessionDeUsuarioDto;
@@ -258,8 +257,8 @@ class DefaultController extends Controller
         );
     }
 
-    /*
-     * @Route("/reportes", name="_reporte_generar")
+    /**
+     * @Route("/reportes", name="_reportes")
      * @param Request $request
      * @return Response
      */
