@@ -1,0 +1,30 @@
+<script>
+    function pedidosGuestLogin() {
+        submitForm2(
+                "{{ path('_login_guest_form') }}",
+                "login-guest-form",
+                "loginGuestFormDiv",
+                function () {
+                    window.open("{{ path("_index") }}", "_self");
+                }
+        );
+    }
+</script>
+
+{% form_theme form 'PedidosBundle:form:fields.html.twig' %}
+<div class="row">
+    <div class="col-xs-12">
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'login-guest-form'}}) }}
+        {{ form_errors(form) }}
+        <div class="form-group">
+            {{ form_label(form.nickname) }}
+            {{ form_widget(form.nickname) }}
+            {{ form_errors(form.nickname) }}
+        </div>
+        {{ form_end(form) }}
+        <div class="form-group text-center">
+            <button type="button" class="btn btn-secondary" onclick="resetLoginScreen();">Volver</button>
+            <button type="button" class="btn btn-primary disableable" onclick="pedidosGuestLogin();">Ingresar</button>
+        </div>
+    </div>
+</div>

@@ -2,16 +2,27 @@
 
 namespace PedidosBundle\Controller;
 
+use JMS\Serializer\Serializer;
+use PedidosBundle\Dto\BootstrapTableDto;
 use PedidosBundle\Dto\ItemsByCategoriaDto;
+use PedidosBundle\Dto\MenuItemDto;
 use PedidosBundle\Dto\Request\LoginUsuarioRegistradoRequestDto;
 use PedidosBundle\Dto\Request\PedidoRequestDto;
+use PedidosBundle\Dto\Response\ReporteResponseDto;
+use PedidosBundle\Dto\SessionDeUsuarioDto;
 use PedidosBundle\Dto\UsuarioDto;
+use PedidosBundle\Exception\PedidosException;
+use PedidosBundle\Form\LoginForm;
+use PedidosBundle\Form\LoginGuestForm;
 use PedidosBundle\Form\PedidoItemForm;
+use PedidosBundle\FormEntity\LoginFormEntity;
+use PedidosBundle\FormEntity\LoginGuestFormEntity;
 use PedidosBundle\FormEntity\PedidoItemFormEntity;
 use PedidosBundle\Service\PedidosApiHttpClient;
 use PedidosBundle\Service\PedidosService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -167,6 +178,142 @@ class DefaultController extends Controller
         return $this->render(
             "PedidosBundle:default:listar_pedidos.html.twig",
             array("pedidos" => $pedidos));
+    }
+
+
+    /**
+     * @Route("/login", name="_login")
+     */
+    public function loginAction(Request $request) {
+        return $this->render("PedidosBundle:default:login.html.twig");
+    }
+
+    /**
+     * @Route("/logout", name="_logout")
+     */
+    public function logoutAction(Request $request) {
+        $request->getSession()->remove(UsuarioDto::SESSION_NAME);
+        $request->getSession()->invalidate(0);
+
+        return $this->render("PedidosBundle:default:login.html.twig");
+    }
+
+    /**
+     * @Route("/login_form", name="_login_form")
+     * @param Request $request
+     * @return Response
+     */
+    public function loginFormAction(Request $request) {
+        $formEntity = new LoginFormEntity();
+
+        $form = $this->createForm(LoginForm::class, $formEntity);
+        $form->handleRequest($request);
+
+        $response = new Response();
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+
+                    /** @var SessionDeUsuarioDto $sessionDeUsuarioDto */
+                    $sessionDeUsuarioDto = $this->getPedidosService()->login($formEntity->getEmail(), $formEntity->getPassword());
+                    $request->getSession()->set(UsuarioDto::SESSION_NAME, $sessionDeUsuarioDto->getUsuario());
+                    $form = $this->createForm(LoginForm::class, new LoginFormEntity());
+                } catch(PedidosException $e) {
+                    $response = new Response("", Response::HTTP_BAD_REQUEST);
+                    $form->get('password')->addError(new FormError('Usuario o contraseña incorrectos.'));
+                }
+            } else {
+                $response = new Response("", Response::HTTP_BAD_REQUEST);
+            }
+        }
+
+        return $this->render(
+            "PedidosBundle:default:login_form.html.twig", array("form" => $form->createView()), $response
+        );
+    }
+
+    /**
+     * @Route("/login_guest_form", name="_login_guest_form")
+     * @param Request $request
+     * @return Response
+     */
+    public function loginGuestFormAction(Request $request) {
+        $formEntity = new LoginGuestFormEntity();
+
+        $form = $this->createForm(LoginGuestForm::class, $formEntity);
+        $form->handleRequest($request);
+
+        $response = new Response();
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+
+                /** @var SessionDeUsuarioDto $sessionDeUsuarioDto */
+                $sessionDeUsuarioDto = $this->getPedidosService()->loginGuest($formEntity->getNickname());
+                $request->getSession()->set(UsuarioDto::SESSION_NAME, $sessionDeUsuarioDto->getUsuario());
+                $form = $this->createForm(LoginForm::class, new LoginFormEntity());
+            } else {
+                $response = new Response("", Response::HTTP_BAD_REQUEST);
+            }
+        }
+
+        return $this->render(
+            "PedidosBundle:default:login_guest_form.html.twig", array("form" => $form->createView()), $response
+        );
+    }
+
+    /*
+     * @Route("/reportes", name="_reporte_generar")
+     * @param Request $request
+     * @return Response
+     */
+    public function reporteGenerarAction(Request $request) {
+        return $this->render(
+            "PedidosBundle:default:generar_reporte.html.twig");
+    }
+
+    /**
+    * @Route("/reporte_list", name="_reporte_list")
+    * @param $request
+    * @return Response
+    */
+    public function reporteListAction(Request $request)
+    {
+        $this->get('logger')->debug('reporteListAction');
+        $from = $request->get('from');
+        $to = $request->get('to');
+
+        $arrayReporte = array();
+
+        $reporteDto1 = new ReporteResponseDto();
+        $reporteDto1->setCantidad(4);
+        $menuItem1 = new MenuItemDto();
+        $menuItem1->setNombre("Papas con cheddar");
+
+        $reporteDto1->setItemDeMenu($menuItem1);
+
+        array_push($arrayReporte,$reporteDto1);
+
+        $reporteDto2 = new ReporteResponseDto();
+        $reporteDto2->setCantidad(6);
+        $menuItem2 = new MenuItemDto();
+        $menuItem2->setNombre("Cerveza Artesanal");
+        $reporteDto2->setItemDeMenu($menuItem2);
+
+        array_push($arrayReporte,$reporteDto2);
+
+        $bootstrapTable = new BootstrapTableDto(
+            $arrayReporte,
+            sizeof($arrayReporte));
+
+
+        /** @var Serializer $serializer */
+        $serializer = $this->get("serializer");
+        $json = $serializer->serialize($bootstrapTable, 'json');
+        $this->get('logger')->debug("Reporte: " . json_encode($json, JSON_PRETTY_PRINT));
+
+        return new Response($json, Response::HTTP_OK, array("Content-Type: application/json"));
     }
 
     /**

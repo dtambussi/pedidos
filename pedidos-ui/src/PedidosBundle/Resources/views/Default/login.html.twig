@@ -1,0 +1,62 @@
+{% extends 'PedidosBundle:layout:layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        function showLoginForm() {
+            $("#loginButton").hide();
+            $("#loginFormDiv").slideToggle();
+            $("#loginGuestDiv").slideUp();
+        }
+
+        function showLoginGuestForm() {
+            $("#loginGuestButton").hide();
+            $("#loginGuestFormDiv").slideToggle();
+            $("#loginDiv").slideUp();
+        }
+
+        function resetLoginScreen() {
+            window.open("{{ path("_login") }}", "_self");
+        }
+    </script>
+{% endblock %}
+
+{% block body %}
+    <section id="login-page">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-xs-12">
+                    <h1 style="font-family: inherit">Ingreso de Usuarios</h1>
+                </div>
+            </div>
+            <br>
+            <div id="loginDiv">
+                <div class="form-group text-center">
+                    <button id="loginButton"  type="button" class="btn btn-lg btn-block btn-primary" onclick="showLoginForm();">Ingresar como usuario</button>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12" id="loginFormDiv" style="display: none;">
+                        {{ render(controller("PedidosBundle:Default:loginForm")) }}
+                    </div>
+                </div>
+            </div>
+            <div id="loginGuestDiv">
+                <div class="form-group text-center">
+                    <button id="loginGuestButton" type="button" class="btn btn-lg btn-block  btn-primary" onclick="showLoginGuestForm();">Ingresar como invitado</button>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12" id="loginGuestFormDiv" style="display: none;">
+                        {{ render(controller("PedidosBundle:Default:loginGuestForm")) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

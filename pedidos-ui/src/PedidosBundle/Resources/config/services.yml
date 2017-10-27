@@ -9,3 +9,9 @@ services:
     pedidos_service:
         class: PedidosBundle\Service\PedidosService
         arguments: ["@logger", "@pedidosapi_http_client"]
+
+    user_listener:
+        class: PedidosBundle\Listener\UserListener
+        arguments: ["@logger", "@router"]
+        tags:
+          - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 2 }
