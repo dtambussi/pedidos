@@ -13,23 +13,24 @@ import com.pedidos.model.EstadoSugerencia;
 import com.pedidos.model.ItemDeMenu;
 import com.pedidos.model.Status;
 import com.pedidos.model.Sugerencia;
+import com.pedidos.repository.ItemDeMenuRepository;
 import com.pedidos.repository.SugerenciaRepository;
 
 @Component
 public class SugerenciaService {
 
 	private SugerenciaRepository sugerenciaRepository;
+	private ItemDeMenuRepository itemDeMenuRepository;
 
-	public SugerenciaService(final SugerenciaRepository sugerenciaRepository) {
+	public SugerenciaService(final SugerenciaRepository sugerenciaRepository, final ItemDeMenuRepository itemDeMenuRepository) {
 		this.sugerenciaRepository = sugerenciaRepository;
+		this.itemDeMenuRepository = itemDeMenuRepository;
 	}
 	
 	public Sugerencia generarSugerencia(final GenerarSugerenciaRequest request) {
-		final ItemDeMenu itemDeMenuAsociadoASugerencia = itemDeMenuAsociadoASugerencia(request);
 		final Sugerencia nuevaSugerencia = Sugerencia.builder()
 				.status(Status.Active)
 				.estado(EstadoSugerencia.Publicado)
-				.itemDeMenu(itemDeMenuAsociadoASugerencia)
 				.nombre(request.getNombre())
 				.descripcion(request.getDescripcion())
 				.precio(request.getPrecio())
@@ -38,6 +39,8 @@ public class SugerenciaService {
 				.fechaFin(request.getFechaFin())
 				.fechaCreacion(currentDate())
 				.build();
+		final ItemDeMenu itemDeMenuAsociadoASugerencia = itemDeMenuAsociadoASugerencia(request);
+		nuevaSugerencia.setItemDeMenu(this.itemDeMenuRepository.save(itemDeMenuAsociadoASugerencia));
 		return this.sugerenciaRepository.save(nuevaSugerencia);
 	}
 	
