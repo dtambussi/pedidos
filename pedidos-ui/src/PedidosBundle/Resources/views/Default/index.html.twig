@@ -44,7 +44,7 @@
             </div>
             <div class="row">
                 <div class="col-sm-4">
-                    <a href="#" class="btn btn-primary {% if not app.session.get("usuarioDto").puedeCrearSugerencia %} disabled {% endif %}">
+                    <a href="{{ path("_generar_sugerencia") }}" class="btn btn-primary {% if not app.session.get("usuarioDto").puedeCrearSugerencia %} disabled {% endif %}">
                         <div class="menu-principal-item">
                             <h4 class="card-title">ALTA SUGERENCIAS</h4>
                             <p class="card-text"><i class="fa fa-star menu-icon"></i></p>
@@ -52,7 +52,7 @@
                     </a>
                 </div>
                 <div class="col-sm-4 ">
-                    <a href="#" class="btn btn-primary {% if not app.session.get("usuarioDto").puedeGenerarReporte %} disabled {% endif %}  ">
+                    <a href="{{ path("_reportes") }}" class="btn btn-primary {% if not app.session.get("usuarioDto").puedeGenerarReporte %} disabled {% endif %}  ">
                         <div class="menu-principal-item">
                             <h4 class="card-title">REPORTE</h4>
                             <p class="card-text"><i class="fa fa-signal menu-icon"></i></p>

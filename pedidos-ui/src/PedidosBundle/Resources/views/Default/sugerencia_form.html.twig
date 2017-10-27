@@ -1,0 +1,82 @@
+{% extends 'PedidosBundle:layout:layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+{% endblock %}
+
+{% block body %}
+    <section id="crear-sugerencia-page">
+        <div class="container">
+            <div class="row">
+                <h1>Generar Sugerencia</h1>
+            </div>
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'sugerencia-form'}}) }}
+            {{ form_errors(form) }}
+            <div class="row">
+                <div class="col-sm-6">
+                    <h4>Nueva Promo Sugerida</h4>
+                    <hr>
+                    <div class="col-sm-12">
+                        <div class="form-group ">
+                            {{ form_label(form.nombre) }}
+                            {{ form_widget(form.nombre, {'attr': {'novalidate': 'novalidate'}}) }}
+                            {{ form_errors(form.nombre) }}
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            {{ form_label(form.descripcion) }}
+                            {{ form_widget(form.descripcion, {'attr': {'novalidate': 'novalidate'}}) }}
+                            {{ form_errors(form.descripcion) }}
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            {{ form_label(form.precio) }}
+                            {{ form_widget(form.precio, {'attr': {'novalidate': 'novalidate'}}) }}
+                            {{ form_errors(form.precio) }}
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group ">
+                            {{ form_label(form.cantidad) }}
+                            {{ form_widget(form.cantidad, {'attr': {'novalidate': 'novalidate'}}) }}
+                            {{ form_errors(form.cantidad) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Validación hasta</h4>
+                    <hr>
+                    <div class="form-group">
+                        {{ form_label(form.fechaInicio) }}
+                        {{ form_widget(form.fechaInicio, {'attr': {'novalidate': 'novalidate'}}) }}
+                        {{ form_errors(form.fechaInicio) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.fechaFin) }}
+                        {{ form_widget(form.fechaFin, {'attr': {'novalidate': 'novalidate'}}) }}
+                        {{ form_errors(form.fechaFin) }}
+                    </div>
+                </div>
+            </div>
+            {{ form_end(form) }}
+            <div class="row">
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-primary disableable">Crear</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
