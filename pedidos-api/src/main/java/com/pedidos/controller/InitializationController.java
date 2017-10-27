@@ -16,13 +16,16 @@ import com.pedidos.model.InfoAdicionalUsuario;
 import com.pedidos.model.Menu;
 import com.pedidos.model.Rol;
 import com.pedidos.model.Roles;
+import com.pedidos.model.Sugerencia;
 import com.pedidos.model.Usuario;
 import com.pedidos.model.fixture.MenuFixture;
+import com.pedidos.model.fixture.SugerenciaFixture;
 import com.pedidos.model.fixture.UsuarioFixture;
 import com.pedidos.repository.InfoAdicionalUsuarioRepository;
 import com.pedidos.repository.ItemDeMenuRepository;
 import com.pedidos.repository.MenuRepository;
 import com.pedidos.repository.RolRepository;
+import com.pedidos.repository.SugerenciaRepository;
 import com.pedidos.repository.UsuarioRepository;
 
 @RestController
@@ -35,19 +38,25 @@ public class InitializationController {
 	private RolRepository rolRepository;
 	private UsuarioFixture usuarioFixture;
 	private InfoAdicionalUsuarioRepository infoAdicionalUsuarioRepository;
+	private SugerenciaFixture sugerenciaFixture;
+	private SugerenciaRepository sugerenciaRepository;
 
 	public InitializationController(
 			final MenuFixture menuFixture,
+			final SugerenciaFixture sugerenciaFixture,
 			final UsuarioFixture usuarioFixture,
 			final MenuRepository menuRepository,
+			final SugerenciaRepository sugerenciaRepository,
 			final ItemDeMenuRepository itemDeMenuRepository,
 			final UsuarioRepository usuarioRepository,
 			final InfoAdicionalUsuarioRepository infoAdicionalUsuarioRepository,
 			final RolRepository rolRepository,
 			final UsuarioFactory usuarioFactory) {
 		this.menuFixture = menuFixture;
+		this.sugerenciaFixture = sugerenciaFixture;
 		this.usuarioFixture = usuarioFixture;
 		this.menuRepository = menuRepository;
+		this.sugerenciaRepository = sugerenciaRepository;
 		this.itemDeMenuRepository = itemDeMenuRepository;
 		this.usuarioRepository = usuarioRepository;
 		this.infoAdicionalUsuarioRepository = infoAdicionalUsuarioRepository;
@@ -61,6 +70,10 @@ public class InitializationController {
 		final Menu menuDefault = menuFixture.menuDefault();
 		this.itemDeMenuRepository.save(menuDefault.getItems());
 		this.menuRepository.save(menuDefault);
+		// Persist sugerencias
+		List<Sugerencia> sugerencias = this.sugerenciaFixture.sugerencias();
+		sugerencias.stream().forEach(sugerencia -> this.itemDeMenuRepository.save(sugerencia.getItemDeMenu()));
+		this.sugerenciaRepository.save(sugerencias);
 		// Persist default roles
 		Roles.all().stream().map(rol -> this.rolRepository.save(rol)).collect(Collectors.toList());
 		// Persist default users
