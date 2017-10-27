@@ -1,0 +1,90 @@
+{% import _self as pedidoListarMacro %}
+{% extends 'PedidosBundle:layout:layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function () {
+
+            $('#reporte-table').bootstrapTable({
+                showExport:true
+            });
+
+            $('#date-picker').daterangepicker({
+                    locale: {
+                        format: 'DD/MM/YYYY'
+                    }
+                }, function (start, end, label) {
+                    $("#date-from").attr("value", start.format('DD/MM/YYYY'));
+                    $("#date-to").attr("value", end.format('DD/MM/YYYY'));
+                }
+            );
+
+
+            $("#generar-reporte-btn").on('click', function () {
+                var $from = $("#date-from").val();
+                var $to = $("#date-to").val();
+                $("#reporte-list").slideDown();
+                var listUrl = decodeURIComponent($("#reporteListUrl").val()).replace('#date-from', $from).replace('#date-to', $to);
+                $('#reporte-table').bootstrapTable('refresh', {url: listUrl});
+
+            });
+
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="col-md-12">
+            <div class="row">
+                <h1>Reportes</h1>
+            </div>
+
+            <input type="hidden" id="reporteListUrl" value="{{ path('_reporte_list', {'from': '#date-from','to':'#date-to'})}}">
+
+            <div class="top-buffer" id="reportes-list-filter">
+                <div class="row">
+                    <div class="form">
+                        <div class="form-group">
+                            <label for="date_from">Fecha: </label>
+                            <input type="text" class="form-control" id="date-picker" placeholder="Seleccionar">
+                            <input type="hidden" class="form-control" id="date-from" value="{{ "now"|date("d/m/Y") }}">
+                            <input type="hidden" class="form-control" id="date-to" value="{{ "now"|date("d/m/Y") }}">
+                        </div>
+                        <a id="generar-reporte-btn" href="#" type="button" class="btn btn-primary"
+                           data-loading-text="Enviando <i class='fa fa-circle-o-notch fa-spin'></i>">Generar Reporte</a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="reporte-list" style="display: none;">
+                <div class="row top-buffer">
+                    <table id="reporte-table"
+                           class="table-striped"
+                           data-url="{{ path('_reporte_list', {'from': '#date-from','to':'#date-to'})}}"
+                           data-pagination="false"
+                           data-page-size="100"
+                           data-side-pagination="server"
+                           data-striped="true">
+                        <thead>
+                        <tr>
+                            <th data-field="itemDeMenu.nombre" >Item</th>
+                            <th data-field="cantidad">Cantidad</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div><!-- .row -->
+            </div><!-- #reporte-list -->
+
+        </div>
+    </div>
+{% endblock %}
+

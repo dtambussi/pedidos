@@ -2,9 +2,13 @@
 
 namespace PedidosBundle\Controller;
 
+use JMS\Serializer\Serializer;
+use PedidosBundle\Dto\BootstrapTableDto;
 use PedidosBundle\Dto\ItemsByCategoriaDto;
+use PedidosBundle\Dto\MenuItemDto;
 use PedidosBundle\Dto\Request\LoginUsuarioRegistradoRequestDto;
 use PedidosBundle\Dto\Request\PedidoRequestDto;
+use PedidosBundle\Dto\Response\ReporteResponseDto;
 use PedidosBundle\Dto\SessionDeUsuarioDto;
 use PedidosBundle\Dto\UsuarioDto;
 use PedidosBundle\Exception\PedidosException;
@@ -257,6 +261,59 @@ class DefaultController extends Controller
         return $this->render(
             "PedidosBundle:default:login_guest_form.html.twig", array("form" => $form->createView()), $response
         );
+    }
+
+    /*
+     * @Route("/reportes", name="_reporte_generar")
+     * @param Request $request
+     * @return Response
+     */
+    public function reporteGenerarAction(Request $request) {
+        return $this->render(
+            "PedidosBundle:default:generar_reporte.html.twig");
+    }
+
+    /**
+    * @Route("/reporte_list", name="_reporte_list")
+    * @param $request
+    * @return Response
+    */
+    public function reporteListAction(Request $request)
+    {
+        $this->get('logger')->debug('reporteListAction');
+        $from = $request->get('from');
+        $to = $request->get('to');
+
+        $arrayReporte = array();
+
+        $reporteDto1 = new ReporteResponseDto();
+        $reporteDto1->setCantidad(4);
+        $menuItem1 = new MenuItemDto();
+        $menuItem1->setNombre("Papas con cheddar");
+
+        $reporteDto1->setItemDeMenu($menuItem1);
+
+        array_push($arrayReporte,$reporteDto1);
+
+        $reporteDto2 = new ReporteResponseDto();
+        $reporteDto2->setCantidad(6);
+        $menuItem2 = new MenuItemDto();
+        $menuItem2->setNombre("Cerveza Artesanal");
+        $reporteDto2->setItemDeMenu($menuItem2);
+
+        array_push($arrayReporte,$reporteDto2);
+
+        $bootstrapTable = new BootstrapTableDto(
+            $arrayReporte,
+            sizeof($arrayReporte));
+
+
+        /** @var Serializer $serializer */
+        $serializer = $this->get("serializer");
+        $json = $serializer->serialize($bootstrapTable, 'json');
+        $this->get('logger')->debug("Reporte: " . json_encode($json, JSON_PRETTY_PRINT));
+
+        return new Response($json, Response::HTTP_OK, array("Content-Type: application/json"));
     }
 
     /**
