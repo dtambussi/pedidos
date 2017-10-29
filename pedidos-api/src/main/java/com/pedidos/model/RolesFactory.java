@@ -5,26 +5,27 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Roles {
+public class RolesFactory {
 	
-	public static final Rol UsuarioRegistrado = rol("UsuarioRegistrado");
-	public static final Rol UsuarioNoRegistrado = rol("UsuarioNoRegistrado");
-	public static final Rol Camarera = rol("Camarera");
-	public static final Rol Barman = rol("Barman");
-	public static final Rol Cocinero = rol("Cocinero");
-	public static final Rol Cajero = rol("Cajero");
-	public static final Rol Dueño = rol("Dueño");
-	public static final Rol Cliente = rol("Cliente");
-	public static final Rol CrearPedido = rol("CrearPedido");
-	public static final Rol RecibirPedido = rol("RecibirPedido");
-	public static final Rol CambiarEstadoDePedido = rol("CambiarEstadoDePedido");
-	public static final Rol ListarPedidos = rol("ListarPedidos");
-	public static final Rol GenerarReporteDePedidos = rol("GenerarReporteDePedidos");
-	public static final Rol CrearSugerencia = rol("CrearSugerencia");
-	public static final Rol CambiarEstadoDeSugerencia = rol("CambiarEstadoDeSugerencia");
+	public static final Rol UsuarioRegistrado = rol(1L, "UsuarioRegistrado");
+	public static final Rol UsuarioNoRegistrado = rol(2L, "UsuarioNoRegistrado");
+	public static final Rol Camarera = rol(3L, "Camarera");
+	public static final Rol Barman = rol(4L, "Barman");
+	public static final Rol Cocinero = rol(5L, "Cocinero");
+	public static final Rol Cajero = rol(6L, "Cajero");
+	public static final Rol Dueño = rol(7L, "Dueño");
+	public static final Rol Cliente = rol(8L, "Cliente");
+	public static final Rol CrearPedido = rol(9L, "CrearPedido");
+	public static final Rol RecibirPedido = rol(10L, "RecibirPedido");
+	public static final Rol CambiarEstadoDePedido = rol(11L, "CambiarEstadoDePedido");
+	public static final Rol ListarPedidos = rol(12L, "ListarPedidos");
+	public static final Rol GenerarReporteDePedidos = rol(13L, "GenerarReporteDePedidos");
+	public static final Rol CrearSugerencia = rol(14L, "CrearSugerencia");
+	public static final Rol CambiarEstadoDeSugerencia = rol(15L, "CambiarEstadoDeSugerencia");
 	
-	private static final Rol rol(final String nombreRol) {
+	private static final Rol rol(final Long id, final String nombreRol) {
 		return Rol.builder()
+				.id(id)
 				.nombre(nombreRol)
 				.build();
 	}

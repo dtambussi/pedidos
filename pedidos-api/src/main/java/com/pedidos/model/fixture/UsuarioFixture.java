@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import com.pedidos.factory.UsuarioFactory;
 import com.pedidos.model.InfoAdicionalUsuario;
 import com.pedidos.model.Rol;
-import com.pedidos.model.Roles;
+import com.pedidos.model.RolesFactory;
 import com.pedidos.model.Usuario;
 
 @Component
@@ -40,23 +40,23 @@ public class UsuarioFixture {
 	}
 	
 	private Usuario clienteRegistrado(final InfoAdicionalUsuario infoUsuario) {
-		return this.usuario(infoUsuario, Roles.rolesDefaultClienteRegistrado());
+		return this.usuario(infoUsuario, RolesFactory.rolesDefaultClienteRegistrado());
 	}
 	
 	private Usuario camarera(final InfoAdicionalUsuario infoUsuario) {
-		return this.usuario(infoUsuario, Roles.rolesDefaultCamarera());
+		return this.usuario(infoUsuario, RolesFactory.rolesDefaultCamarera());
 	}
 	
 	private Usuario barman(final InfoAdicionalUsuario infoUsuario) {
-		return this.usuario(infoUsuario, Roles.rolesDefaultBarman());
+		return this.usuario(infoUsuario, RolesFactory.rolesDefaultBarman());
 	}
 	
 	private Usuario cocinero(final InfoAdicionalUsuario infoUsuario) {
-		return this.usuario(infoUsuario, Roles.rolesDefaultCocinero());
+		return this.usuario(infoUsuario, RolesFactory.rolesDefaultCocinero());
 	}
 	
 	private Usuario dueño(final InfoAdicionalUsuario infoUsuario) {
-		return this.usuario(infoUsuario, Roles.rolesDefaultDueño());
+		return this.usuario(infoUsuario, RolesFactory.rolesDefaultDueño());
 	}
 	
 	private Usuario usuario(final InfoAdicionalUsuario infoUsuario, Set<Rol> roles) {
