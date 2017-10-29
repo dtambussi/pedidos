@@ -100,7 +100,7 @@ public class MenuFixture {
 		return itemDeMenu("Taza de te", "",  CategoriaItemDeMenu.Cafeteria, 25D);
 	}
 	
-	private ItemDeMenu itemDeMenu(final String nombre, final String descripcion, final CategoriaItemDeMenu categoria,
+	public ItemDeMenu itemDeMenu(final String nombre, final String descripcion, final CategoriaItemDeMenu categoria,
 			final Double precio) {
 		return ItemDeMenu.builder()
 				.nombre(nombre)

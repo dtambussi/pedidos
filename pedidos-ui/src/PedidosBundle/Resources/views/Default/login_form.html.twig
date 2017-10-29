@@ -1,0 +1,35 @@
+<script>
+    function pedidosLogin() {
+        submitForm2(
+                "{{ path('_login_form') }}",
+                "login-form",
+                "loginFormDiv",
+                function () {
+                    window.open("{{ path("_index") }}", "_self");
+                }
+        );
+    }
+</script>
+
+{% form_theme form 'PedidosBundle:form:fields.html.twig' %}
+<div class="row">
+    <div class="col-xs-12">
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'login-form'}}) }}
+        {{ form_errors(form) }}
+        <div class="form-group">
+            {{ form_label(form.email) }}
+            {{ form_widget(form.email, {'attr': {'novalidate': 'novalidate', 'placeholder': 'email@example.com'}}) }}
+            {{ form_errors(form.email) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(form.password) }}
+            {{ form_widget(form.password) }}
+            {{ form_errors(form.password) }}
+        </div>
+        {{ form_end(form) }}
+        <div class="form-group text-center">
+            <button type="button" class="btn btn-secondary" onclick="resetLoginScreen();">Volver</button>
+            <button type="button" class="btn btn-primary disableable" onclick="pedidosLogin();">Ingresar</button>
+        </div>
+    </div>
+</div>

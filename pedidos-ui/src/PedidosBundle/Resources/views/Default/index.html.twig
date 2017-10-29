@@ -4,27 +4,6 @@
 
 {% block body %}
 
-    {% set crearSugerencia = false %}
-    {% set crearPedido = false %}
-    {% set crearReporte = false %}
-    {% set listarPedido = false %}
-
-    {% for role in usuarioDto.roles %}
-        {% if role.nombre == constant('PedidosBundle\\Dto\\UsuarioRoleType::CREAR_SUGERENCIA') %}
-            {% set crearSugerencia = "true" %}
-        {% endif %}
-        {% if role.nombre == constant('PedidosBundle\\Dto\\UsuarioRoleType::CREAR_PEDIDO') %}
-            {% set crearPedido = "true" %}
-        {% endif %}
-        {% if role.nombre == constant('PedidosBundle\\Dto\\UsuarioRoleType::LISTAR_PEDIDOS') %}
-            {% set listarPedido = "true" %}
-        {% endif %}
-        {% if role.nombre == constant('PedidosBundle\\Dto\\UsuarioRoleType::GENERAR_REPORTE_PEDIDOS') %}
-            {% set crearReporte = "true" %}
-        {% endif %}
-    {% endfor %}
-
-
     <section id="main-page">
         <div class="container">
             <div class="row">
@@ -37,7 +16,7 @@
                     </a>
                 </div>
                 <div class="col-sm-4 ">
-                    <a href="{{ path("_pedido") }}" class="btn btn-primary {% if not crearPedido %} disabled {% endif %}">
+                    <a href="{{ path("_pedido") }}" class="btn btn-primary {% if not app.session.get("usuarioDto").puedeCrearPedido %} disabled {% endif %}">
                         <div class="menu-principal-item">
                             <h4 class="card-title">PEDIR</h4>
                             <p class="card-text"><i class="fa fa-hand-o-up menu-icon"></i></p>
@@ -47,7 +26,7 @@
             </div>
             <div class="row">
                 <div class="col-sm-4 ">
-                    <a href="{{ path("_pedido_listar") }}" class="btn btn-primary {% if not listarPedido %} disabled {% endif %}">
+                    <a href="{{ path("_pedido_listar") }}" class="btn btn-primary {% if not app.session.get("usuarioDto").puedeListarPedidos %} disabled {% endif %}">
                         <div class="menu-principal-item">
                             <h4 class="card-title">MIS PEDIDOS</h4>
                             <p class="card-text"><i class="fa fa-history menu-icon"></i></p>
@@ -65,7 +44,7 @@
             </div>
             <div class="row">
                 <div class="col-sm-4">
-                    <a href="#" class="btn btn-primary {% if not crearSugerencia %} disabled {% endif %}">
+                    <a href="{{ path("_generar_sugerencia") }}" class="btn btn-primary {% if not app.session.get("usuarioDto").puedeCrearSugerencia %} disabled {% endif %}">
                         <div class="menu-principal-item">
                             <h4 class="card-title">ALTA SUGERENCIAS</h4>
                             <p class="card-text"><i class="fa fa-star menu-icon"></i></p>
@@ -73,7 +52,7 @@
                     </a>
                 </div>
                 <div class="col-sm-4 ">
-                    <a href="#" class="btn btn-primary {% if not crearReporte %} disabled {% endif %}  ">
+                    <a href="{{ path("_reportes") }}" class="btn btn-primary {% if not app.session.get("usuarioDto").puedeGenerarReporte %} disabled {% endif %}  ">
                         <div class="menu-principal-item">
                             <h4 class="card-title">REPORTE</h4>
                             <p class="card-text"><i class="fa fa-signal menu-icon"></i></p>

@@ -1,6 +1,7 @@
 package com.pedidos.repository;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -13,7 +14,7 @@ public interface RolRepository extends CrudRepository<Rol, Long> {
 	
 	public Rol findOneByNombre(final String nombre);
 	
-	public List<Rol> findAllByNombreIn(final List<String> nombres);
+	public Set<Rol> findAllByNombreIn(final Set<String> nombres);
 	
 	public List<Rol> save(final List<Rol> roles);
 }

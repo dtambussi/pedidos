@@ -9,8 +9,10 @@
 				</a>
 			</div>
 			<ul class="nav navbar-nav navbar-right text-center hidden-xs">
-				<li><a href="{{ path("_pedido_listar") }}"><span class="fa fa-history menu-icon" aria-hidden="true"></span><br>Mis Pedidos</a></li>
-				<li><a href="{{ path("_get_menu") }}"><span class="fa fa-cutlery menu-icon" aria-hidden="true"></span><br>Ver Menu</a></li>
+				{% if app.session.get("usuarioDto") %}
+					<li><a href="{{ path("_logout") }}"><span class="fa fa-power-off menu-icon" aria-hidden="true"></span><br>Salir</a></li>
+					<li><a href="{{ path("_get_menu") }}"><span class="fa fa-cutlery menu-icon" aria-hidden="true"></span><br>Ver Menu</a></li>
+				{% endif %}
 			</ul>
 		</div><!-- .container-fluid -->
 	</nav>

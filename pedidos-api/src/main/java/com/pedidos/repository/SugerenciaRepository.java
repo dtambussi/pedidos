@@ -12,6 +12,8 @@ import com.pedidos.model.Sugerencia;
 
 @Transactional
 public interface SugerenciaRepository extends CrudRepository<Sugerencia, Long> {
+		
+	List<Sugerencia> findAll();
 	
 	List<Sugerencia> findAllByEstadoAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(
 			final EstadoSugerencia estadoSugerencia, final Date fechaInicio, final Date fechaFin);
