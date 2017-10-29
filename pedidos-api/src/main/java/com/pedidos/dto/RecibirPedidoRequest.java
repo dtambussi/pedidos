@@ -6,5 +6,5 @@ import lombok.Data;
 public class RecibirPedidoRequest {
 	
 	private Long idPedido;
-	private String comentario, mesa;
+	private String comentario, destino;
 }

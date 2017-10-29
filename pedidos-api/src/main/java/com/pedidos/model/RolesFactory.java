@@ -58,23 +58,23 @@ public class RolesFactory {
 	}
 	
 	public static final Set<Rol> rolesDefaultCamarera() {
-		return roles(UsuarioRegistrado, Camarera);
+		return roles(UsuarioRegistrado, Camarera, ListarPedidos, RecibirPedido, CambiarEstadoDePedido);
 	}
 
 	public static final Set<Rol> rolesDefaultBarman() {
-		return roles(UsuarioRegistrado, Barman);
+		return roles(UsuarioRegistrado, Barman, ListarPedidos, RecibirPedido, CambiarEstadoDePedido);
 	}
 	
 	public static final Set<Rol> rolesDefaultCocinero() {
-		return roles(UsuarioRegistrado, Cocinero);
+		return roles(UsuarioRegistrado, Cocinero, ListarPedidos, CambiarEstadoDePedido);
 	}
 
 	public static final Set<Rol> rolesDefaultCajero() {
-		return roles(UsuarioRegistrado, Cajero);
+		return roles(UsuarioRegistrado, Cajero, ListarPedidos, CambiarEstadoDePedido, GenerarReporteDePedidos);
 	}
 	
 	public static final Set<Rol> rolesDefaultDueño() {
-		return roles(UsuarioRegistrado, Dueño);
+		return roles(UsuarioRegistrado, Dueño, ListarPedidos, CambiarEstadoDePedido, GenerarReporteDePedidos);
 	}
 	
 	public static final Set<Rol> rolesDefaultCliente() {

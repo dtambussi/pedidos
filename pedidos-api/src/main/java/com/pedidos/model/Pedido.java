@@ -36,12 +36,16 @@ public class Pedido {
 	private EstadoPedido estado;
 	private String comentario;
 	private Boolean abonado;
-	private String mesa;
+	private String destino;
 	@OneToMany(cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<ItemDePedido> items;
 	private Date fechaCreacion;
 	private Date fechaUltimaModificacion;
+	@OneToOne
+	private Usuario cliente;
+	@OneToOne
+	private Usuario personalAsignado;
 	
 	public String agregarComentario(final String nuevoComentario) {
 		final String comentarioAgregado = nuevoComentario != null ? nuevoComentario : "";
