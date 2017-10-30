@@ -226,7 +226,7 @@ class DefaultController extends Controller
 
                     /** @var SessionDeUsuarioDto $sessionDeUsuarioDto */
                     $sessionDeUsuarioDto = $this->getPedidosService()->login($formEntity->getEmail(), $formEntity->getPassword());
-                    $request->getSession()->set(UsuarioDto::SESSION_NAME, $sessionDeUsuarioDto->getUsuario());
+                    $this->setUserInSession($request, $sessionDeUsuarioDto);
                     $form = $this->createForm(LoginForm::class, new LoginFormEntity());
                 } catch(PedidosException $e) {
                     $response = new Response("", Response::HTTP_BAD_REQUEST);
@@ -260,7 +260,7 @@ class DefaultController extends Controller
                 try {
                     /** @var SessionDeUsuarioDto $sessionDeUsuarioDto */
                     $sessionDeUsuarioDto = $this->getPedidosService()->loginGuest($formEntity->getNickname());
-                    $request->getSession()->set(UsuarioDto::SESSION_NAME, $sessionDeUsuarioDto->getUsuario());
+                    $this->setUserInSession($request, $sessionDeUsuarioDto);
                     $form = $this->createForm(LoginGuestForm::class, new LoginGuestFormEntity());
                 } catch(PedidosException $e) {
                     $response = new Response("", Response::HTTP_BAD_REQUEST);
@@ -408,5 +408,15 @@ class DefaultController extends Controller
             array_push($sugerenciaItem, $sugerencia->getItemDeMenu());
         }
         $itemsByCategoria->setSugerenciaItems($sugerenciaItem);
+    }
+
+    /**
+     * @param Request $request
+     * @param $sessionDeUsuarioDto
+     */
+    private function setUserInSession(Request $request, SessionDeUsuarioDto $sessionDeUsuarioDto)
+    {
+        $sessionDeUsuarioDto->getUsuario()->setSessionId($sessionDeUsuarioDto->getId());
+        $request->getSession()->set(UsuarioDto::SESSION_NAME, $sessionDeUsuarioDto->getUsuario());
     }
 }

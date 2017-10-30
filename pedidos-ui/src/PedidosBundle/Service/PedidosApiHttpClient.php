@@ -18,10 +18,12 @@ use PedidosBundle\Dto\Response\PedidoDto;
 use PedidosBundle\Dto\Request\PedidoRequestDto;
 use PedidosBundle\Dto\SessionDeUsuarioDto;
 use PedidosBundle\Dto\SugerenciaDto;
+use PedidosBundle\Dto\UsuarioDto;
 use PedidosBundle\Exception\PedidosException;
 use Psr\Log\LoggerInterface;
 use JMS\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class PedidosApiHttpClient
 {
@@ -30,6 +32,9 @@ class PedidosApiHttpClient
      * @var LoggerInterface
      */
     private $logger;
+
+    /** @var  Session */
+    private $session;
 
     /**
      * @var Serializer
@@ -43,11 +48,12 @@ class PedidosApiHttpClient
      * @param $serializer
      * @param $pedidosapiHostname
      */
-    public function __construct($logger, $pedidosapiHostname, $serializer)
+    public function __construct($logger, $pedidosapiHostname, $serializer,$session)
     {
         $this->logger = $logger;
         $this->serializer = $serializer;
         $this->pedidosapiHostname = $pedidosapiHostname;
+        $this->session = $session;
     }
 
     /**
@@ -136,9 +142,19 @@ class PedidosApiHttpClient
 
         $ch = curl_init($url);
 
+        /** @var UsuarioDto $usuarioDto */
+        $usuarioDto = $this->session->get(UsuarioDto::SESSION_NAME);
+
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        if(!is_null($usuarioDto)){
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                    'AuthorizationTambussi: ' . $usuarioDto->getSessionId())
+            );
+        }
+
         $json = curl_exec($ch);
         $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
 
         if (in_array($responseCode, $expectedCodes)) {
             $this->logger->info("Ok!");
@@ -175,12 +191,21 @@ class PedidosApiHttpClient
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 
+        /** @var UsuarioDto $usuarioDto */
+        $usuarioDto = $this->session->get(UsuarioDto::SESSION_NAME);
+
+
         if (is_object($postBody)) {
             $postJson = $this->serializer->serialize($postBody, "json");
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                    'Content-Type: application/json',
-                    'Content-Length: ' . strlen($postJson))
-            );
+            $headerParams = array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($postJson));
+
+            if(!is_null($usuarioDto)){
+                array_push($headerParams,'AuthorizationTambussi: ' . $usuarioDto->getSessionId());
+            }
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headerParams);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $postJson);
 
         } else {

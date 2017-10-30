@@ -57,6 +57,9 @@ h2 {
 .top-buffer {
   margin-top: 30px;
 }
+.msg-error {
+  color: red;
+}
 #main-header .navbar {
   min-height: 80px;
 }
