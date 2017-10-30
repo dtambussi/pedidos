@@ -10,6 +10,7 @@ public class GenerarPedidoRequest {
 	
 	private Long idMenu;
 	private Date fechaUltimaModificacionMenu;
+	private String destino;
 	private String comentario;
 	private List<ItemDePedidoRequest> items;
 }

@@ -147,6 +147,43 @@ h2 {
   background-color: #ffecb3;
   border-radius: 7px;
 }
+#main-page {
+  text-align: center;
+}
+#main-page .menu-principal-item {
+  color: black;
+  width: 20rem;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-style: solid;
+  border-radius: 30px;
+  border-color: #ffe57f;
+  text-align: center;
+}
+#main-page .menu-principal-item:hover {
+  background-color: #ffe57f;
+}
+@media only screen and (max-width: 500px) {
+  #main-page body {
+    background-color: lightblue;
+  }
+}
+#main-page .menu-icon {
+  font-size: 40px;
+}
+#main-page .btn-primary {
+  background-color: inherit;
+  border-color: inherit;
+  border-style: none;
+  color: black;
+}
+#main-page .disabled a {
+  cursor: not-allowed;
+}
+#main-page .disabled .menu-principal-item {
+  background-color: #dfdfdf;
+  border-color: #dfdfdf;
+}
 @font-face {
   font-family: 'Open Sans';
   src: url('../fonts/Open_Sans/OpenSans-Regular.ttf');

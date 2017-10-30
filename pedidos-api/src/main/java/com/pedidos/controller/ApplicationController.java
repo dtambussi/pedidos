@@ -21,8 +21,11 @@ import com.pedidos.dto.RecibirPedidoRequest;
 import com.pedidos.model.CategoriaItemDeMenu;
 import com.pedidos.model.EstadoItemDePedido;
 import com.pedidos.model.EstadoPedido;
+import com.pedidos.model.ItemDeMenu;
+import com.pedidos.model.ItemReporteDePedidos;
 import com.pedidos.model.Menu;
 import com.pedidos.model.Pedido;
+import com.pedidos.model.ReporteDePedidos;
 import com.pedidos.model.SesionDeUsuario;
 import com.pedidos.model.Sugerencia;
 import com.pedidos.service.LoginService;
@@ -125,5 +128,19 @@ public class ApplicationController {
 	@GetMapping("/sugerenciasVigentes")
 	public List<Sugerencia> obtenerSugerenciasVigentes() {
 		return this.sugerenciaService.obtenerSugerenciasVigentes();
+	}
+	
+	@ResponseStatus(HttpStatus.OK)
+	@PostMapping("/reporteDePedidosRequest")
+	public ReporteDePedidos generarReporteDePedidos() { // mocked response to allow ui development
+		final ReporteDePedidos reporte = new ReporteDePedidos();
+		final List<ItemReporteDePedidos> items = Arrays.asList(
+					new ItemReporteDePedidos(CategoriaItemDeMenu.Bebidas.name(), "Cerveza", 80),
+					new ItemReporteDePedidos(CategoriaItemDeMenu.Bebidas.name(), "Coca Cola", 50),
+					new ItemReporteDePedidos(CategoriaItemDeMenu.PlatosPrincipales.name(), "Papas fritas", 70),
+					new ItemReporteDePedidos(CategoriaItemDeMenu.PlatosPrincipales.name(), "Pollo rebozado", 30)
+				); 
+		reporte.setItems(items);
+		return reporte;
 	}
 }
