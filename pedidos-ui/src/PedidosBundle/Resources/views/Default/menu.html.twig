@@ -100,6 +100,14 @@
                             {{ menuMacro.generarListaItemsDeMenu(itemsByCategoriaDto.bebidaItems) }}
                         </div>
                     </div>
+                    {% if itemsByCategoriaDto.sugerenciaItems is defined %}
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h2>Promos/Sugerencias</h2>
+                            {{ menuMacro.generarListaItemsDeMenu(itemsByCategoriaDto.sugerenciaItems) }}
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
             {% if modoPedir is defined %}

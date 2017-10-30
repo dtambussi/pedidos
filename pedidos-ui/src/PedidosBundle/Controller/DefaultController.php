@@ -9,6 +9,7 @@ use PedidosBundle\Dto\MenuItemDto;
 use PedidosBundle\Dto\Request\PedidoRequestDto;
 use PedidosBundle\Dto\Response\ReporteResponseDto;
 use PedidosBundle\Dto\SessionDeUsuarioDto;
+use PedidosBundle\Dto\SugerenciaDto;
 use PedidosBundle\Dto\UsuarioDto;
 use PedidosBundle\Exception\PedidosException;
 use PedidosBundle\Form\LoginForm;
@@ -62,6 +63,11 @@ class DefaultController extends Controller
 
         /** @var ItemsByCategoriaDto $itemsByCategoria */
         $itemsByCategoria = $pedidosService->findMenuItemsByCategoria();
+
+        $sugerencias = $pedidosService->findSugerencias();
+
+        $this->getSugerenciaItem($sugerencias, $itemsByCategoria);
+
         return $this->render("@Pedidos/default/menu.html.twig", array("itemsByCategoriaDto" => $itemsByCategoria));
     }
 
@@ -74,6 +80,11 @@ class DefaultController extends Controller
 
         /** @var ItemsByCategoriaDto $itemsByCategoria */
         $itemsByCategoria = $pedidosService->findMenuItemsByCategoria();
+
+        $sugerencias = $pedidosService->findSugerencias();
+
+        $this->getSugerenciaItem($sugerencias, $itemsByCategoria);
+
         return $this->render("@Pedidos/default/menu.html.twig", array("itemsByCategoriaDto" => $itemsByCategoria, "modoPedir" => true));
     }
 
@@ -123,6 +134,10 @@ class DefaultController extends Controller
     {
         /** @var ItemsByCategoriaDto $itemsByCategoria */
         $itemsByCategoria = $this->getPedidosService()->findMenuItemsByCategoria();
+
+        $sugerencias = $this->getPedidosService()->findSugerencias();
+
+        $this->getSugerenciaItem($sugerencias, $itemsByCategoria);
 
         return $this->render(
             "PedidosBundle:default:pedido.html.twig",
@@ -351,6 +366,7 @@ class DefaultController extends Controller
      */
     public function generarSugerenciaAction(Request $request)
     {
+
         $formEntity = new SugerenciaFormEntity();
 
         $form = $this->createForm(SugerenciaForm::class, $formEntity);
@@ -360,6 +376,11 @@ class DefaultController extends Controller
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
+                $sugerenciaRequestDto = $formEntity->toSugerenciaRequestDto();
+                $this->getPedidosService()->crearSugerencia($sugerenciaRequestDto);
+
+                $this->addFlash('notice', 'Sugerencia creada exitosamente');
+                return $this->redirectToRoute('_get_menu');
 
             }
         }
@@ -369,5 +390,19 @@ class DefaultController extends Controller
             array("form" => $form->createView()),
             $response
         );
+    }
+
+    /**
+     * @param $sugerencias
+     * @param $itemsByCategoria
+     */
+    private function getSugerenciaItem($sugerencias, $itemsByCategoria)
+    {
+        $sugerenciaItem = array();
+        /** @var SugerenciaDto $sugerencia */
+        foreach ($sugerencias as $sugerencia) {
+            array_push($sugerenciaItem, $sugerencia->getItemDeMenu());
+        }
+        $itemsByCategoria->setSugerenciaItems($sugerenciaItem);
     }
 }

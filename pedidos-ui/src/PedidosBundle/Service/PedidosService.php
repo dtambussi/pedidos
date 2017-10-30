@@ -11,6 +11,7 @@ namespace PedidosBundle\Service;
 
 use PedidosBundle\Dto\ItemsByCategoriaDto;
 use PedidosBundle\Dto\Request\PedidoRequestDto;
+use PedidosBundle\Dto\Request\SugerenciaRequestDto;
 use PedidosBundle\Dto\Response\PedidoDto;
 use Psr\Log\LoggerInterface;
 
@@ -46,6 +47,10 @@ class PedidosService
         return $result;
     }
 
+    public function findSugerencias() {
+        return $this->pedidosApiHttpClient->findSugerencias();
+    }
+
     public function confirmarPedido(PedidoRequestDto $pedidoRequestDto) {
         $this->pedidosApiHttpClient->confirmarPedido($pedidoRequestDto);
     }
@@ -69,5 +74,9 @@ class PedidosService
 
     public function loginGuest($nickname) {
         return $this->pedidosApiHttpClient->doLoginGuest($nickname);
+    }
+
+    public function crearSugerencia(SugerenciaRequestDto $sugerenciaRequestDto) {
+        $this->pedidosApiHttpClient->generarSugerencia($sugerenciaRequestDto);
     }
 }

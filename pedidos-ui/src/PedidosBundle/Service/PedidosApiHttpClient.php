@@ -13,9 +13,11 @@ use PedidosBundle\Dto\MenuDto;
 use PedidosBundle\Dto\Request\LoginGuestRequestDto;
 use PedidosBundle\Dto\Request\LoginRequestDto;
 use PedidosBundle\Dto\Request\LoginUsuarioRegistradoRequestDto;
+use PedidosBundle\Dto\Request\SugerenciaRequestDto;
 use PedidosBundle\Dto\Response\PedidoDto;
 use PedidosBundle\Dto\Request\PedidoRequestDto;
 use PedidosBundle\Dto\SessionDeUsuarioDto;
+use PedidosBundle\Dto\SugerenciaDto;
 use PedidosBundle\Exception\PedidosException;
 use Psr\Log\LoggerInterface;
 use JMS\Serializer\Serializer;
@@ -57,6 +59,15 @@ class PedidosApiHttpClient
         return $response[0];
     }
 
+    /**
+     * @return array<SugerenciaDto>
+     */
+    public function findSugerencias() {
+        $url = "http://" . $this->pedidosapiHostname . "/sugerenciasVigentes";
+        $response = $this->doGet($url, "array<".SugerenciaDto::class.">");
+        return $response[0];
+    }
+
 
     /**
      * @return array<PedidoDto>
@@ -94,6 +105,15 @@ class PedidosApiHttpClient
         $url = "http://" . $this->pedidosapiHostname . "/loginUsuarioNoRegistrado";
         $loginRequest = new LoginGuestRequestDto($nickname);
         $response = $this->doPost($url, SessionDeUsuarioDto::class, $loginRequest);
+        return $response[0];
+    }
+
+    /**
+     * @return SugerenciaRequestDto
+     */
+    public function generarSugerencia(SugerenciaRequestDto $sugerenciaRequestDto) {
+        $url = "http://" . $this->pedidosapiHostname . "/sugerencias";
+        $response = $this->doPost($url, SugerenciaDto::class, $sugerenciaRequestDto);
         return $response[0];
     }
 

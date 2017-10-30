@@ -13,6 +13,7 @@ use PedidosBundle\FormEntity\SugerenciaFormEntity;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -26,6 +27,7 @@ class SugerenciaForm extends AbstractType
         $builder->add('cantidad', TextType::class, array('label' => 'Cantidad:'));
         $builder->add('fechaInicio', TextType::class, array('label' => 'Fecha Inicio:'));
         $builder->add('fechaFin', TextType::class, array('label' => 'Fecha Fin:'));
+        $builder->add('save', SubmitType::class,array('label' => 'Crear'));
     }
 
     public function configureOptions(OptionsResolver $resolver)

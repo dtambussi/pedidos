@@ -19,6 +19,7 @@ class ItemsByCategoriaDto
     private $bebidaItems;
     private $cafeteriaItems;
     private $postreItems;
+    private $sugerenciaItems;
 
     /**
      * ItemByCategoriaDto constructor.
@@ -31,6 +32,7 @@ class ItemsByCategoriaDto
         $this->bebidaItems = array_filter($items, array($this, "isBebida"));
         $this->postreItems = array_filter($items, array($this, "isPostre"));
         $this->cafeteriaItems = array_filter($items, array($this, "isCafeteria"));
+        $this->sugerenciaItems = array_filter($items, array($this, "isSugerencia"));
     }
 
     private function isPlatoPrincipal($itemDto) {
@@ -66,6 +68,13 @@ class ItemsByCategoriaDto
             $itemDto = $itemDto->getItemDeMenu();
         }
         return $itemDto->getCategoria() == CategoriaMenuItemType::ENTRADAS;
+    }
+
+    private function isSugerencia($itemDto) {
+        if ($itemDto instanceof PedidoItem) {
+            $itemDto = $itemDto->getItemDeMenu();
+        }
+        return $itemDto->getCategoria() == CategoriaMenuItemType::SUGERENCIA;
     }
 
     public function getItemsByCategoria($categoria) {
@@ -111,4 +120,62 @@ class ItemsByCategoriaDto
     {
         return $this->postreItems;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSugerenciaItems()
+    {
+        return $this->sugerenciaItems;
+    }
+
+    /**
+     * @param array $platoPrincipalItems
+     */
+    public function setPlatoPrincipalItems($platoPrincipalItems)
+    {
+        $this->platoPrincipalItems = $platoPrincipalItems;
+    }
+
+    /**
+     * @param array $entradaItems
+     */
+    public function setEntradaItems($entradaItems)
+    {
+        $this->entradaItems = $entradaItems;
+    }
+
+    /**
+     * @param array $bebidaItems
+     */
+    public function setBebidaItems($bebidaItems)
+    {
+        $this->bebidaItems = $bebidaItems;
+    }
+
+    /**
+     * @param array $cafeteriaItems
+     */
+    public function setCafeteriaItems($cafeteriaItems)
+    {
+        $this->cafeteriaItems = $cafeteriaItems;
+    }
+
+    /**
+     * @param array $postreItems
+     */
+    public function setPostreItems($postreItems)
+    {
+        $this->postreItems = $postreItems;
+    }
+
+    /**
+     * @param mixed $sugerenciaItems
+     */
+    public function setSugerenciaItems($sugerenciaItems)
+    {
+        $this->sugerenciaItems = $sugerenciaItems;
+    }
+
+
 }

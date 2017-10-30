@@ -3,7 +3,7 @@
 <head>
 
     <title>{% block title %}Pedidos{% endblock %}</title>
-    <link rel="icon" type="image/x-icon" href="{{ asset('bundles/pedidos/images/favicon.ico')}}" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('bundles/pedidos/images/favicon.ico') }}"/>
     <meta content="" name="author">
     <meta content="3 month" name="revisit-after">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -16,31 +16,32 @@
 
     {% block stylesheets %}
         {% stylesheets
-            'bundles/pedidos/vendor/bootstrap/css/bootstrap.css'
-            'bundles/pedidos/fonts/font-awesome/css/font-awesome.min.css'
-            'bundles/pedidos/vendor/bootstrap-datepicker/css/bootstrap-datepicker.min.css'
-            'bundles/pedidos/vendor/bootstrap-table/bootstrap-table.css'
-            'bundles/pedidos/vendor/bootstrap-daterangepicker/daterangepicker.css'
-            'bundles/pedidos/css/main.css'
-        filter='?uglifycss' filter='cssrewrite'  %}
-        <link rel="stylesheet" href="{{ asset_url }}" rel="stylesheet" type="text/css" />
+        'bundles/pedidos/vendor/bootstrap/css/bootstrap.css'
+        'bundles/pedidos/fonts/font-awesome/css/font-awesome.min.css'
+        'bundles/pedidos/vendor/bootstrap-datepicker/css/bootstrap-datepicker.min.css'
+        'bundles/pedidos/vendor/bootstrap-table/bootstrap-table.css'
+        'bundles/pedidos/vendor/bootstrap-daterangepicker/daterangepicker.css'
+        'bundles/pedidos/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css'
+        'bundles/pedidos/css/main.css'
+        filter='?uglifycss' filter='cssrewrite' %}
+        <link rel="stylesheet" href="{{ asset_url }}" rel="stylesheet" type="text/css"/>
         {% endstylesheets %}
     {% endblock %}
 
     {% block javascripts %}
         {% javascripts
-            '@PedidosBundle/Resources/public/vendor/jquery/jquery.js'
-            '@PedidosBundle/Resources/public/vendor/bootstrap/js/bootstrap.js'
-            '@PedidosBundle/Resources/public/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js'
-            '@PedidosBundle/Resources/public/vendor/bootstrap-daterangepicker/moment.js'
-            '@PedidosBundle/Resources/public/vendor/bootstrap-table/bootstrap-table.js'
-            '@PedidosBundle/Resources/public/vendor/bootstrap-table/bootstrap-table-export.js'
+        '@PedidosBundle/Resources/public/vendor/jquery/jquery.js'
+        '@PedidosBundle/Resources/public/vendor/bootstrap/js/bootstrap.js'
+        '@PedidosBundle/Resources/public/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js'
+        '@PedidosBundle/Resources/public/vendor/bootstrap-daterangepicker/moment.js'
+        '@PedidosBundle/Resources/public/vendor/bootstrap-table/bootstrap-table.js'
+        '@PedidosBundle/Resources/public/vendor/bootstrap-table/bootstrap-table-export.js'
         '@PedidosBundle/Resources/public/vendor/table-export/table-export.js'
-            '@PedidosBundle/Resources/public/vendor/bootstrap-daterangepicker/daterangepicker.js'
+        '@PedidosBundle/Resources/public/vendor/bootstrap-daterangepicker/daterangepicker.js'
+        '@PedidosBundle/Resources/public/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.js'
 
-            '@PedidosBundle/Resources/public/js/global-functions.js'
-            '@PedidosBundle/Resources/public/js/form/field_format.js'
-        %}
+        '@PedidosBundle/Resources/public/js/global-functions.js'
+        '@PedidosBundle/Resources/public/js/form/field_format.js' %}
         <script src="{{ asset_url }}"></script>
         <script>
         </script>
@@ -59,6 +60,15 @@
 
 <div id="body-content">
     <div class="container-fluid">
+        <div class="container">
+            {% for label, messages in app.flashes(['notice']) %}
+            {% for message in messages %}
+                <div class="alert alert-success">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
         {% block body %}
         {% endblock %}
     </div>
