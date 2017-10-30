@@ -17,6 +17,15 @@ class LoginGuestRequestDto
     private $nickname;
 
     /**
+     * LoginGuestRequestDto constructor.
+     * @param string $nickname
+     */
+    public function __construct($nickname)
+    {
+        $this->nickname = $nickname;
+    }
+
+    /**
      * @return string
      */
     public function getNickname()
