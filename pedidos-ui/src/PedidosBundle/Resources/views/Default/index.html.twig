@@ -7,7 +7,7 @@
     <section id="main-page">
         <div class="container">
             <div class="row">
-                <div class="col-sm-4 ">
+                <div class="col-sm-4 col-sm-offset-2">
                     <a href="{{ path("_get_menu") }}" class="btn btn-primary">
                         <div class="menu-principal-item">
                             <h4 class="card-title">MENU</h4>
@@ -15,7 +15,7 @@
                         </div>
                     </a>
                 </div>
-                <div class="col-sm-4 ">
+                <div class="col-sm-4">
                     <a href="{{ path("_pedido") }}" class="btn btn-primary {% if not app.session.get("usuarioDto").puedeCrearPedido %} disabled {% endif %}">
                         <div class="menu-principal-item">
                             <h4 class="card-title">PEDIR</h4>
@@ -25,7 +25,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-4 ">
+                <div class="col-sm-4 col-sm-offset-2">
                     <a href="{{ path("_pedido_listar") }}" class="btn btn-primary {% if not app.session.get("usuarioDto").puedeListarPedidos %} disabled {% endif %}">
                         <div class="menu-principal-item">
                             <h4 class="card-title">MIS PEDIDOS</h4>
@@ -33,7 +33,7 @@
                         </div>
                     </a>
                 </div>
-                <div class="col-sm-4  ">
+                <div class="col-sm-4">
                     <a href="#" class="btn btn-primary disabled">
                         <div class="menu-principal-item">
                             <h4 class="card-title">AYUDA</h4>
@@ -43,7 +43,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-4">
+                <div class="col-sm-4 col-sm-offset-2">
                     <a href="{{ path("_generar_sugerencia") }}" class="btn btn-primary {% if not app.session.get("usuarioDto").puedeCrearSugerencia %} disabled {% endif %}">
                         <div class="menu-principal-item">
                             <h4 class="card-title">ALTA SUGERENCIAS</h4>
