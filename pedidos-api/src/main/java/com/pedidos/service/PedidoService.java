@@ -53,7 +53,7 @@ public class PedidoService {
 	public Pedido recibirPedido(final RecibirPedidoRequest request) {
 		final Pedido pedido = pedidoRepository.findOne(request.getIdPedido());
 		pedido.setEstado(EstadoPedido.Pendiente);
-		pedido.setMesa(request.getMesa());
+		pedido.setDestino(request.getDestino());
 		pedido.agregarComentario(request.getComentario());
 		pedido.setFechaUltimaModificacion(currentDate());
 		final Pedido pedidoRecibido = pedidoRepository.save(pedido);

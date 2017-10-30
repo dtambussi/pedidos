@@ -6,7 +6,6 @@ use JMS\Serializer\Serializer;
 use PedidosBundle\Dto\BootstrapTableDto;
 use PedidosBundle\Dto\ItemsByCategoriaDto;
 use PedidosBundle\Dto\MenuItemDto;
-use PedidosBundle\Dto\Request\LoginUsuarioRegistradoRequestDto;
 use PedidosBundle\Dto\Request\PedidoRequestDto;
 use PedidosBundle\Dto\Response\ReporteResponseDto;
 use PedidosBundle\Dto\SessionDeUsuarioDto;
@@ -15,9 +14,11 @@ use PedidosBundle\Exception\PedidosException;
 use PedidosBundle\Form\LoginForm;
 use PedidosBundle\Form\LoginGuestForm;
 use PedidosBundle\Form\PedidoItemForm;
+use PedidosBundle\Form\SugerenciaForm;
 use PedidosBundle\FormEntity\LoginFormEntity;
 use PedidosBundle\FormEntity\LoginGuestFormEntity;
 use PedidosBundle\FormEntity\PedidoItemFormEntity;
+use PedidosBundle\FormEntity\SugerenciaFormEntity;
 use PedidosBundle\Service\PedidosApiHttpClient;
 use PedidosBundle\Service\PedidosService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -36,14 +37,7 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-
-        /** @var PedidosApiHttpClient $client */
-        $client = $this->container->get(PedidosApiHttpClient::SERVICE_NAME);
-
-        /* TODO Reemplazar por el login posta */
-        $sessionDto = $client->doLogin("esteban_copas@pedidos.com","esteban");
-
-        return $this->render('PedidosBundle:Default:index.html.twig',array("usuarioDto"=>$sessionDto->getUsuario()));
+        return $this->render('PedidosBundle:Default:index.html.twig');
     }
 
     /**
@@ -263,8 +257,8 @@ class DefaultController extends Controller
         );
     }
 
-    /*
-     * @Route("/reportes", name="_reporte_generar")
+    /**
+     * @Route("/reportes", name="_reportes")
      * @param Request $request
      * @return Response
      */
@@ -286,6 +280,7 @@ class DefaultController extends Controller
 
         $arrayReporte = array();
 
+        /* TODO Reemplazar con el TambuServicio */
         $reporteDto1 = new ReporteResponseDto();
         $reporteDto1->setCantidad(4);
         $menuItem1 = new MenuItemDto();
@@ -347,5 +342,32 @@ class DefaultController extends Controller
         $this->savePedidoRequestDto($request, $pedidoRequestDto);
 
         return $pedidoRequestDto;
+    }
+
+    /**
+     * @Route("/generar_sugerencia", name="_generar_sugerencia")
+     * @param Request $request
+     * @return Response
+     */
+    public function generarSugerenciaAction(Request $request)
+    {
+        $formEntity = new SugerenciaFormEntity();
+
+        $form = $this->createForm(SugerenciaForm::class, $formEntity);
+        $form->handleRequest($request);
+
+        $response = new Response();
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+
+            }
+        }
+
+        return $this->render(
+            "PedidosBundle:default:sugerencia_form.html.twig",
+            array("form" => $form->createView()),
+            $response
+        );
     }
 }
