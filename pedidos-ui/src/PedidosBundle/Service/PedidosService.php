@@ -11,6 +11,7 @@ namespace PedidosBundle\Service;
 
 use PedidosBundle\Dto\ItemsByCategoriaDto;
 use PedidosBundle\Dto\Request\PedidoRequestDto;
+use PedidosBundle\Dto\Request\ReportePedidosRequestDto;
 use PedidosBundle\Dto\Request\SugerenciaRequestDto;
 use PedidosBundle\Dto\Response\PedidoDto;
 use Psr\Log\LoggerInterface;
@@ -78,5 +79,10 @@ class PedidosService
 
     public function crearSugerencia(SugerenciaRequestDto $sugerenciaRequestDto) {
         $this->pedidosApiHttpClient->generarSugerencia($sugerenciaRequestDto);
+    }
+
+    public function generarReportePedidos(ReportePedidosRequestDto $reportePedidosRequestDto){
+        return $this->pedidosApiHttpClient->generarReportePedidos($reportePedidosRequestDto);
+
     }
 }

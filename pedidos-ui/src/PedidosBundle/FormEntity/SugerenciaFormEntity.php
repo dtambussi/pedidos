@@ -8,6 +8,7 @@
 
 namespace PedidosBundle\FormEntity;
 use PedidosBundle\Dto\Request\SugerenciaRequestDto;
+use PedidosBundle\Util\PedidosDateUtil;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -178,11 +179,8 @@ class SugerenciaFormEntity
         $sugerenciaRequestDto->setCantidadDisponible($this->getCantidad());
         $sugerenciaRequestDto->setPrecio($this->getPrecio());
 
-        $fechaInicio = \DateTime::createFromFormat("d/m/Y H:i", $this->getFechaInicio());
-        $fechaFin = \DateTime::createFromFormat("d/m/Y H:i", $this->getFechaFin());
-
-        $sugerenciaRequestDto->setFechaInicio($fechaInicio->format("Y-m-d\TH:i:s.000\Z"));
-        $sugerenciaRequestDto->setFechaFin($fechaFin->format("Y-m-d\TH:i:s.000\Z"));
+        $sugerenciaRequestDto->setFechaInicio(PedidosDateUtil::toPedidosApiFormat($this->getFechaInicio(),"d/m/Y H:i"));
+        $sugerenciaRequestDto->setFechaFin(PedidosDateUtil::toPedidosApiFormat($this->getFechaFin(),"d/m/Y H:i"));
 
         return $sugerenciaRequestDto;
     }
