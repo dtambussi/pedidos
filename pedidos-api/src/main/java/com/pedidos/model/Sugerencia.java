@@ -36,3 +36,5 @@ public class Sugerencia {
 	private Date fechaInicio;
 	private Date fechaFin;
 }
+//@JsonFormat(timezone = "GMT+03:00")
+//spring.jackson.date-format=+03:00
