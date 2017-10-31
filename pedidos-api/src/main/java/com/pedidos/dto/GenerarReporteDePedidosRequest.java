@@ -8,5 +8,5 @@ import lombok.Data;
 public class GenerarReporteDePedidosRequest {
 	
 	private Date fechaDesde, fechaHasta;
-	private String estadoDePedido;
+	private String estadoPedido;
 }
