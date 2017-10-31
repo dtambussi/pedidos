@@ -72,6 +72,14 @@
                             {{ menuMacro.generarListaItemsDePedido(itemsByCategoriaDto.bebidaItems, pedidoRequestDto) }}
                         </div>
                     </div>
+                    {% if itemsByCategoriaDto.sugerenciaItems is defined %}
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h2>Promos/Sugerencias</h2>
+                                {{ menuMacro.generarListaItemsDePedido(itemsByCategoriaDto.sugerenciaItems, pedidoRequestDto) }}
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
             <div class="row text-center top-buffer">

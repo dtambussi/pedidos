@@ -7,6 +7,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class ItemReporteDePedidos {
 	
-	String categoria, nombre;
+	String categoria, nombre, tag;
 	Integer cantidad;
 }

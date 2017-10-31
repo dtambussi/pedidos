@@ -7,6 +7,7 @@
  */
 
 namespace PedidosBundle\FormEntity;
+use PedidosBundle\Dto\Request\SugerenciaRequestDto;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -35,7 +36,7 @@ class SugerenciaFormEntity
     private $precio;
 
     /**
-     * @Assert\NotBlank(message="Completar campo")
+     * @Assert\NotBlank(message="Cantidad es obligatorio")
      * @var string
      * @Assert\Range(
      *      min = 1,
@@ -48,12 +49,14 @@ class SugerenciaFormEntity
 
 
     /**
+     * @Assert\NotBlank(message="Fecha inicio obligatoria")
      * @var string $fechaInicio
      * @Assert\DateTime(format="d/m/Y H:i")
      */
     private $fechaInicio;
 
     /**
+     * @Assert\NotBlank(message="Fecha fin obligatoria")
      * @var string $fechaFin
      * @Assert\DateTime(format="d/m/Y H:i")
      */
@@ -164,6 +167,24 @@ class SugerenciaFormEntity
     public function setFechaFin($fechaFin)
     {
         $this->fechaFin = $fechaFin;
+    }
+
+
+    public function toSugerenciaRequestDto(){
+        $sugerenciaRequestDto = new SugerenciaRequestDto();
+
+        $sugerenciaRequestDto->setNombre($this->getNombre());
+        $sugerenciaRequestDto->setDescripcion($this->getDescripcion());
+        $sugerenciaRequestDto->setCantidadDisponible($this->getCantidad());
+        $sugerenciaRequestDto->setPrecio($this->getPrecio());
+
+        $fechaInicio = \DateTime::createFromFormat("d/m/Y H:i", $this->getFechaInicio());
+        $fechaFin = \DateTime::createFromFormat("d/m/Y H:i", $this->getFechaFin());
+
+        $sugerenciaRequestDto->setFechaInicio($fechaInicio->format("Y-m-d\TH:i:s.000\Z"));
+        $sugerenciaRequestDto->setFechaFin($fechaFin->format("Y-m-d\TH:i:s.000\Z"));
+
+        return $sugerenciaRequestDto;
     }
 
 

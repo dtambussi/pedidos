@@ -9,6 +9,44 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script>
+        $(function () {
+            $('#sugerencia_form_fechaInicio').datetimepicker({format: 'D/M/Y H:m'});
+            $('#sugerencia_form_fechaFin').datetimepicker({format: 'D/M/Y H:m', useCurrent: false});
+            $("#sugerencia_form_fechaInicio").on("dp.change", function (e) {
+                $('#sugerencia_form_fechaFin').data("DateTimePicker").minDate(e.date);
+            });
+            $("#sugerencia_form_fechaFin").on("dp.change", function (e) {
+                $('#sugerencia_form_fechaInicio').data("DateTimePicker").maxDate(e.date);
+            });
+
+        });
+
+        function incrementarCantidad() {
+            var inputText = $("#sugerencia_form_cantidad");
+            var val = 0;
+            if (!isNaN(inputText.val())) {
+                val = inputText.val();
+            }
+            if (val < 99) {
+                val++;
+            }
+            inputText.val(val);
+        }
+
+        function reducirCantidad() {
+            var inputText = $("#sugerencia_form_cantidad");
+            var val = 0;
+            if (!isNaN(inputText.val())) {
+                val = inputText.val();
+            }
+            if (val > 0) {
+                val--;
+            }
+            inputText.val(val);
+        }
+
+    </script>
 
 {% endblock %}
 
@@ -18,7 +56,7 @@
             <div class="row">
                 <h1>Generar Sugerencia</h1>
             </div>
-            {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'sugerencia-form'}}) }}
+            {{ form_start(form,{'attr': {'novalidate': 'novalidate', 'id': 'sugerencia-form'}}) }}
             {{ form_errors(form) }}
             <div class="row">
                 <div class="col-sm-6">
@@ -41,15 +79,33 @@
                     <div class="col-sm-12">
                         <div class="form-group">
                             {{ form_label(form.precio) }}
-                            {{ form_widget(form.precio, {'attr': {'novalidate': 'novalidate'}}) }}
+                            <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                {{ form_widget(form.precio, {'attr': {'novalidate': 'novalidate'}}) }}
+                            </div>
                             {{ form_errors(form.precio) }}
                         </div>
                     </div>
                     <div class="col-sm-12">
                         <div class="form-group ">
-                            {{ form_label(form.cantidad) }}
-                            {{ form_widget(form.cantidad, {'attr': {'novalidate': 'novalidate'}}) }}
-                            {{ form_errors(form.cantidad) }}
+                            <div class="row">
+                                <div class="col-xs-8">
+                                    {{ form_label(form.cantidad) }}
+                                    {{ form_widget(form.cantidad, {'attr': {'novalidate': 'novalidate'}}) }}
+                                    {{ form_errors(form.cantidad) }}
+                                </div>
+                                <div class="col-xs-4">
+                                    <div class="form-group">
+                                        <label class="control-label">&nbsp;</label><br>
+                                        <button type="button" class="btn btn-default" style="min-width: 34px;"
+                                                onclick="reducirCantidad()">-
+                                        </button>
+                                        <button type="button" class="btn btn-default" style="min-width: 34px;"
+                                                onclick="incrementarCantidad()">+
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -69,12 +125,12 @@
                     </div>
                 </div>
             </div>
-            {{ form_end(form) }}
             <div class="row">
                 <div class="form-group text-center">
-                    <button type="submit" class="btn btn-primary disableable">Crear</button>
+                    {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
                 </div>
             </div>
+            {{ form_end(form) }}
         </div>
     </section>
 

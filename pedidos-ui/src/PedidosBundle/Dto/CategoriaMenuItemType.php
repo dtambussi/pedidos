@@ -16,4 +16,5 @@ class CategoriaMenuItemType
     const POSTRES = "Postres";
     const BEBIDAS = "Bebidas";
     const CAFETERIA = "Cafeteria";
+    const SUGERENCIA = "Sugerencia";
 }
