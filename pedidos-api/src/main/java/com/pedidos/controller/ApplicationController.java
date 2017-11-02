@@ -1,7 +1,6 @@
 package com.pedidos.controller;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +33,7 @@ import com.pedidos.model.Rol;
 import com.pedidos.model.RolesFactory;
 import com.pedidos.model.SesionDeUsuario;
 import com.pedidos.model.Sugerencia;
-import com.pedidos.security.SecurityService;
+import com.pedidos.security.ValidadorDeSesionDeUsuarioService;
 import com.pedidos.service.LoginService;
 import com.pedidos.service.MenuService;
 import com.pedidos.service.PedidoService;
@@ -47,39 +46,36 @@ public class ApplicationController {
 	private PedidoService pedidoService;
 	private LoginService loginService;
 	private SugerenciaService sugerenciaService;
-	private SecurityService securityService;
+	private ValidadorDeSesionDeUsuarioService validadorDeSesionDeUsuarioService;
 
 	public ApplicationController(
 			final LoginService loginService,
 			final MenuService menuService, 
 			final PedidoService pedidoService,
 			final SugerenciaService sugerenciaService,
-			final SecurityService securityService) {
+			final ValidadorDeSesionDeUsuarioService validadorDeSesionDeUsuarioService) {
 		this.menuService = menuService;
 		this.pedidoService = pedidoService;
 		this.loginService = loginService;
 		this.sugerenciaService = sugerenciaService;
-		this.securityService = securityService;
+		this.validadorDeSesionDeUsuarioService = validadorDeSesionDeUsuarioService;
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "/estadoPedido")
 	public List<EstadoPedido> estadosDePedido(final HttpServletRequest request, final HttpServletResponse response) {
-		validarSesionDeUsuario(request);
 		return Arrays.asList(EstadoPedido.values());
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "/estadoItemDePedido")
 	public List<EstadoItemDePedido> estadosItemDePedido(final HttpServletRequest request, final HttpServletResponse response) {
-		validarSesionDeUsuario(request);
 		return Arrays.asList(EstadoItemDePedido.values());
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "/categoriaItemDeMenu")
 	public List<CategoriaItemDeMenu> categoriasItemDeMenu(final HttpServletRequest request, final HttpServletResponse response) {
-		validarSesionDeUsuario(request);
 		return Arrays.asList(CategoriaItemDeMenu.values());
 	}
 	
@@ -108,24 +104,24 @@ public class ApplicationController {
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/pedidos")
 	public List<Pedido> pedidos(final HttpServletRequest request, final HttpServletResponse response) {
-		validarSesionDeUsuario(request, RolesFactory.ListarPedidos);
-		return this.pedidoService.findAll();
+		final SesionDeUsuario sesionDeUsuario = validarSesionDeUsuario(request, RolesFactory.ListarPedidos);
+		return this.pedidoService.obtenerPedidos(sesionDeUsuario);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/pedidos")
 	public Pedido generarPedido(@RequestBody final GenerarPedidoRequest generarPedidoRequest,
 			final HttpServletRequest request, final HttpServletResponse response) {
-		validarSesionDeUsuario(request, RolesFactory.CrearPedido);
-		return this.pedidoService.generarPedido(generarPedidoRequest);
+		final SesionDeUsuario sesionDeUsuario = validarSesionDeUsuario(request, RolesFactory.CrearPedido);
+		return this.pedidoService.generarPedido(generarPedidoRequest, sesionDeUsuario);
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/pedido/{id}/recibirPedidoRequest")
 	public Pedido recibirPedido(@PathVariable("id") Long id, final @RequestBody RecibirPedidoRequest recibirPedidoRequest,
 			final HttpServletRequest request, final HttpServletResponse response) {
-		validarSesionDeUsuario(request, RolesFactory.RecibirPedido);
-		return this.pedidoService.recibirPedido(recibirPedidoRequest);
+		final SesionDeUsuario sesionDeUsuario = validarSesionDeUsuario(request, RolesFactory.RecibirPedido);
+		return this.pedidoService.recibirPedido(recibirPedidoRequest, sesionDeUsuario);
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
@@ -133,16 +129,16 @@ public class ApplicationController {
 	public Pedido cambiarEstadoDePedido(@PathVariable("id") Long id,
 			final @RequestBody CambiarEstadoDePedidoRequest cambiarEstadoDePedidoRequest,
 			final HttpServletRequest request, final HttpServletResponse response) {
-		validarSesionDeUsuario(request, RolesFactory.CambiarEstadoDePedido);
-		return this.pedidoService.cambiarEstadoDePedido(cambiarEstadoDePedidoRequest);
+		final SesionDeUsuario sesionDeUsuario = validarSesionDeUsuario(request, RolesFactory.CambiarEstadoDePedido);
+		return this.pedidoService.cambiarEstadoDePedido(cambiarEstadoDePedidoRequest, sesionDeUsuario);
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/sugerencias")
 	public Sugerencia generarSugerencia(final @RequestBody GenerarSugerenciaRequest generarSugerenciaRequest,
 			final HttpServletRequest request, final HttpServletResponse response) {
-		validarSesionDeUsuario(request, RolesFactory.CrearSugerencia);
-		return this.sugerenciaService.generarSugerencia(generarSugerenciaRequest);
+		final SesionDeUsuario sesionDeUsuario = validarSesionDeUsuario(request, RolesFactory.CrearSugerencia);
+		return this.sugerenciaService.generarSugerencia(generarSugerenciaRequest, sesionDeUsuario);
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
@@ -150,8 +146,8 @@ public class ApplicationController {
 	public Sugerencia cambiarEstadoDeSugerencia(
 			final @RequestBody CambiarEstadoDeSugerenciaRequest cambiarEstadoDeSugerenciaRequest,
 			final HttpServletRequest request, final HttpServletResponse response) {
-		validarSesionDeUsuario(request, RolesFactory.CambiarEstadoDeSugerencia);
-		return this.sugerenciaService.cambiarEstadoDeSugerencia(cambiarEstadoDeSugerenciaRequest);
+		final SesionDeUsuario sesionDeUsuario = validarSesionDeUsuario(request, RolesFactory.CambiarEstadoDeSugerencia);
+		return this.sugerenciaService.cambiarEstadoDeSugerencia(cambiarEstadoDeSugerenciaRequest, sesionDeUsuario);
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
@@ -180,11 +176,8 @@ public class ApplicationController {
 		return reporte;
 	}
 	
-	private void validarSesionDeUsuario(final HttpServletRequest request) {
-		// this.securityService.validarSesionDeUsuario(request);
-	}
-	
-	private void validarSesionDeUsuario(final HttpServletRequest request, final Rol... roles) {
-		// this.securityService.validarSesionDeUsuario(request, new HashSet<>(Arrays.asList(roles)));
+	private SesionDeUsuario validarSesionDeUsuario(final HttpServletRequest request, final Rol... roles) {
+		// return this.securityService.validarSesionDeUsuario(request, new HashSet<>(Arrays.asList(roles)));
+		return null;
 	}
 }

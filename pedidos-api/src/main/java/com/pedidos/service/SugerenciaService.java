@@ -11,6 +11,7 @@ import com.pedidos.dto.GenerarSugerenciaRequest;
 import com.pedidos.model.CategoriaItemDeMenu;
 import com.pedidos.model.EstadoSugerencia;
 import com.pedidos.model.ItemDeMenu;
+import com.pedidos.model.SesionDeUsuario;
 import com.pedidos.model.Status;
 import com.pedidos.model.Sugerencia;
 import com.pedidos.repository.ItemDeMenuRepository;
@@ -27,7 +28,7 @@ public class SugerenciaService {
 		this.itemDeMenuRepository = itemDeMenuRepository;
 	}
 	
-	public Sugerencia generarSugerencia(final GenerarSugerenciaRequest request) {
+	public Sugerencia generarSugerencia(final GenerarSugerenciaRequest request, final SesionDeUsuario sesionDeUsuario) {
 		final Sugerencia nuevaSugerencia = Sugerencia.builder()
 				.status(Status.Active)
 				.estado(EstadoSugerencia.Publicado)
@@ -44,7 +45,7 @@ public class SugerenciaService {
 		return this.sugerenciaRepository.save(nuevaSugerencia);
 	}
 	
-	public Sugerencia cambiarEstadoDeSugerencia(final CambiarEstadoDeSugerenciaRequest request) {
+	public Sugerencia cambiarEstadoDeSugerencia(final CambiarEstadoDeSugerenciaRequest request, final SesionDeUsuario sesionDeUsuario) {
 		final Sugerencia sugerencia = this.sugerenciaRepository.findOne(request.getIdSugerencia());
 		sugerencia.setEstado(request.getEstadoSugerencia());
 		return this.sugerenciaRepository.save(sugerencia);

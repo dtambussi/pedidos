@@ -12,6 +12,7 @@ import com.pedidos.model.EstadoItemDePedido;
 import com.pedidos.model.EstadoPedido;
 import com.pedidos.model.ItemDePedido;
 import com.pedidos.model.Pedido;
+import com.pedidos.model.SesionDeUsuario;
 import com.pedidos.model.Status;
 import com.pedidos.repository.ItemDeMenuRepository;
 import com.pedidos.repository.MenuRepository;
@@ -33,11 +34,11 @@ public class PedidoService {
 		this.itemDeMenuRepository = itemDeMenuRepository;
 	}
 
-	public List<Pedido> findAll() {
+	public List<Pedido> obtenerPedidos(final SesionDeUsuario sesionDeUsuario) {
 		return this.pedidoRepository.findAll();
 	}
 
-	public Pedido generarPedido(final GenerarPedidoRequest request) {
+	public Pedido generarPedido(final GenerarPedidoRequest request, final SesionDeUsuario sesionDeUsuario) {
 		final List<ItemDePedido> itemsDePedido = request.getItems().stream()
 				.map(itemPedido -> ItemDePedido.builder().estado(EstadoItemDePedido.Generado)
 						.itemDeMenu(itemDeMenuRepository.findOne(itemPedido.getIdItemDeMenu()))
@@ -50,7 +51,7 @@ public class PedidoService {
 		return pedidoRepository.save(pedidoGenerado);
 	}
 
-	public Pedido recibirPedido(final RecibirPedidoRequest request) {
+	public Pedido recibirPedido(final RecibirPedidoRequest request, final SesionDeUsuario sesionDeUsuario) {
 		final Pedido pedido = pedidoRepository.findOne(request.getIdPedido());
 		pedido.setEstado(EstadoPedido.Pendiente);
 		pedido.setDestino(request.getDestino());
@@ -60,7 +61,7 @@ public class PedidoService {
 		return pedidoRecibido;
 	}
 
-	public Pedido cambiarEstadoDePedido(final CambiarEstadoDePedidoRequest request) {
+	public Pedido cambiarEstadoDePedido(final CambiarEstadoDePedidoRequest request, final SesionDeUsuario sesionDeUsuario) {
 		final Pedido pedido = pedidoRepository.findOne(request.getIdPedido());
 		pedido.agregarComentario(request.getComentario());
 		pedido.setAbonado(request.getAbonado());
