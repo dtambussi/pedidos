@@ -34,4 +34,8 @@ public class Usuario {
 	private Set<Rol> roles;
 	@OneToOne
 	private InfoAdicionalUsuario infoAdicional;
+	
+	public boolean tieneAlgunRolContenidoEn(final Set<Rol> roles) {
+		return false;
+	}
 }
