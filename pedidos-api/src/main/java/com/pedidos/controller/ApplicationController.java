@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pedidos.dto.CambiarEstadoDePedidoRequest;
 import com.pedidos.dto.CambiarEstadoDeSugerenciaRequest;
 import com.pedidos.dto.GenerarPedidoRequest;
+import com.pedidos.dto.GenerarReporteDePedidosRequest;
 import com.pedidos.dto.GenerarSugerenciaRequest;
 import com.pedidos.dto.LoginUsuarioNoRegistradoRequest;
 import com.pedidos.dto.LoginUsuarioRegistradoRequest;
@@ -21,7 +22,6 @@ import com.pedidos.dto.RecibirPedidoRequest;
 import com.pedidos.model.CategoriaItemDeMenu;
 import com.pedidos.model.EstadoItemDePedido;
 import com.pedidos.model.EstadoPedido;
-import com.pedidos.model.ItemDeMenu;
 import com.pedidos.model.ItemReporteDePedidos;
 import com.pedidos.model.Menu;
 import com.pedidos.model.Pedido;
@@ -132,13 +132,16 @@ public class ApplicationController {
 	
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/reporteDePedidosRequest")
-	public ReporteDePedidos generarReporteDePedidos() { // mocked response to allow ui development
+	public ReporteDePedidos generarReporteDePedidos(final  @RequestBody GenerarReporteDePedidosRequest generarReporteDePedidosRequest) { 
+		// mocked response to allow ui development
 		final ReporteDePedidos reporte = new ReporteDePedidos();
 		final List<ItemReporteDePedidos> items = Arrays.asList(
-					new ItemReporteDePedidos(CategoriaItemDeMenu.Bebidas.name(), "Cerveza", 80),
-					new ItemReporteDePedidos(CategoriaItemDeMenu.Bebidas.name(), "Coca Cola", 50),
-					new ItemReporteDePedidos(CategoriaItemDeMenu.PlatosPrincipales.name(), "Papas fritas", 70),
-					new ItemReporteDePedidos(CategoriaItemDeMenu.PlatosPrincipales.name(), "Pollo rebozado", 30)
+					new ItemReporteDePedidos(CategoriaItemDeMenu.Bebidas.name(), "Cerveza", "max", 80),
+					new ItemReporteDePedidos(CategoriaItemDeMenu.Bebidas.name(), "Coca Cola", "", 50),
+					new ItemReporteDePedidos(CategoriaItemDeMenu.Bebidas.name(), "Café", "min", 10),
+					new ItemReporteDePedidos(CategoriaItemDeMenu.PlatosPrincipales.name(), "max", "Papas fritas", 70),
+					new ItemReporteDePedidos(CategoriaItemDeMenu.PlatosPrincipales.name(), "", "Rabas", 40),
+					new ItemReporteDePedidos(CategoriaItemDeMenu.PlatosPrincipales.name(), "min", "Pollo rebozado", 30)
 				); 
 		reporte.setItems(items);
 		return reporte;

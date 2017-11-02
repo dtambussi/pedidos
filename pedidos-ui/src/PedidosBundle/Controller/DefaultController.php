@@ -9,6 +9,7 @@ use PedidosBundle\Dto\MenuItemDto;
 use PedidosBundle\Dto\Request\PedidoRequestDto;
 use PedidosBundle\Dto\Response\ReporteResponseDto;
 use PedidosBundle\Dto\SessionDeUsuarioDto;
+use PedidosBundle\Dto\SugerenciaDto;
 use PedidosBundle\Dto\UsuarioDto;
 use PedidosBundle\Exception\PedidosException;
 use PedidosBundle\Form\LoginForm;
@@ -62,6 +63,11 @@ class DefaultController extends Controller
 
         /** @var ItemsByCategoriaDto $itemsByCategoria */
         $itemsByCategoria = $pedidosService->findMenuItemsByCategoria();
+
+        $sugerencias = $pedidosService->findSugerencias();
+
+        $this->getSugerenciaItem($sugerencias, $itemsByCategoria);
+
         return $this->render("@Pedidos/default/menu.html.twig", array("itemsByCategoriaDto" => $itemsByCategoria));
     }
 
@@ -74,6 +80,11 @@ class DefaultController extends Controller
 
         /** @var ItemsByCategoriaDto $itemsByCategoria */
         $itemsByCategoria = $pedidosService->findMenuItemsByCategoria();
+
+        $sugerencias = $pedidosService->findSugerencias();
+
+        $this->getSugerenciaItem($sugerencias, $itemsByCategoria);
+
         return $this->render("@Pedidos/default/menu.html.twig", array("itemsByCategoriaDto" => $itemsByCategoria, "modoPedir" => true));
     }
 
@@ -123,6 +134,10 @@ class DefaultController extends Controller
     {
         /** @var ItemsByCategoriaDto $itemsByCategoria */
         $itemsByCategoria = $this->getPedidosService()->findMenuItemsByCategoria();
+
+        $sugerencias = $this->getPedidosService()->findSugerencias();
+
+        $this->getSugerenciaItem($sugerencias, $itemsByCategoria);
 
         return $this->render(
             "PedidosBundle:default:pedido.html.twig",
@@ -211,7 +226,7 @@ class DefaultController extends Controller
 
                     /** @var SessionDeUsuarioDto $sessionDeUsuarioDto */
                     $sessionDeUsuarioDto = $this->getPedidosService()->login($formEntity->getEmail(), $formEntity->getPassword());
-                    $request->getSession()->set(UsuarioDto::SESSION_NAME, $sessionDeUsuarioDto->getUsuario());
+                    $this->setUserInSession($request, $sessionDeUsuarioDto);
                     $form = $this->createForm(LoginForm::class, new LoginFormEntity());
                 } catch(PedidosException $e) {
                     $response = new Response("", Response::HTTP_BAD_REQUEST);
@@ -242,11 +257,15 @@ class DefaultController extends Controller
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-
-                /** @var SessionDeUsuarioDto $sessionDeUsuarioDto */
-                $sessionDeUsuarioDto = $this->getPedidosService()->loginGuest($formEntity->getNickname());
-                $request->getSession()->set(UsuarioDto::SESSION_NAME, $sessionDeUsuarioDto->getUsuario());
-                $form = $this->createForm(LoginForm::class, new LoginFormEntity());
+                try {
+                    /** @var SessionDeUsuarioDto $sessionDeUsuarioDto */
+                    $sessionDeUsuarioDto = $this->getPedidosService()->loginGuest($formEntity->getNickname());
+                    $this->setUserInSession($request, $sessionDeUsuarioDto);
+                    $form = $this->createForm(LoginGuestForm::class, new LoginGuestFormEntity());
+                } catch(PedidosException $e) {
+                    $response = new Response("", Response::HTTP_BAD_REQUEST);
+                    $form->get('nickname')->addError(new FormError('Ya existe un invitado con ese nickname'));
+                }
             } else {
                 $response = new Response("", Response::HTTP_BAD_REQUEST);
             }
@@ -351,6 +370,7 @@ class DefaultController extends Controller
      */
     public function generarSugerenciaAction(Request $request)
     {
+
         $formEntity = new SugerenciaFormEntity();
 
         $form = $this->createForm(SugerenciaForm::class, $formEntity);
@@ -360,6 +380,11 @@ class DefaultController extends Controller
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
+                $sugerenciaRequestDto = $formEntity->toSugerenciaRequestDto();
+                $this->getPedidosService()->crearSugerencia($sugerenciaRequestDto);
+
+                $this->addFlash('notice', 'Sugerencia creada exitosamente');
+                return $this->redirectToRoute('_get_menu');
 
             }
         }
@@ -369,5 +394,29 @@ class DefaultController extends Controller
             array("form" => $form->createView()),
             $response
         );
+    }
+
+    /**
+     * @param $sugerencias
+     * @param $itemsByCategoria
+     */
+    private function getSugerenciaItem($sugerencias, $itemsByCategoria)
+    {
+        $sugerenciaItem = array();
+        /** @var SugerenciaDto $sugerencia */
+        foreach ($sugerencias as $sugerencia) {
+            array_push($sugerenciaItem, $sugerencia->getItemDeMenu());
+        }
+        $itemsByCategoria->setSugerenciaItems($sugerenciaItem);
+    }
+
+    /**
+     * @param Request $request
+     * @param $sessionDeUsuarioDto
+     */
+    private function setUserInSession(Request $request, SessionDeUsuarioDto $sessionDeUsuarioDto)
+    {
+        $sessionDeUsuarioDto->getUsuario()->setSessionId($sessionDeUsuarioDto->getId());
+        $request->getSession()->set(UsuarioDto::SESSION_NAME, $sessionDeUsuarioDto->getUsuario());
     }
 }

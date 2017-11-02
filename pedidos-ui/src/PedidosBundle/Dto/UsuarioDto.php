@@ -21,6 +21,11 @@ class UsuarioDto
     public $id; //int
 
     /**
+     * @var int
+     */
+    public $sessionId; //int
+
+    /**
      * @var string
      * @Type("string")
      */
@@ -52,6 +57,22 @@ class UsuarioDto
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSessionId()
+    {
+        return $this->sessionId;
+    }
+
+    /**
+     * @param int $sessionId
+     */
+    public function setSessionId($sessionId)
+    {
+        $this->sessionId = $sessionId;
     }
 
     /**
