@@ -6,7 +6,9 @@ use JMS\Serializer\Serializer;
 use PedidosBundle\Dto\BootstrapTableDto;
 use PedidosBundle\Dto\ItemsByCategoriaDto;
 use PedidosBundle\Dto\MenuItemDto;
+use PedidosBundle\Dto\ReportePedidosDto;
 use PedidosBundle\Dto\Request\PedidoRequestDto;
+use PedidosBundle\Dto\Request\ReportePedidosRequestDto;
 use PedidosBundle\Dto\Response\ReporteResponseDto;
 use PedidosBundle\Dto\SessionDeUsuarioDto;
 use PedidosBundle\Dto\SugerenciaDto;
@@ -22,6 +24,7 @@ use PedidosBundle\FormEntity\PedidoItemFormEntity;
 use PedidosBundle\FormEntity\SugerenciaFormEntity;
 use PedidosBundle\Service\PedidosApiHttpClient;
 use PedidosBundle\Service\PedidosService;
+use PedidosBundle\Util\PedidosDateUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
@@ -297,29 +300,16 @@ class DefaultController extends Controller
         $from = $request->get('from');
         $to = $request->get('to');
 
-        $arrayReporte = array();
+        $fechaDesde = PedidosDateUtil::toPedidosApiFormat($from);
+        $fechaHasta = PedidosDateUtil::toPedidosApiFormat($to);
 
-        /* TODO Reemplazar con el TambuServicio */
-        $reporteDto1 = new ReporteResponseDto();
-        $reporteDto1->setCantidad(4);
-        $menuItem1 = new MenuItemDto();
-        $menuItem1->setNombre("Papas con cheddar");
+        $reportePedidosRequest = new ReportePedidosRequestDto($fechaDesde,$fechaHasta);
 
-        $reporteDto1->setItemDeMenu($menuItem1);
-
-        array_push($arrayReporte,$reporteDto1);
-
-        $reporteDto2 = new ReporteResponseDto();
-        $reporteDto2->setCantidad(6);
-        $menuItem2 = new MenuItemDto();
-        $menuItem2->setNombre("Cerveza Artesanal");
-        $reporteDto2->setItemDeMenu($menuItem2);
-
-        array_push($arrayReporte,$reporteDto2);
+        $reportePedidos = $this->getPedidosService()->generarReportePedidos($reportePedidosRequest);
 
         $bootstrapTable = new BootstrapTableDto(
-            $arrayReporte,
-            sizeof($arrayReporte));
+            $reportePedidos->getItems(),
+            sizeof($reportePedidos->getItems()));
 
 
         /** @var Serializer $serializer */
