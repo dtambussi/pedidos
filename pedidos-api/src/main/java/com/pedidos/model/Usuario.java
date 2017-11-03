@@ -1,6 +1,6 @@
 package com.pedidos.model;
 
-import static com.pedidos.model.RolesFactory.rolesDeAtencionAlCliente;
+import static com.pedidos.model.Roles.rolesDeAtencionAlCliente;
 
 import java.util.Collections;
 import java.util.Set;
@@ -53,10 +53,10 @@ public class Usuario {
 	}
 	
 	public boolean esPersonalDeCocina() {
-		return this.tieneRol(RolesFactory.Cocinero);
+		return this.tieneRol(Roles.Cocinero);
 	}
 	
 	public boolean esCliente() {
-		return this.tieneRol(RolesFactory.Cliente);
+		return this.tieneRol(Roles.Cliente);
 	}
 }

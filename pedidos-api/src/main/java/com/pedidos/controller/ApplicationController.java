@@ -1,6 +1,7 @@
 package com.pedidos.controller;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +31,7 @@ import com.pedidos.model.Menu;
 import com.pedidos.model.Pedido;
 import com.pedidos.model.ReporteDePedidos;
 import com.pedidos.model.Rol;
-import com.pedidos.model.RolesFactory;
+import com.pedidos.model.Roles;
 import com.pedidos.model.SesionDeUsuario;
 import com.pedidos.model.Sugerencia;
 import com.pedidos.security.ValidadorDeSesionDeUsuarioService;
@@ -104,7 +105,7 @@ public class ApplicationController {
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/pedidos")
 	public List<Pedido> pedidos(final HttpServletRequest request, final HttpServletResponse response) {
-		final SesionDeUsuario sesionDeUsuario = validarSesionDeUsuario(request, RolesFactory.ListarPedidos);
+		final SesionDeUsuario sesionDeUsuario = validarSesionDeUsuario(request, Roles.ListarPedidos);
 		return this.pedidoService.obtenerPedidos(sesionDeUsuario);
 	}
 
@@ -112,7 +113,7 @@ public class ApplicationController {
 	@PostMapping("/pedidos")
 	public Pedido generarPedido(@RequestBody final GenerarPedidoRequest generarPedidoRequest,
 			final HttpServletRequest request, final HttpServletResponse response) {
-		final SesionDeUsuario sesionDeUsuario = validarSesionDeUsuario(request, RolesFactory.CrearPedido);
+		final SesionDeUsuario sesionDeUsuario = validarSesionDeUsuario(request, Roles.CrearPedido);
 		return this.pedidoService.generarPedido(generarPedidoRequest, sesionDeUsuario);
 	}
 	
@@ -120,7 +121,7 @@ public class ApplicationController {
 	@PostMapping("/pedido/{id}/recibirPedidoRequest")
 	public Pedido recibirPedido(@PathVariable("id") Long id, final @RequestBody RecibirPedidoRequest recibirPedidoRequest,
 			final HttpServletRequest request, final HttpServletResponse response) {
-		final SesionDeUsuario sesionDeUsuario = validarSesionDeUsuario(request, RolesFactory.RecibirPedido);
+		final SesionDeUsuario sesionDeUsuario = validarSesionDeUsuario(request, Roles.RecibirPedido);
 		return this.pedidoService.recibirPedido(recibirPedidoRequest, sesionDeUsuario);
 	}
 	
@@ -129,7 +130,7 @@ public class ApplicationController {
 	public Pedido cambiarEstadoDePedido(@PathVariable("id") Long id,
 			final @RequestBody CambiarEstadoDePedidoRequest cambiarEstadoDePedidoRequest,
 			final HttpServletRequest request, final HttpServletResponse response) {
-		final SesionDeUsuario sesionDeUsuario = validarSesionDeUsuario(request, RolesFactory.CambiarEstadoDePedido);
+		final SesionDeUsuario sesionDeUsuario = validarSesionDeUsuario(request, Roles.CambiarEstadoDePedido);
 		return this.pedidoService.cambiarEstadoDePedido(cambiarEstadoDePedidoRequest, sesionDeUsuario);
 	}
 	
@@ -137,7 +138,7 @@ public class ApplicationController {
 	@PostMapping("/sugerencias")
 	public Sugerencia generarSugerencia(final @RequestBody GenerarSugerenciaRequest generarSugerenciaRequest,
 			final HttpServletRequest request, final HttpServletResponse response) {
-		final SesionDeUsuario sesionDeUsuario = validarSesionDeUsuario(request, RolesFactory.CrearSugerencia);
+		final SesionDeUsuario sesionDeUsuario = validarSesionDeUsuario(request, Roles.CrearSugerencia);
 		return this.sugerenciaService.generarSugerencia(generarSugerenciaRequest, sesionDeUsuario);
 	}
 	
@@ -146,7 +147,7 @@ public class ApplicationController {
 	public Sugerencia cambiarEstadoDeSugerencia(
 			final @RequestBody CambiarEstadoDeSugerenciaRequest cambiarEstadoDeSugerenciaRequest,
 			final HttpServletRequest request, final HttpServletResponse response) {
-		final SesionDeUsuario sesionDeUsuario = validarSesionDeUsuario(request, RolesFactory.CambiarEstadoDeSugerencia);
+		final SesionDeUsuario sesionDeUsuario = validarSesionDeUsuario(request, Roles.CambiarEstadoDeSugerencia);
 		return this.sugerenciaService.cambiarEstadoDeSugerencia(cambiarEstadoDeSugerenciaRequest, sesionDeUsuario);
 	}
 	
@@ -161,23 +162,22 @@ public class ApplicationController {
 	public ReporteDePedidos generarReporteDePedidos(
 			final @RequestBody GenerarReporteDePedidosRequest generarReporteDePedidosRequest,
 			final HttpServletRequest request, final HttpServletResponse response) {
-		validarSesionDeUsuario(request, RolesFactory.GenerarReporteDePedidos);
+		validarSesionDeUsuario(request, Roles.GenerarReporteDePedidos);
 		// mocked response to allow ui development
 		final ReporteDePedidos reporte = new ReporteDePedidos();
 		final List<ItemReporteDePedidos> items = Arrays.asList(
 					new ItemReporteDePedidos(CategoriaItemDeMenu.Bebidas.name(), "Cerveza", "max", 80),
 					new ItemReporteDePedidos(CategoriaItemDeMenu.Bebidas.name(), "Coca Cola", "", 50),
 					new ItemReporteDePedidos(CategoriaItemDeMenu.Bebidas.name(), "Café", "min", 10),
-					new ItemReporteDePedidos(CategoriaItemDeMenu.PlatosPrincipales.name(), "max", "Papas fritas", 70),
-					new ItemReporteDePedidos(CategoriaItemDeMenu.PlatosPrincipales.name(), "", "Rabas", 40),
-					new ItemReporteDePedidos(CategoriaItemDeMenu.PlatosPrincipales.name(), "min", "Pollo rebozado", 30)
+					new ItemReporteDePedidos(CategoriaItemDeMenu.PlatosPrincipales.name(), "Papas fritas", "max", 70),
+					new ItemReporteDePedidos(CategoriaItemDeMenu.PlatosPrincipales.name(), "Rabas", "", 40),
+					new ItemReporteDePedidos(CategoriaItemDeMenu.PlatosPrincipales.name(), "Pollo rebozado", "min", 30)
 				); 
 		reporte.setItems(items);
 		return reporte;
 	}
 	
 	private SesionDeUsuario validarSesionDeUsuario(final HttpServletRequest request, final Rol... roles) {
-		// return this.securityService.validarSesionDeUsuario(request, new HashSet<>(Arrays.asList(roles)));
-		return null;
+		return this.validadorDeSesionDeUsuarioService.validarSesionDeUsuario(request, new HashSet<>(Arrays.asList(roles)));
 	}
 }

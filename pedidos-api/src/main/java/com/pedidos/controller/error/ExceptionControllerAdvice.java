@@ -1,4 +1,4 @@
-package com.pedidos.controller;
+package com.pedidos.controller.error;
 
 import static org.springframework.core.annotation.AnnotatedElementUtils.*;
 
