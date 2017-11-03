@@ -10,9 +10,11 @@ namespace PedidosBundle\Service;
 
 
 use PedidosBundle\Dto\MenuDto;
+use PedidosBundle\Dto\ReportePedidosDto;
 use PedidosBundle\Dto\Request\LoginGuestRequestDto;
 use PedidosBundle\Dto\Request\LoginRequestDto;
 use PedidosBundle\Dto\Request\LoginUsuarioRegistradoRequestDto;
+use PedidosBundle\Dto\Request\ReportePedidosRequestDto;
 use PedidosBundle\Dto\Request\SugerenciaRequestDto;
 use PedidosBundle\Dto\Response\PedidoDto;
 use PedidosBundle\Dto\Request\PedidoRequestDto;
@@ -28,6 +30,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class PedidosApiHttpClient
 {
     const SERVICE_NAME = "pedidosapi_http_client";
+
     /**
      * @var LoggerInterface
      */
@@ -115,11 +118,21 @@ class PedidosApiHttpClient
     }
 
     /**
-     * @return SugerenciaRequestDto
+     * @return SugerenciaDto
      */
     public function generarSugerencia(SugerenciaRequestDto $sugerenciaRequestDto) {
         $url = "http://" . $this->pedidosapiHostname . "/sugerencias";
         $response = $this->doPost($url, SugerenciaDto::class, $sugerenciaRequestDto);
+        return $response[0];
+    }
+
+
+    /**
+     * @return ReportePedidosDto
+     */
+    public function generarReportePedidos(ReportePedidosRequestDto $reporteRequestDto){
+        $url = "http://" . $this->pedidosapiHostname . "/reporteDePedidosRequest";
+        $response = $this->doPost($url, ReportePedidosDto::class, $reporteRequestDto);
         return $response[0];
     }
 
@@ -148,7 +161,7 @@ class PedidosApiHttpClient
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         if(!is_null($usuarioDto)){
             curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                    'AuthorizationTambussi: ' . $usuarioDto->getSessionId())
+                    'AuthorizationPedidos: ' . $usuarioDto->getSessionId())
             );
         }
 
@@ -202,7 +215,7 @@ class PedidosApiHttpClient
                 'Content-Length: ' . strlen($postJson));
 
             if(!is_null($usuarioDto)){
-                array_push($headerParams,'AuthorizationTambussi: ' . $usuarioDto->getSessionId());
+                array_push($headerParams,'AuthorizationPedidos: ' . $usuarioDto->getSessionId());
             }
 
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headerParams);
@@ -229,4 +242,5 @@ class PedidosApiHttpClient
 
         return [$response, $responseCode];
     }
+
 }

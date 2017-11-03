@@ -38,6 +38,20 @@
             });
 
         });
+
+        function categoriaFormatter(it, row) {
+            return row.categoria.replace(/([a-z](?=[A-Z]))/g, '$1 ')
+        }
+
+        function reporteRowStyle(row, index) {
+            if(row.tag === 'max'){
+                return {classes: 'success'};
+            }
+            if(row.tag === 'min'){
+                return {classes: 'warning'};
+            }
+            return {};
+        }
     </script>
 {% endblock %}
 
@@ -73,10 +87,12 @@
                            data-pagination="false"
                            data-page-size="100"
                            data-side-pagination="server"
-                           data-striped="true">
+                           data-striped="true"
+                           data-row-style="reporteRowStyle">
                         <thead>
                         <tr>
-                            <th data-field="itemDeMenu.nombre" >Item</th>
+                            <th data-field="nombre" >Item</th>
+                            <th data-field="categoria"  data-formatter="categoriaFormatter" >Categoria</th>
                             <th data-field="cantidad">Cantidad</th>
                         </tr>
                         </thead>
