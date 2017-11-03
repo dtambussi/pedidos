@@ -35,16 +35,14 @@ public class PedidoService {
 		this.itemDeMenuRepository = itemDeMenuRepository;
 	}
 
-	// mesera: primero sus pedidos pendientes por fecha asc, después los demás pendientes, los generados, cancelados
 	public List<Pedido> obtenerPedidos(final SesionDeUsuario sesionDeUsuario) {
-		// persons.stream().sorted(Comparator.comparing(Person::getName).thenComparing(Person::getAge));
-		return this.pedidoRepository.findAll();
+		return this.pedidoRepository.obtenerPedidosOrdenadosParaUsuario(sesionDeUsuario.getUsuario());
 	}
 
 	public Pedido generarPedido(final GenerarPedidoRequest request, final SesionDeUsuario sesionDeUsuario) {
 		final List<ItemDePedido> itemsDePedido = request.getItems().stream()
 				.map(itemPedido -> ItemDePedido.builder()
-						.estado(EstadoItemDePedido.Generado)
+						.estado(resolverEstadoAsignableANuevoItemDePedido(sesionDeUsuario))
 						.itemDeMenu(itemDeMenuRepository.findOne(itemPedido.getIdItemDeMenu()))
 						.cantidad(itemPedido.getCantidad())
 						.comentario(itemPedido.getComentario())
@@ -57,6 +55,7 @@ public class PedidoService {
 				.estado(resolverEstadoAsignableANuevoPedido(sesionDeUsuario))
 				.comentario(request.getComentario())
 				.abonado(false)
+				.cliente(sesionDeUsuario.getUsuario())
 				.fechaCreacion(currentDate()).fechaUltimaModificacion(currentDate()).status(Status.Active).build();
 		return pedidoRepository.save(pedidoRegistrado);
 	}
@@ -65,6 +64,7 @@ public class PedidoService {
 		final Pedido pedido = pedidoRepository.findOne(request.getIdPedido());
 		pedido.setEstado(EstadoPedido.Pendiente);
 		pedido.setDestino(request.getDestino());
+		pedido.setPersonalAsignado(sesionDeUsuario.getUsuario());
 		pedido.agregarComentario(request.getComentario());
 		pedido.setFechaUltimaModificacion(currentDate());
 		final Pedido pedidoRecibido = pedidoRepository.save(pedido);
@@ -91,6 +91,12 @@ public class PedidoService {
 	}
 	
 	private EstadoPedido resolverEstadoAsignableANuevoPedido(final SesionDeUsuario sesionDeUsuario) {
-		return sesionDeUsuario.getUsuario().tieneRol(RolesFactory.UsuarioRegistrado) ? EstadoPedido.Pendiente : EstadoPedido.Generado;
+		return sesionDeUsuario.getUsuario().tieneRol(RolesFactory.UsuarioRegistrado) ? EstadoPedido.Pendiente
+				: EstadoPedido.Generado;
+	}
+
+	private EstadoItemDePedido resolverEstadoAsignableANuevoItemDePedido(final SesionDeUsuario sesionDeUsuario) {
+		return sesionDeUsuario.getUsuario().tieneRol(RolesFactory.UsuarioRegistrado) ? EstadoItemDePedido.Pendiente
+				: EstadoItemDePedido.Generado;
 	}
 }

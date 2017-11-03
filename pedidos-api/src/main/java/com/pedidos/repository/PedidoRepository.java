@@ -14,5 +14,5 @@ public interface PedidoRepository extends CrudRepository<Pedido, Long>, PedidoCu
 	
 	List<Pedido> findAll();
 
-	List<Pedido> findAllByCliente(final Usuario usuario);	
+	List<Pedido> findAllByCliente(final Usuario cliente);	
 }
