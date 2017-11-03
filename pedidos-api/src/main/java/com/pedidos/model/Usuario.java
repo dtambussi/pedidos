@@ -1,5 +1,8 @@
 package com.pedidos.model;
 
+import static com.pedidos.model.RolesFactory.rolesDeAtencionAlCliente;
+
+import java.util.Collections;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -34,4 +37,26 @@ public class Usuario {
 	private Set<Rol> roles;
 	@OneToOne
 	private InfoAdicionalUsuario infoAdicional;
+	
+	public boolean tieneAlgunoDeLosRoles(final Set<Rol> roles) {
+		// disjoint implicaría que no tienen elementos en común (disjuntos)
+		return !Collections.disjoint(this.roles,  roles);
+	}
+	
+	public boolean tieneRol(final Rol rol) {
+		// disjoint implicaría que no tienen elementos en común (disjuntos)
+		return this.roles.contains(rol);
+	}
+	
+	public boolean esPersonalDeAtencionAlCliente() {
+		return this.tieneAlgunoDeLosRoles(rolesDeAtencionAlCliente());
+	}
+	
+	public boolean esPersonalDeCocina() {
+		return this.tieneRol(RolesFactory.Cocinero);
+	}
+	
+	public boolean esCliente() {
+		return this.tieneRol(RolesFactory.Cliente);
+	}
 }
