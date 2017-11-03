@@ -1,4 +1,4 @@
-package com.pedidos.controller;
+package com.pedidos.controller.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

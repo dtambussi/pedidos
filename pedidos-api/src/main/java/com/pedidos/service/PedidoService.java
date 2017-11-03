@@ -12,7 +12,7 @@ import com.pedidos.model.EstadoItemDePedido;
 import com.pedidos.model.EstadoPedido;
 import com.pedidos.model.ItemDePedido;
 import com.pedidos.model.Pedido;
-import com.pedidos.model.RolesFactory;
+import com.pedidos.model.Roles;
 import com.pedidos.model.SesionDeUsuario;
 import com.pedidos.model.Status;
 import com.pedidos.repository.ItemDeMenuRepository;
@@ -53,6 +53,7 @@ public class PedidoService {
 				.menu(menuRepository.findOne(request.getIdMenu()))
 				.items(itemsDePedido)
 				.estado(resolverEstadoAsignableANuevoPedido(sesionDeUsuario))
+				.destino(request.getDestino())
 				.comentario(request.getComentario())
 				.abonado(false)
 				.cliente(sesionDeUsuario.getUsuario())
@@ -91,12 +92,12 @@ public class PedidoService {
 	}
 	
 	private EstadoPedido resolverEstadoAsignableANuevoPedido(final SesionDeUsuario sesionDeUsuario) {
-		return sesionDeUsuario.getUsuario().tieneRol(RolesFactory.UsuarioRegistrado) ? EstadoPedido.Pendiente
+		return sesionDeUsuario.getUsuario().tieneRol(Roles.UsuarioRegistrado) ? EstadoPedido.Pendiente
 				: EstadoPedido.Generado;
 	}
 
 	private EstadoItemDePedido resolverEstadoAsignableANuevoItemDePedido(final SesionDeUsuario sesionDeUsuario) {
-		return sesionDeUsuario.getUsuario().tieneRol(RolesFactory.UsuarioRegistrado) ? EstadoItemDePedido.Pendiente
+		return sesionDeUsuario.getUsuario().tieneRol(Roles.UsuarioRegistrado) ? EstadoItemDePedido.Pendiente
 				: EstadoItemDePedido.Generado;
 	}
 }

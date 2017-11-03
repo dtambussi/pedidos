@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class RolesFactory {
+public class Roles {
 	
 	public static final Rol UsuarioRegistrado = rol(1L, "UsuarioRegistrado");
 	public static final Rol UsuarioNoRegistrado = rol(2L, "UsuarioNoRegistrado");
