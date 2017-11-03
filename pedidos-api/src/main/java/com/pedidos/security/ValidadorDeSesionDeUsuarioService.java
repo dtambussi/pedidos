@@ -29,7 +29,7 @@ public class ValidadorDeSesionDeUsuarioService {
 	 */
 	public SesionDeUsuario validarSesionDeUsuario(final HttpServletRequest request, final Set<Rol> roles) {
 		final SesionDeUsuario sesionDeUsuario = this.validarSesionDeUsuario(request);
-		if (!sesionDeUsuario.getUsuario().tieneAlgunRolContenidoEn(roles)) {
+		if (!sesionDeUsuario.getUsuario().tieneAlgunoDeLosRoles(roles)) {
 			throw new RuntimeException("User should have at least one of these roles: " + roles);
 		}
 		return sesionDeUsuario;
