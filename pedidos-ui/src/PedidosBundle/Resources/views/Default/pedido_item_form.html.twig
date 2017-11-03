@@ -6,9 +6,11 @@
                 "pedido-item-modal-body-div",
                 function () {
                     $("#agregar-pedido-success-alert").show();
+                    $("#agregarButton").hide();
                     setTimeout(function () {
                         $("#pedidoItemModal").modal("hide");
-                    }, 2000);
+                        $("#agregarButton").show();
+                    }, 1000);
                 }
         );
     }
@@ -69,7 +71,7 @@
             Item agregado
         </div>
         <div class="form-group text-center">
-            <button type="button" class="btn btn-primary disableable" onclick="agregearPedidoItem();">Agregar</button>
+            <button id="agregarButton" type="button" class="btn btn-primary disableable" onclick="agregearPedidoItem();">Agregar</button>
         </div>
     </div>
 </div>
