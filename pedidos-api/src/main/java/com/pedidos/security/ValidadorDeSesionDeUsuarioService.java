@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 
 import com.mysql.jdbc.StringUtils;
+import com.pedidos.controller.error.UnauthorizedUserActionException;
 import com.pedidos.model.Rol;
 import com.pedidos.model.SesionDeUsuario;
 import com.pedidos.repository.SesionDeUsuarioRepository;
@@ -17,6 +18,7 @@ import com.pedidos.repository.SesionDeUsuarioRepository;
 public class ValidadorDeSesionDeUsuarioService {
 	
 	private static final String AUTH_HEADER = "AuthorizationPedidos";
+	private static final String MISSING_AUTH_HEADER_MSG = "Missing header value: " + AUTH_HEADER + " required to validate user action.";
 	
 	private SesionDeUsuarioRepository sesionDeUsuarioRepository;
 
@@ -41,12 +43,12 @@ public class ValidadorDeSesionDeUsuarioService {
 	private SesionDeUsuario validarSesionDeUsuario(final HttpServletRequest request) {
 		final String sessionIdHeaderValue = StringUtils.isNullOrEmpty(request.getHeader(AUTH_HEADER)) ? null : request.getHeader(AUTH_HEADER);
 		return Optional.of(sessionIdHeaderValue).map(sessionId -> obtenerSesionDeUsuarioValida(sessionId))
-				.orElseThrow(() -> new RuntimeException("Missing header value: " + AUTH_HEADER + " required to validate user action."));
+				.orElseThrow(() -> new UnauthorizedUserActionException(MISSING_AUTH_HEADER_MSG));
 	}
 	
 	private SesionDeUsuario obtenerSesionDeUsuarioValida(final String sessionId) {
 		final SesionDeUsuario sesion = this.sesionDeUsuarioRepository.findOne(sessionId);
 		return Optional.of(sesion).map(Function.identity()).orElseThrow(
-				() -> new RuntimeException("No active session with id: " + sessionId + " Try with login."));
+				() -> new UnauthorizedUserActionException("No active session with id: " + sessionId + " Try with login."));
 	}
 }

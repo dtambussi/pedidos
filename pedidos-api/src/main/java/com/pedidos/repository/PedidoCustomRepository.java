@@ -7,5 +7,5 @@ import com.pedidos.model.Usuario;
 
 public interface PedidoCustomRepository {
 	
-	public List<Pedido> obtenerPedidosOrdenadosParaUsuario(final Usuario usuario);
+	List<Pedido> obtenerPedidosOrdenadosParaUsuario(final Usuario usuario);
 }

@@ -6,15 +6,17 @@ import java.util.Set;
 import javax.transaction.Transactional;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import com.pedidos.model.Rol;
 
+@Repository
 @Transactional
 public interface RolRepository extends CrudRepository<Rol, Long> {
 	
-	public Rol findOneByNombre(final String nombre);
+	Rol findOneByNombre(final String nombre);
 	
-	public Set<Rol> findAllByNombreIn(final Set<String> nombres);
+	Set<Rol> findAllByNombreIn(final Set<String> nombres);
 	
-	public List<Rol> save(final List<Rol> roles);
+	List<Rol> save(final List<Rol> roles);
 }

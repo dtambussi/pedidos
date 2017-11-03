@@ -77,8 +77,12 @@ class DefaultController extends Controller
     /**
      * @Route("/pedido", name="_pedido")
      */
-    public function pedidoAction()
+    public function pedidoAction(Request $request)
     {
+        if (!$this->getUsuario($request)->puedeCrearPedido()) {
+            return $this->sinPermisosResponse();
+        }
+
         $pedidosService = $this->getPedidosService();
 
         /** @var ItemsByCategoriaDto $itemsByCategoria */
@@ -98,6 +102,10 @@ class DefaultController extends Controller
      */
     public function agregarItemDePedidoAction(Request $request)
     {
+        if (!$this->getUsuario($request)->puedeCrearPedido()) {
+            return $this->sinPermisosResponse();
+        }
+
         $formEntity = new PedidoItemFormEntity();
 
         if ($request->get("pedido_item_id")) {
@@ -135,6 +143,10 @@ class DefaultController extends Controller
      */
     public function pedidoPreviewAction(Request $request)
     {
+        if (!$this->getUsuario($request)->puedeCrearPedido()) {
+            return $this->sinPermisosResponse();
+        }
+
         /** @var ItemsByCategoriaDto $itemsByCategoria */
         $itemsByCategoria = $this->getPedidosService()->findMenuItemsByCategoria();
 
@@ -156,6 +168,10 @@ class DefaultController extends Controller
      */
     public function pedidoLimpiarAction(Request $request)
     {
+        if (!$this->getUsuario($request)->puedeCrearPedido()) {
+            return $this->sinPermisosResponse();
+        }
+
         $this->generarNuevoPedidoRequestDto($request);
         return $this->redirectToRoute("_get_menu");
     }
@@ -167,6 +183,10 @@ class DefaultController extends Controller
      */
     public function confirmarPedidoAction(Request $request)
     {
+        if (!$this->getUsuario($request)->puedeCrearPedido()) {
+            return $this->sinPermisosResponse();
+        }
+
         $pedidoRequestDto = $this->getPedidoRequestDto($request);
 
         if (!$pedidoRequestDto->isEmpty()) {
@@ -185,6 +205,10 @@ class DefaultController extends Controller
      * @return Response
      */
     public function pedidoListarAction(Request $request) {
+        if (!$this->getUsuario($request)->puedeListarPedidos()) {
+            return $this->sinPermisosResponse();
+        }
+
         $pedidos = $this->getPedidosService()->findPedidos();
 
         return $this->render(
@@ -285,6 +309,10 @@ class DefaultController extends Controller
      * @return Response
      */
     public function reporteGenerarAction(Request $request) {
+        if (!$this->getUsuario($request)->puedeGenerarReporte()) {
+            return $this->sinPermisosResponse();
+        }
+
         return $this->render(
             "PedidosBundle:default:generar_reporte.html.twig");
     }
@@ -296,6 +324,10 @@ class DefaultController extends Controller
     */
     public function reporteListAction(Request $request)
     {
+        if (!$this->getUsuario($request)->puedeGenerarReporte()) {
+            return $this->sinPermisosResponse();
+        }
+
         $this->get('logger')->debug('reporteListAction');
         $from = $request->get('from');
         $to = $request->get('to');
@@ -360,6 +392,9 @@ class DefaultController extends Controller
      */
     public function generarSugerenciaAction(Request $request)
     {
+        if (!$this->getUsuario($request)->puedeCrearSugerencia()) {
+            return $this->sinPermisosResponse();
+        }
 
         $formEntity = new SugerenciaFormEntity();
 
@@ -408,5 +443,21 @@ class DefaultController extends Controller
     {
         $sessionDeUsuarioDto->getUsuario()->setSessionId($sessionDeUsuarioDto->getId());
         $request->getSession()->set(UsuarioDto::SESSION_NAME, $sessionDeUsuarioDto->getUsuario());
+    }
+
+    /**
+     * @param Request $request
+     * @return UsuarioDto
+     */
+    private function getUsuario(Request $request) {
+
+        return $request->getSession()->get(UsuarioDto::SESSION_NAME);
+    }
+
+    /**
+     * @return Response
+     */
+    private function sinPermisosResponse() {
+        return new Response("El usuario no posee permisos para realizar la operación", Response::HTTP_FORBIDDEN);
     }
 }

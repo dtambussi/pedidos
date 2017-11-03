@@ -15,7 +15,7 @@ import com.pedidos.factory.UsuarioFactory;
 import com.pedidos.model.InfoAdicionalUsuario;
 import com.pedidos.model.Menu;
 import com.pedidos.model.Rol;
-import com.pedidos.model.RolesFactory;
+import com.pedidos.model.Roles;
 import com.pedidos.model.Sugerencia;
 import com.pedidos.model.Usuario;
 import com.pedidos.model.fixture.MenuFixture;
@@ -75,7 +75,7 @@ public class InitializationController {
 		sugerencias.stream().forEach(sugerencia -> this.itemDeMenuRepository.save(sugerencia.getItemDeMenu()));
 		this.sugerenciaRepository.save(sugerencias);
 		// Persist default roles
-		RolesFactory.all().stream().map(rol -> this.rolRepository.save(rol)).collect(Collectors.toList());
+		Roles.all().stream().map(rol -> this.rolRepository.save(rol)).collect(Collectors.toList());
 		// Persist default users
 		this.crearUsuario(this.usuarioFixture.camarera_sabrina_mesa());
 		this.crearUsuario(this.usuarioFixture.barman_esteban_copas());

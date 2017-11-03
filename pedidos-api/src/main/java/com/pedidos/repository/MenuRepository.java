@@ -11,5 +11,5 @@ import com.pedidos.model.Menu;
 @Transactional
 public interface MenuRepository extends CrudRepository<Menu, Long> {
 	
-	public List<Menu> findAll();	
+	List<Menu> findAll();	
 }
