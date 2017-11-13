@@ -74,7 +74,7 @@ public class Roles {
 	}
 	
 	public static final Set<Rol> rolesDefaultDueño() {
-		return roles(UsuarioRegistrado, Dueño, ListarPedidos, CambiarEstadoDePedido, GenerarReporteDePedidos);
+		return roles(UsuarioRegistrado, Dueño, ListarPedidos, CambiarEstadoDePedido, GenerarReporteDePedidos, CrearSugerencia);
 	}
 	
 	public static final Set<Rol> rolesDeAtencionAlCliente() {

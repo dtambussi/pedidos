@@ -15,39 +15,27 @@
     <meta content="0" http-equiv="expires">
 
     {% block stylesheets %}
-        {% stylesheets
-        'bundles/pedidos/vendor/bootstrap/css/bootstrap.css'
-        'bundles/pedidos/fonts/font-awesome/css/font-awesome.min.css'
-        'bundles/pedidos/vendor/bootstrap-datepicker/css/bootstrap-datepicker.min.css'
-        'bundles/pedidos/vendor/bootstrap-table/bootstrap-table.css'
-        'bundles/pedidos/vendor/bootstrap-daterangepicker/daterangepicker.css'
-        'bundles/pedidos/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css'
-        'bundles/pedidos/css/main.css'
-        filter='?uglifycss' filter='cssrewrite' %}
-        <link rel="stylesheet" href="{{ asset_url }}" rel="stylesheet" type="text/css"/>
-        {% endstylesheets %}
+        <link rel="stylesheet" href="{{ asset('bundles/pedidos/vendor/bootstrap/css/bootstrap.css') }}" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" href="{{ asset('bundles/pedidos/fonts/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" href="{{ asset('bundles/pedidos/vendor/bootstrap-datepicker/css/bootstrap-datepicker.min.css') }}" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" href="{{ asset('bundles/pedidos/vendor/bootstrap-table/bootstrap-table.css') }}" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" href="{{ asset('bundles/pedidos/vendor/bootstrap-daterangepicker/daterangepicker.css') }}" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" href="{{ asset('bundles/pedidos/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css') }}" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" href="{{ asset('bundles/pedidos/css/main.css') }}" rel="stylesheet" type="text/css"/>
     {% endblock %}
 
     {% block javascripts %}
-        {% javascripts
-        '@PedidosBundle/Resources/public/vendor/jquery/jquery.js'
-        '@PedidosBundle/Resources/public/vendor/bootstrap/js/bootstrap.js'
-        '@PedidosBundle/Resources/public/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js'
-        '@PedidosBundle/Resources/public/vendor/bootstrap-daterangepicker/moment.js'
-        '@PedidosBundle/Resources/public/vendor/bootstrap-table/bootstrap-table.js'
-        '@PedidosBundle/Resources/public/vendor/bootstrap-table/bootstrap-table-export.js'
-        '@PedidosBundle/Resources/public/vendor/table-export/table-export.js'
-        '@PedidosBundle/Resources/public/vendor/bootstrap-daterangepicker/daterangepicker.js'
-        '@PedidosBundle/Resources/public/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.js'
-
-        '@PedidosBundle/Resources/public/js/global-functions.js'
-        '@PedidosBundle/Resources/public/js/form/field_format.js' %}
-        <script src="{{ asset_url }}"></script>
-        <script>
-        </script>
-        {% endjavascripts %}
-        <script>
-        </script>
+        <script src="{{ asset('bundles/pedidos/vendor/jquery/jquery.js')  }}"></script>
+        <script src="{{ asset('bundles/pedidos/vendor/bootstrap/js/bootstrap.js')  }}"></script>
+        <script src="{{ asset('bundles/pedidos/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js')  }}"></script>
+        <script src="{{ asset('bundles/pedidos/vendor/bootstrap-daterangepicker/moment.js')  }}"></script>
+        <script src="{{ asset('bundles/pedidos/vendor/bootstrap-table/bootstrap-table.js')  }}"></script>
+        <script src="{{ asset('bundles/pedidos/vendor/bootstrap-table/bootstrap-table-export.js')  }}"></script>
+        <script src="{{ asset('bundles/pedidos/vendor/table-export/table-export.js')  }}"></script>
+        <script src="{{ asset('bundles/pedidos/vendor/bootstrap-daterangepicker/daterangepicker.js')  }}"></script>
+        <script src="{{ asset('bundles/pedidos/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.js')  }}"></script>
+        <script src="{{ asset('bundles/pedidos/js/global-functions.js')  }}"></script>
+        <script src="{{ asset('bundles/pedidos/js/form/field_format.js')  }}"></script>
     {% endblock %}
 </head>
 

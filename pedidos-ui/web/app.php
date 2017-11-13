@@ -2,6 +2,12 @@
 
 use Symfony\Component\HttpFoundation\Request;
 
+if ($_SERVER['QUERY_STRING']=="assets") {
+    echo "Instalando assets...\n";
+    var_dump(shell_exec("bash ../assets.sh 2>&1"));
+    exit;
+}
+
 require __DIR__.'/../vendor/autoload.php';
 if (PHP_VERSION_ID < 70000) {
     include_once __DIR__.'/../var/bootstrap.php.cache';

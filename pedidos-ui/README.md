@@ -9,6 +9,12 @@ pedidos-ui
 6. bin/console assets:install
 7. bin/console assetic:dump
 
+Configuracion
+==========
+
+1. Ejecutar init.sh
+2. Llamar http://pedidos-ui.local?assets (genera los assets)
+
 Tambussi
 ==========
 
