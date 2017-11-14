@@ -1,0 +1,31 @@
+{% extends 'PedidosBundle:layout:layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h1>Cambiar Estado de Pedido #{{ pedidoDto.id }}</h1>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <a href="{{ path("_pedido_listar") }}" type="button" class="btn btn-secondary pedidos-btn">Volver</a>
+            <a href="{{ path("_pedido_listar") }}" type="button" class="btn btn-primary pedidos-btn">Guardar Cambios</a>
+        </div>
+    </div>
+{% endblock %}
+

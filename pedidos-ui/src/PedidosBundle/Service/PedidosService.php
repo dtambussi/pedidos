@@ -83,6 +83,5 @@ class PedidosService
 
     public function generarReportePedidos(ReportePedidosRequestDto $reportePedidosRequestDto){
         return $this->pedidosApiHttpClient->generarReportePedidos($reportePedidosRequestDto);
-
     }
 }

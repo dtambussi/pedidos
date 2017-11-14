@@ -10,6 +10,7 @@ namespace PedidosBundle\Dto\Response;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\Exclude;
 use PedidosBundle\Dto\ItemsByCategoriaDto;
+use PedidosBundle\Dto\UsuarioDto;
 
 // https://jsonutils.com/
 class PedidoDto
@@ -18,61 +19,74 @@ class PedidoDto
      * @var int
      * @Type("int")
      */
-    public $id; //int
+    private $id; //int
 
     /**
      * @var string
      * @Type("string")
      */
-    public $status; //String
+    private $status; //String
 
     /**
      * @var string
      * @Type("string")
      */
-    public $estado; //String
+    private $estado; //String
 
     /**
      * @var string
      * @Type("string")
      */
-    public $comentario; //String
+    private $comentario; //String
 
     /**
      * @var boolean
      * @Type("boolean")
      */
-    public $abonado; //boolean
+    private $abonado; //boolean
+
 
     /**
-     * @var object
-     * @Type("object")
+     * @var string
+     * @Type("string")
      */
-    public $mesa;
+    private $destino;
 
     /**
      * @var array
      * @Type("array<PedidosBundle\Dto\Response\PedidoItem>")
      */
-    public $items; //array(Item)
+    private $items; //array(Item)
 
     /**
      * @var ItemsByCategoriaDto
      * @Exclude
      */
-    public $itemsByCategoriaDto;
+    private $itemsByCategoriaDto;
 
     /**
      * @var string
      * @Type("string")
      */
-    public $fechaCreacion; //Date
+    private $fechaCreacion; //Date
 
     /**
      * @var string
      * @Type("string")
      */
-    public $fechaUltimaModificacion;
+    private $fechaUltimaModificacion;
+
+    /**
+     * @var UsuarioDto
+     * @Type("PedidosBundle\Dto\UsuarioDto")
+     */
+    private $cliente;
+
+    /**
+     * @var UsuarioDto
+     * @Type("PedidosBundle\Dto\UsuarioDto")
+     */
+    private $personalAsignado;
 
     /**
      * @return int
@@ -187,22 +201,6 @@ class PedidoDto
     }
 
     /**
-     * @return object
-     */
-    public function getMesa()
-    {
-        return $this->mesa;
-    }
-
-    /**
-     * @param object $mesa
-     */
-    public function setMesa($mesa)
-    {
-        $this->mesa = $mesa;
-    }
-
-    /**
      * @return array
      */
     public function getItems()
@@ -232,5 +230,53 @@ class PedidoDto
     public function setItemsByCategoriaDto($itemsByCategoriaDto)
     {
         $this->itemsByCategoriaDto = $itemsByCategoriaDto;
-    } //Date
+    }
+
+    /**
+     * @return UsuarioDto
+     */
+    public function getCliente()
+    {
+        return $this->cliente;
+    }
+
+    /**
+     * @param UsuarioDto $cliente
+     */
+    public function setCliente($cliente)
+    {
+        $this->cliente = $cliente;
+    }
+
+    /**
+     * @return UsuarioDto
+     */
+    public function getPersonalAsignado()
+    {
+        return $this->personalAsignado;
+    }
+
+    /**
+     * @param UsuarioDto $personalAsignado
+     */
+    public function setPersonalAsignado($personalAsignado)
+    {
+        $this->personalAsignado = $personalAsignado;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDestino()
+    {
+        return $this->destino;
+    }
+
+    /**
+     * @param string $destino
+     */
+    public function setDestino($destino)
+    {
+        $this->destino = $destino;
+    }
 }

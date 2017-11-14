@@ -11,6 +11,19 @@
   font-family: 'Pacifico';
   src: url('../fonts/Pacifico/Pacifico-Regular.ttf');
 }
+@font-face {
+  font-family: 'Open Sans';
+  src: url('../fonts/Open_Sans/OpenSans-Regular.ttf');
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: url('../fonts/Open_Sans/OpenSans-Bold.ttf');
+  font-weight: bold;
+}
+@font-face {
+  font-family: 'Pacifico';
+  src: url('../fonts/Pacifico/Pacifico-Regular.ttf');
+}
 body {
   font-family: 'Open Sans', sans-serif;
   padding-bottom: 120px;
@@ -25,6 +38,12 @@ h2 {
 .btn-primary {
   background-color: #ffc107;
   border-color: #ffc107;
+  min-width: 120px;
+}
+.btn-secondary {
+  background-color: gray;
+  border-color: gray;
+  color: white;
   min-width: 120px;
 }
 .btn-default {
@@ -186,17 +205,4 @@ h2 {
 #main-page .disabled .menu-principal-item {
   background-color: #dfdfdf;
   border-color: #dfdfdf;
-}
-@font-face {
-  font-family: 'Open Sans';
-  src: url('../fonts/Open_Sans/OpenSans-Regular.ttf');
-}
-@font-face {
-  font-family: 'Open Sans';
-  src: url('../fonts/Open_Sans/OpenSans-Bold.ttf');
-  font-weight: bold;
-}
-@font-face {
-  font-family: 'Pacifico';
-  src: url('../fonts/Pacifico/Pacifico-Regular.ttf');
 }

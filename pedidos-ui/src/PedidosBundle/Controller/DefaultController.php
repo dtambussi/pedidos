@@ -9,6 +9,7 @@ use PedidosBundle\Dto\MenuItemDto;
 use PedidosBundle\Dto\ReportePedidosDto;
 use PedidosBundle\Dto\Request\PedidoRequestDto;
 use PedidosBundle\Dto\Request\ReportePedidosRequestDto;
+use PedidosBundle\Dto\Response\PedidoDto;
 use PedidosBundle\Dto\Response\ReporteResponseDto;
 use PedidosBundle\Dto\SessionDeUsuarioDto;
 use PedidosBundle\Dto\SugerenciaDto;
@@ -35,6 +36,7 @@ use Symfony\Component\HttpFoundation\Response;
 class DefaultController extends Controller
 {
     const HARDCODED_MENU_ID = 1;
+    const PEDIDO_DTO_ARRAY_SESSION_NAME = "pedidoDtoArray";
 
     /**
      * @Route("/", name="_index")
@@ -210,6 +212,7 @@ class DefaultController extends Controller
         }
 
         $pedidos = $this->getPedidosService()->findPedidos();
+        $request->getSession()->set(self::PEDIDO_DTO_ARRAY_SESSION_NAME, $pedidos);
 
         return $this->render(
             "PedidosBundle:default:listar_pedidos.html.twig",
@@ -229,6 +232,7 @@ class DefaultController extends Controller
      */
     public function logoutAction(Request $request) {
         $request->getSession()->remove(UsuarioDto::SESSION_NAME);
+        $request->getSession()->remove(self::PEDIDO_DTO_ARRAY_SESSION_NAME);
         $request->getSession()->invalidate(0);
 
         return $this->render("PedidosBundle:default:login.html.twig");
@@ -422,6 +426,28 @@ class DefaultController extends Controller
     }
 
     /**
+     * @Route("/cambiar_estado_pedido", name="_cambiar_estado_pedido")
+     * @param Request $request
+     * @return Response
+     */
+    public function cambiarEstadoPedidoAction(Request $request) {
+        if (!$this->getUsuario($request)->puedeCambiarEstadoDePedido()) {
+            return $this->sinPermisosResponse();
+        }
+
+        $pedidoId = $request->get("pedido_id");
+
+        $pedidoDto = $this->getPedidoById($request, $pedidoId);
+
+        if (!$pedidoDto) {
+            return new Response("No existe el pedido", Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->render("PedidosBundle:default:cambiar_estado_pedido.html.twig",
+            array("pedidoDto" => $pedidoDto));
+    }
+
+    /**
      * @param $sugerencias
      * @param $itemsByCategoria
      */
@@ -459,5 +485,23 @@ class DefaultController extends Controller
      */
     private function sinPermisosResponse() {
         return new Response("El usuario no posee permisos para realizar la operación", Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @param Request $request
+     * @param $pedidoId
+     * @return PedidoDto
+     */
+    private function getPedidoById(Request $request, $pedidoId) {
+        $pedidoDtoArray = $request->getSession()->get(self::PEDIDO_DTO_ARRAY_SESSION_NAME);
+
+        /** @var PedidoDto $pedidoDto */
+        foreach ($pedidoDtoArray as $pedidoDto) {
+            if ($pedidoDto->getId() == $pedidoId) {
+                return $pedidoDto;
+            }
+        }
+
+        return null;
     }
 }

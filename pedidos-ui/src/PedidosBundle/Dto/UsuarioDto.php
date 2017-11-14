@@ -139,6 +139,10 @@ class UsuarioDto
         return $this->roleExists(UsuarioRoleType::GENERAR_REPORTE_PEDIDOS);
     }
 
+    public function puedeCambiarEstadoDePedido() {
+        return $this->roleExists(UsuarioRoleType::CAMBIAR_ESTADO_PEDIDO);
+    }
+
     private function roleExists($roleNombre) {
         if (empty($this->roles)) {
             return false;

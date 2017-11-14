@@ -14,6 +14,9 @@
         function mostrarDetallePedido($pedidoId) {
             $("#pedido-detalle-" + $pedidoId).slideToggle();
         }
+        function cambiarEstadoDePedido(pedidoId) {
+
+        }
     </script>
 {% endblock %}
 
@@ -33,6 +36,10 @@
                     <h3 onclick="mostrarDetallePedido({{ pedidoDto.id }})">
                         Pedido #{{ pedidoDto.id }}<button type="button" class="btn btn-default btn-small pull-right">Detalle</button><br>
                         <small>{% if pedidoDto.comentario %}{{ pedidoDto.comentario }}&nbsp;{% endif %}({{ pedidoDto.estado }})</small>
+                        {% if app.session.get("usuarioDto").puedeCambiarEstadoDePedido %}
+                            <a href="{{ path("_cambiar_estado_pedido") }}?pedido_id={{ pedidoDto.id }}"
+                               type="button" class="btn btn-primary pedidos-btn">EditarPedido</a>
+                        {% endif %}
                     </h3>
                     <div style="display: none;" id="pedido-detalle-{{ pedidoDto.id }}">
                         {{ pedidoListarMacro.generarListaItemsDePedido("Entradas", pedidoDto.itemsByCategoriaDto.entradaItems) }}
