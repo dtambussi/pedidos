@@ -36,11 +36,11 @@ class ReportePedidosRequestDto
      * @param string $fechaDesde
      * @param string $fechaHasta
      */
-    public function __construct($fechaDesde, $fechaHasta)
+    public function __construct($fechaDesde, $fechaHasta,$estado)
     {
         $this->fechaDesde = $fechaDesde;
         $this->fechaHasta = $fechaHasta;
-        $this->estadoDePedido = EstadoPedidoType::ENTREGADO;
+        $this->estadoDePedido = empty($estado)?null:$estado;
     }
 
     /**

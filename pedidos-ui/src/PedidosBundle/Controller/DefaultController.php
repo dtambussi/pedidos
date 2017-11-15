@@ -4,6 +4,7 @@ namespace PedidosBundle\Controller;
 
 use JMS\Serializer\Serializer;
 use PedidosBundle\Dto\BootstrapTableDto;
+use PedidosBundle\Dto\EstadoPedidoType;
 use PedidosBundle\Dto\ItemsByCategoriaDto;
 use PedidosBundle\Dto\MenuItemDto;
 use PedidosBundle\Dto\ReportePedidosDto;
@@ -318,8 +319,10 @@ class DefaultController extends Controller
             return $this->sinPermisosResponse();
         }
 
+        $estadoPedidos = EstadoPedidoType::getEstados();
+
         return $this->render(
-            "PedidosBundle:default:generar_reporte.html.twig");
+            "PedidosBundle:default:generar_reporte.html.twig",array('estadoPedidos' =>$estadoPedidos));
     }
 
     /**
@@ -336,11 +339,17 @@ class DefaultController extends Controller
         $this->get('logger')->debug('reporteListAction');
         $from = $request->get('from');
         $to = $request->get('to');
+        $estado = $request->get('estado');
+
+        // Cuando no se envia ninguna fecha, no devulve nada.
+        if($from == '#date-from'){
+            return new Response(Response::HTTP_OK);
+        }
 
         $fechaDesde = PedidosDateUtil::toPedidosApiFormat($from);
         $fechaHasta = PedidosDateUtil::toPedidosApiFormat($to);
 
-        $reportePedidosRequest = new ReportePedidosRequestDto($fechaDesde,$fechaHasta);
+        $reportePedidosRequest = new ReportePedidosRequestDto($fechaDesde,$fechaHasta,$estado);
 
         $reportePedidos = $this->getPedidosService()->generarReportePedidos($reportePedidosRequest);
 
