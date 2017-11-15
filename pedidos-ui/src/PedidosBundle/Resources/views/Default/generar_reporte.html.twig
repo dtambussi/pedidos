@@ -14,7 +14,8 @@
         $(document).ready(function () {
 
             $('#reporte-table').bootstrapTable({
-                showExport:true
+                showExport:true,
+                exportOptions:{fileName:"reporte_pedidos"}
             });
 
             $('#date-picker').daterangepicker({

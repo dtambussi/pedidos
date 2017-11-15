@@ -11,19 +11,6 @@
   font-family: 'Pacifico';
   src: url('../fonts/Pacifico/Pacifico-Regular.ttf');
 }
-@font-face {
-  font-family: 'Open Sans';
-  src: url('../fonts/Open_Sans/OpenSans-Regular.ttf');
-}
-@font-face {
-  font-family: 'Open Sans';
-  src: url('../fonts/Open_Sans/OpenSans-Bold.ttf');
-  font-weight: bold;
-}
-@font-face {
-  font-family: 'Pacifico';
-  src: url('../fonts/Pacifico/Pacifico-Regular.ttf');
-}
 body {
   font-family: 'Open Sans', sans-serif;
   padding-bottom: 120px;
@@ -205,4 +192,55 @@ h2 {
 #main-page .disabled .menu-principal-item {
   background-color: #dfdfdf;
   border-color: #dfdfdf;
+}
+#listado-pedidos .comentario-color i {
+  color: #ffecb3;
+}
+#listado-pedidos .abonado {
+  background-color: #1ba852;
+  color: white;
+  border-radius: 100px;
+  padding: 8px;
+  font-size: 10px;
+}
+#listado-pedidos .estado-pedido {
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 30px;
+  padding: 7px;
+  color: white;
+  font-size: 12px;
+}
+#listado-pedidos .generado {
+  background-color: #636c72;
+  border-color: #636c72;
+}
+#listado-pedidos .confeccionado {
+  background-color: #5bc0de;
+  border-color: #5bc0de;
+}
+#listado-pedidos .pendiente {
+  background-color: #ffe57f;
+  border-color: #ffe57f;
+}
+#listado-pedidos .entregado {
+  background-color: #5cb85c;
+  border-color: #5cb85c;
+}
+#listado-pedidos .cancelado {
+  background-color: #d9534f;
+  border-color: #d9534f;
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: url('../fonts/Open_Sans/OpenSans-Regular.ttf');
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: url('../fonts/Open_Sans/OpenSans-Bold.ttf');
+  font-weight: bold;
+}
+@font-face {
+  font-family: 'Pacifico';
+  src: url('../fonts/Pacifico/Pacifico-Regular.ttf');
 }

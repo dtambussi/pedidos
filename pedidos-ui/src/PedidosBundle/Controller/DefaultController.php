@@ -193,6 +193,7 @@ class DefaultController extends Controller
 
         if (!$pedidoRequestDto->isEmpty()) {
             $pedidoRequestDto->setComentario($request->get("comentario"));
+            $pedidoRequestDto->setDestino($request->get("destino"));
             $this->getPedidosService()->confirmarPedido($pedidoRequestDto);
             $this->generarNuevoPedidoRequestDto($request);
         }
