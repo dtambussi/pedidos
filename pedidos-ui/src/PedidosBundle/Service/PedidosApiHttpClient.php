@@ -11,9 +11,11 @@ namespace PedidosBundle\Service;
 
 use PedidosBundle\Dto\MenuDto;
 use PedidosBundle\Dto\ReportePedidosDto;
+use PedidosBundle\Dto\Request\CambiarEstadoDePedidoRequest;
 use PedidosBundle\Dto\Request\LoginGuestRequestDto;
 use PedidosBundle\Dto\Request\LoginRequestDto;
 use PedidosBundle\Dto\Request\LoginUsuarioRegistradoRequestDto;
+use PedidosBundle\Dto\Request\RecibirPedidoRequest;
 use PedidosBundle\Dto\Request\ReportePedidosRequestDto;
 use PedidosBundle\Dto\Request\SugerenciaRequestDto;
 use PedidosBundle\Dto\Response\PedidoDto;
@@ -136,6 +138,25 @@ class PedidosApiHttpClient
         return $response[0];
     }
 
+    /**
+     * @param CambiarEstadoDePedidoRequest $cambiarEstadoPedidoRequest
+     */
+    public function cambiarEstadoDePedido(CambiarEstadoDePedidoRequest $cambiarEstadoPedidoRequest)
+    {
+        $url = "http://" . $this->pedidosapiHostname . "/pedido/" . $cambiarEstadoPedidoRequest->getIdPedido() . "/cambiarEstadoDePedidoRequest";
+        $response = $this->doPost($url, null, $cambiarEstadoPedidoRequest);
+        return $response[0];
+    }
+
+    /**
+     * @param $recibirPedidoRequest
+     */
+    public function recibirPedido(RecibirPedidoRequest $recibirPedidoRequest)
+    {
+        $url = "http://" . $this->pedidosapiHostname . "/pedido/" . $recibirPedidoRequest->getIdPedido() . "/recibirPedidoRequest";
+        $response = $this->doPost($url, null, $recibirPedidoRequest);
+        return $response[0];
+    }
 
     /**
      * @param $url

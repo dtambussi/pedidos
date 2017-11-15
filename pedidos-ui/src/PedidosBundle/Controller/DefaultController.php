@@ -4,10 +4,14 @@ namespace PedidosBundle\Controller;
 
 use JMS\Serializer\Serializer;
 use PedidosBundle\Dto\BootstrapTableDto;
+use PedidosBundle\Dto\EstadoPedidoType;
 use PedidosBundle\Dto\ItemsByCategoriaDto;
 use PedidosBundle\Dto\MenuItemDto;
 use PedidosBundle\Dto\ReportePedidosDto;
+use PedidosBundle\Dto\Request\CambiarEstadoDePedidoRequest;
+use PedidosBundle\Dto\Request\CambiarEstadoItemDePedidoRequest;
 use PedidosBundle\Dto\Request\PedidoRequestDto;
+use PedidosBundle\Dto\Request\RecibirPedidoRequest;
 use PedidosBundle\Dto\Request\ReportePedidosRequestDto;
 use PedidosBundle\Dto\Response\PedidoDto;
 use PedidosBundle\Dto\Response\ReporteResponseDto;
@@ -211,8 +215,7 @@ class DefaultController extends Controller
             return $this->sinPermisosResponse();
         }
 
-        $pedidos = $this->getPedidosService()->findPedidos();
-        $request->getSession()->set(self::PEDIDO_DTO_ARRAY_SESSION_NAME, $pedidos);
+        $pedidos = $this->setPedidosDtoArrayInSession($request);
 
         return $this->render(
             "PedidosBundle:default:listar_pedidos.html.twig",
@@ -354,6 +357,63 @@ class DefaultController extends Controller
         $this->get('logger')->debug("Reporte: " . json_encode($json, JSON_PRETTY_PRINT));
 
         return new Response($json, Response::HTTP_OK, array("Content-Type: application/json"));
+    }
+
+    /**
+     * @Route("/pedido_cambiar_estado_form", name="_pedido_cambiar_estado_form")
+     * @param $request
+     * @return Response
+     */
+    public function pedidoCambiarEstadoFormAction(Request $request) {
+        // var_dump($request);
+
+        $estadoPedido = $request->request->get("pedido_estado_form_pedido_estado");
+        $pedidoId = $request->get("pedido_id");
+
+        /** @var array $estadoItemPedidoArray */
+        $estadoItemPedidoArray = $request->request->get("pedido_estado_form_pedido_item_estado");
+
+        $pedidoDto = $this->getPedidoById($request, $pedidoId);
+
+        // Si pasa a pendiente por primera vez es llamar al servicio de recibir
+        if ($estadoPedido == EstadoPedidoType::PENDIENTE &&
+            $pedidoDto->getEstado() != EstadoPedidoType::PENDIENTE) {
+            $this->get("logger")->info("**** PENDIENTE");
+            $recibirPedidoRequest = new RecibirPedidoRequest();
+            $recibirPedidoRequest->setIdPedido($pedidoId);
+
+            // TODO Preguntar de donde tomo estos dos campos
+            $recibirPedidoRequest->setDestino($pedidoDto->getDestino());
+            $recibirPedidoRequest->setComentario($pedidoDto->getComentario());
+
+            $this->getPedidosService()->recibirPedido($recibirPedidoRequest);
+        } else {
+            $this->get("logger")->info("**** DEFINITIVO");
+
+            // TODO DESHARCODEAR!
+            $cambiarEstadoPedidoRequest = new CambiarEstadoDePedidoRequest();
+            $cambiarEstadoPedidoRequest->setIdPedido($pedidoId);
+            $cambiarEstadoPedidoRequest->setAbonado(false);
+            // $cambiarEstadoPedidoRequest->setComentario("Comment");
+            $cambiarEstadoPedidoRequest->setDestino("Mesa destino");
+            $cambiarEstadoPedidoRequest->setEstadoPedido($estadoPedido);
+
+            /**
+             * @var int $pedidoItemId
+             * @var string $pedidoItemEstado
+             */
+            foreach ($estadoItemPedidoArray as $pedidoItemId => $pedidoItemEstado) {
+                $cambiarEstadoItemPedidoRequest = new CambiarEstadoItemDePedidoRequest();
+                $cambiarEstadoItemPedidoRequest->setIdItemDePedido($pedidoItemId);
+                $cambiarEstadoItemPedidoRequest->setEstadoItemDePedido($pedidoItemEstado);
+                $cambiarEstadoPedidoRequest->addCambiarEstadoItem($cambiarEstadoItemPedidoRequest);
+            }
+
+            $this->getPedidosService()->cambiarEstadoPedido($cambiarEstadoPedidoRequest);
+        }
+
+        $this->setPedidosDtoArrayInSession($request);
+        return new Response();
     }
 
     /**
@@ -503,5 +563,16 @@ class DefaultController extends Controller
         }
 
         return null;
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    private function setPedidosDtoArrayInSession(Request $request) {
+        $pedidos = $this->getPedidosService()->findPedidos();
+        $request->getSession()->set(self::PEDIDO_DTO_ARRAY_SESSION_NAME, $pedidos);
+
+        return $pedidos;
     }
 }

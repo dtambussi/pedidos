@@ -16,4 +16,5 @@ class EstadoPedidoType
     const CONFECCIONADO = "Confeccionado";
     const ENTREGADO = "Entregado";
     const CANCELADO = "Cancelado";
+    const EN_CURSO = "En_Curso";
 }

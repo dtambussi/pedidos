@@ -1,3 +1,4 @@
+{% import _self as pedidoCambiarMacro %}
 {% extends 'PedidosBundle:layout:layout.html.twig' %}
 
 {% block stylesheets %}
@@ -10,6 +11,19 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+        function guardarCambios() {
+            submitForm2("/pedido_cambiar_estado_form?pedido_id={{ pedidoDto.id }}",
+                    "pedido_estado_form_id",
+                    "formulario",
+                    function() {
+                        console.log("Joya")
+                    }
+            );
+        }
     </script>
 {% endblock %}
 
@@ -17,15 +31,72 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-12">
-                <h1>Cambiar Estado de Pedido #{{ pedidoDto.id }}</h1>
+                <h1>Cambiar Estado de Pedido</h1>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-12 text-center">
-            <a href="{{ path("_pedido_listar") }}" type="button" class="btn btn-secondary pedidos-btn">Volver</a>
-            <a href="{{ path("_pedido_listar") }}" type="button" class="btn btn-primary pedidos-btn">Guardar Cambios</a>
+        <div id="formualrio">
+        <form name="pedido_estado_form" id="pedido_estado_form_id" action="/pedido_cambiar_estado_form" method="POST">
+            <div class="row">
+                <div class="col-xs-4">
+                    Pedido: {{ pedidoDto.id }}
+                </div>
+                <div class="col-xs-4">
+                    Mesera: {% if pedidoDto.personalAsignado is not null  %} {{ pedidoDto.personalAsignado.nickname }}{% endif %}
+                </div>
+                <div class="col-xs-4">
+                    <select name="pedido_estado_form_pedido_estado">
+                        <option value="Generado" {% if pedidoDto.estado == 'Generado' %}selected="selected"{% endif %}>Generado</option>
+                        <option value="Pendiente" {% if pedidoDto.estado == 'Pendiente' %}selected="selected"{% endif %}>Pendiente</option>
+                        <option value="En_Curso" {% if pedidoDto.estado == 'En_Curso' %}selected="selected"{% endif %}>En Curso</option>
+                        <option value="Confeccionado" {% if pedidoDto.estado == 'Confeccionado' %}selected="selected"{% endif %}>Confeccionado</option>
+                        <option value="Entregado" {% if pedidoDto.estado == 'Entregado' %}selected="selected"{% endif %}>Entregado</option>
+                        <option value="Cancelado" {% if pedidoDto.estado == 'Cancelado' %}selected="selected"{% endif %}>Cancelado</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    {{ pedidoCambiarMacro.generarListaItemsDePedido(pedidoDto.items) }}
+                </div>
+            </div>
+            <br>
+            <br>
+            <div class="row">
+                <div class="col-xs-12 text-center">
+                    <a href="{{ path("_pedido_listar") }}" type="button" class="btn btn-secondary pedidos-btn">Volver</a>
+                    <a type="button" class="btn btn-primary pedidos-btn" onclick="guardarCambios()">Guardar Cambios</a>
+                </div>
+            </div>
+        </form>
         </div>
     </div>
 {% endblock %}
 
+{% macro generarListaItemsDePedido(items) %}
+    {% if items|length > 0 %}
+        <div class="row">
+            <div class="col-xs-12">
+                {% for pedidoItem in items %}
+                    <div class="row">
+                        <div class="col-xs-6">
+                            {{ pedidoItem.itemDeMenu.nombre }}
+                        </div>
+                        <div class="col-xs-1" style="color: grey;">
+                            {{ pedidoItem.cantidad }}
+                        </div>
+                        <div class="col-xs-5" style="color: grey;">
+                            <select name="pedido_estado_form_pedido_item_estado[{{ pedidoItem.id }}]">
+                                <option value="Generado" {% if pedidoItem.estado == 'Generado' %}selected="selected"{% endif %}>Generado</option>
+                                <option value="Pendiente" {% if pedidoItem.estado == 'Pendiente' %}selected="selected"{% endif %}>Pendiente</option>
+                                <option value="Confeccionado" {% if pedidoItem.estado == 'Confeccionado' %}selected="selected"{% endif %}>Confeccionado</option>
+                                <option value="Entregado" {% if pedidoItem.estado == 'Entregado' %}selected="selected"{% endif %}>Entregado</option>
+                                <option value="Cancelado" {% if pedidoItem.estado == 'Cancelado' %}selected="selected"{% endif %}>Cancelado</option>
+                            </select>
+                            {% if pedidoItem.comentario %}<span class="glyphicon glyphicon-comment" aria-hidden="true" data-toggle="tooltip" title="{{ pedidoItem.comentario }}"></span>{% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+{% endmacro %}
