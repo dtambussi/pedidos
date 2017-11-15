@@ -27,6 +27,11 @@ class PedidoRequestDto
     private $comentario;
 
     /**
+     * @var string
+     */
+    private $destino;
+
+    /**
      * @var array<ItemDePedidoRequestDto>
      */
     private $items;
@@ -86,6 +91,22 @@ class PedidoRequestDto
     public function setComentario($comentario)
     {
         $this->comentario = $comentario;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDestino()
+    {
+        return $this->destino;
+    }
+
+    /**
+     * @param string $destino
+     */
+    public function setDestino($destino)
+    {
+        $this->destino = $destino;
     }
 
     /**

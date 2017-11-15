@@ -197,6 +197,7 @@ class DefaultController extends Controller
 
         if (!$pedidoRequestDto->isEmpty()) {
             $pedidoRequestDto->setComentario($request->get("comentario"));
+            $pedidoRequestDto->setDestino($request->get("destino"));
             $this->getPedidosService()->confirmarPedido($pedidoRequestDto);
             $this->generarNuevoPedidoRequestDto($request);
         }
@@ -320,8 +321,10 @@ class DefaultController extends Controller
             return $this->sinPermisosResponse();
         }
 
+        $estadoPedidos = EstadoPedidoType::getEstados();
+
         return $this->render(
-            "PedidosBundle:default:generar_reporte.html.twig");
+            "PedidosBundle:default:generar_reporte.html.twig",array('estadoPedidos' =>$estadoPedidos));
     }
 
     /**
@@ -338,11 +341,17 @@ class DefaultController extends Controller
         $this->get('logger')->debug('reporteListAction');
         $from = $request->get('from');
         $to = $request->get('to');
+        $estado = $request->get('estado');
+
+        // Cuando no se envia ninguna fecha, no devulve nada.
+        if($from == '#date-from'){
+            return new Response(Response::HTTP_OK);
+        }
 
         $fechaDesde = PedidosDateUtil::toPedidosApiFormat($from);
         $fechaHasta = PedidosDateUtil::toPedidosApiFormat($to);
 
-        $reportePedidosRequest = new ReportePedidosRequestDto($fechaDesde,$fechaHasta);
+        $reportePedidosRequest = new ReportePedidosRequestDto($fechaDesde,$fechaHasta,$estado);
 
         $reportePedidos = $this->getPedidosService()->generarReportePedidos($reportePedidosRequest);
 
