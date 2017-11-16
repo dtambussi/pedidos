@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import com.pedidos.dto.CambiarEstadoDePedidoRequest;
+import com.pedidos.dto.CambiarEstadoItemDePedidoRequest;
 import com.pedidos.dto.GenerarPedidoRequest;
 import com.pedidos.dto.RecibirPedidoRequest;
 import com.pedidos.model.EstadoItemDePedido;
@@ -61,6 +62,7 @@ public class PedidoService {
 		return pedidoRepository.save(pedidoRegistrado);
 	}
 
+	// TODO: Eliminar si no se usa finalmente
 	public Pedido recibirPedido(final RecibirPedidoRequest request, final SesionDeUsuario sesionDeUsuario) {
 		final Pedido pedido = pedidoRepository.findOne(request.getIdPedido());
 		pedido.setEstado(EstadoPedido.Pendiente);
@@ -74,21 +76,30 @@ public class PedidoService {
 
 	public Pedido cambiarEstadoDePedido(final CambiarEstadoDePedidoRequest request, final SesionDeUsuario sesionDeUsuario) {
 		final Pedido pedido = pedidoRepository.findOne(request.getIdPedido());
-		pedido.agregarComentario(request.getComentario());
+		pedido.setDestino(request.getDestino());
+		pedido.setComentario(request.getComentario());
 		pedido.setAbonado(request.getAbonado());
 		pedido.setEstado(request.getEstadoPedido());
+		pedido.setFechaUltimaModificacion(currentDate());
+		if (deberiaAsignarPersonalDeAtencion(pedido, sesionDeUsuario)) { pedido.setPersonalAsignado(sesionDeUsuario.getUsuario()); }
 		// modificar únicamente los items para los que se solicitó cambio de estado
 		request.getCambiosDeEstadoSobreItems().stream()
-				.map(cambio -> pedido.obtenerItem(cambio.getIdItemDePedido())
-						.map(item -> cambiarEstadoDeItemDePedido(item, cambio.getEstadoItemDePedido())))
+				.map(cambioEstadoItem -> pedido.obtenerItem(cambioEstadoItem.getIdItemDePedido())
+						.map(item -> cambiarEstadoDeItemDePedido(item, cambioEstadoItem)))
 				.collect(Collectors.toList());
 		return pedidoRepository.save(pedido);
 	}
 
-	// ojo cambio de estado es lo de abonado y demas también
-	private ItemDePedido cambiarEstadoDeItemDePedido(final ItemDePedido itemDePedido, final EstadoItemDePedido estado) {
-		itemDePedido.setEstado(estado);
+	private ItemDePedido cambiarEstadoDeItemDePedido(final ItemDePedido itemDePedido,
+			final CambiarEstadoItemDePedidoRequest request) {
+		itemDePedido.setEstado(request.getEstadoItemDePedido());
+		itemDePedido.setComentario(request.getComentario());
 		return itemDePedido;
+	}
+	
+	private boolean deberiaAsignarPersonalDeAtencion(final Pedido pedido, final SesionDeUsuario sesionDeUsuario) {
+		return pedido.getPersonalAsignado() == null
+				&& sesionDeUsuario.getUsuario().tieneAlgunoDeLosRoles(Roles.rolesDeAtencionAlCliente());
 	}
 	
 	private EstadoPedido resolverEstadoAsignableANuevoPedido(final SesionDeUsuario sesionDeUsuario) {
