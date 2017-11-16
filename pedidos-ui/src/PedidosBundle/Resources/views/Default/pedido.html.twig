@@ -12,14 +12,18 @@
     {{ parent() }}
     <script>
         function confirmarPedido() {
+            var comentario = $("#comentarioPedidoText").val();
+            var destino = $("#destinoPedidoText").val();
+
+            var data = {comentario: comentario,destino:destino}
             $.ajax({
                 type: "POST",
                 url: "{{ path("_pedido_confirmar") }}",
-                data: "comentario=" + $("#comentarioPedidoText").val()
+                data: data,
             }).then(function (view) {
                 $("#pedido-enviado-alert").show();
                 setTimeout(function () {
-                    window.location.href = "{{ path("_get_menu") }}"
+                    window.location.href = "{{ path("_pedido_listar") }}"
                 }, 2000);
                 return true;
             }).fail(function(jqXHR, textStatus, errorThrown) {
@@ -105,6 +109,10 @@
                             <div class="form-group">
                                 <label for="comentarioPedidoText" class="control-label">Comentarios adicionales</label>
                                 <input class="form-control" id="comentarioPedidoText" type="text">
+                            </div>
+                            <div class="form-group">
+                                <label for="destinoPedidoText" class="control-label">Destino</label>
+                                <input class="form-control" id="destinoPedidoText" type="text" placeholder="Mesa Nro. ...">
                             </div>
                             <div class="alert alert-success" id="pedido-enviado-alert" style="display: none;">
                                 ¡Pedido Enviado!

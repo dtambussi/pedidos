@@ -14,7 +14,8 @@
         $(document).ready(function () {
 
             $('#reporte-table').bootstrapTable({
-                showExport:true
+                showExport:true,
+                exportOptions:{fileName:"reporte_pedidos"}
             });
 
             $('#date-picker').daterangepicker({
@@ -31,8 +32,9 @@
             $("#generar-reporte-btn").on('click', function () {
                 var $from = $("#date-from").val();
                 var $to = $("#date-to").val();
+                var $estado = $("#pedido_estado option:selected").val();
                 $("#reporte-list").slideDown();
-                var listUrl = decodeURIComponent($("#reporteListUrl").val()).replace('#date-from', $from).replace('#date-to', $to);
+                var listUrl = decodeURIComponent($("#reporteListUrl").val()).replace('#date-from', $from).replace('#date-to', $to).replace('#estado',$estado);
                 $('#reporte-table').bootstrapTable('refresh', {url: listUrl});
 
             });
@@ -62,7 +64,7 @@
                 <h1>Reportes</h1>
             </div>
 
-            <input type="hidden" id="reporteListUrl" value="{{ path('_reporte_list', {'from': '#date-from','to':'#date-to'})}}">
+            <input type="hidden" id="reporteListUrl" value="{{ path('_reporte_list', {'from': '#date-from','to':'#date-to','estado':'#estado'})}}">
 
             <div class="top-buffer" id="reportes-list-filter">
                 <div class="row">
@@ -72,6 +74,15 @@
                             <input type="text" class="form-control" id="date-picker" placeholder="Seleccionar">
                             <input type="hidden" class="form-control" id="date-from" value="{{ "now"|date("d/m/Y") }}">
                             <input type="hidden" class="form-control" id="date-to" value="{{ "now"|date("d/m/Y") }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="pedido_estado">Estado: </label>
+                            <select class="form-control" id="pedido_estado">
+                                <option value="">Seleccionar...</option>
+                                {% for estado in estadoPedidos %}
+                                    <option value="{{ estado }}">{{ estado }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                         <a id="generar-reporte-btn" href="#" type="button" class="btn btn-primary"
                            data-loading-text="Enviando <i class='fa fa-circle-o-notch fa-spin'></i>">Generar Reporte</a>

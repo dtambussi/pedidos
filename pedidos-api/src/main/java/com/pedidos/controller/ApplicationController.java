@@ -95,6 +95,12 @@ public class ApplicationController {
 			final HttpServletRequest request, final HttpServletResponse response) {
 		return this.loginService.loginUsuarioRegistrado(loginUsuarioRegistradoRequest);
 	}
+
+	@ResponseStatus(HttpStatus.OK)
+	@PostMapping("/logout")
+	public void logout() {
+		
+	}
 	
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/menu")

@@ -4,11 +4,16 @@ namespace PedidosBundle\Controller;
 
 use JMS\Serializer\Serializer;
 use PedidosBundle\Dto\BootstrapTableDto;
+use PedidosBundle\Dto\EstadoPedidoType;
 use PedidosBundle\Dto\ItemsByCategoriaDto;
 use PedidosBundle\Dto\MenuItemDto;
 use PedidosBundle\Dto\ReportePedidosDto;
+use PedidosBundle\Dto\Request\CambiarEstadoDePedidoRequest;
+use PedidosBundle\Dto\Request\CambiarEstadoItemDePedidoRequest;
 use PedidosBundle\Dto\Request\PedidoRequestDto;
+use PedidosBundle\Dto\Request\RecibirPedidoRequest;
 use PedidosBundle\Dto\Request\ReportePedidosRequestDto;
+use PedidosBundle\Dto\Response\PedidoDto;
 use PedidosBundle\Dto\Response\ReporteResponseDto;
 use PedidosBundle\Dto\SessionDeUsuarioDto;
 use PedidosBundle\Dto\SugerenciaDto;
@@ -35,6 +40,7 @@ use Symfony\Component\HttpFoundation\Response;
 class DefaultController extends Controller
 {
     const HARDCODED_MENU_ID = 1;
+    const PEDIDO_DTO_ARRAY_SESSION_NAME = "pedidoDtoArray";
 
     /**
      * @Route("/", name="_index")
@@ -191,6 +197,7 @@ class DefaultController extends Controller
 
         if (!$pedidoRequestDto->isEmpty()) {
             $pedidoRequestDto->setComentario($request->get("comentario"));
+            $pedidoRequestDto->setDestino($request->get("destino"));
             $this->getPedidosService()->confirmarPedido($pedidoRequestDto);
             $this->generarNuevoPedidoRequestDto($request);
         }
@@ -209,7 +216,7 @@ class DefaultController extends Controller
             return $this->sinPermisosResponse();
         }
 
-        $pedidos = $this->getPedidosService()->findPedidos();
+        $pedidos = $this->setPedidosDtoArrayInSession($request);
 
         return $this->render(
             "PedidosBundle:default:listar_pedidos.html.twig",
@@ -228,7 +235,10 @@ class DefaultController extends Controller
      * @Route("/logout", name="_logout")
      */
     public function logoutAction(Request $request) {
+        $this->getPedidosService()->logout();
+
         $request->getSession()->remove(UsuarioDto::SESSION_NAME);
+        $request->getSession()->remove(self::PEDIDO_DTO_ARRAY_SESSION_NAME);
         $request->getSession()->invalidate(0);
 
         return $this->render("PedidosBundle:default:login.html.twig");
@@ -313,8 +323,10 @@ class DefaultController extends Controller
             return $this->sinPermisosResponse();
         }
 
+        $estadoPedidos = EstadoPedidoType::getEstados();
+
         return $this->render(
-            "PedidosBundle:default:generar_reporte.html.twig");
+            "PedidosBundle:default:generar_reporte.html.twig",array('estadoPedidos' =>$estadoPedidos));
     }
 
     /**
@@ -331,11 +343,17 @@ class DefaultController extends Controller
         $this->get('logger')->debug('reporteListAction');
         $from = $request->get('from');
         $to = $request->get('to');
+        $estado = $request->get('estado');
+
+        // Cuando no se envia ninguna fecha, no devulve nada.
+        if($from == '#date-from'){
+            return new Response(Response::HTTP_OK);
+        }
 
         $fechaDesde = PedidosDateUtil::toPedidosApiFormat($from);
         $fechaHasta = PedidosDateUtil::toPedidosApiFormat($to);
 
-        $reportePedidosRequest = new ReportePedidosRequestDto($fechaDesde,$fechaHasta);
+        $reportePedidosRequest = new ReportePedidosRequestDto($fechaDesde,$fechaHasta,$estado);
 
         $reportePedidos = $this->getPedidosService()->generarReportePedidos($reportePedidosRequest);
 
@@ -350,6 +368,67 @@ class DefaultController extends Controller
         $this->get('logger')->debug("Reporte: " . json_encode($json, JSON_PRETTY_PRINT));
 
         return new Response($json, Response::HTTP_OK, array("Content-Type: application/json"));
+    }
+
+    /**
+     * @Route("/pedido_cambiar_estado_form", name="_pedido_cambiar_estado_form")
+     * @param $request
+     * @return Response
+     */
+    public function pedidoCambiarEstadoFormAction(Request $request) {
+        var_dump($request);
+
+        $cambiarEstadoPedidoRequest = $this->crearCambiarEstadoPedidoRequestFromRequest($request);
+        $this->getPedidosService()->cambiarEstadoPedido($cambiarEstadoPedidoRequest);
+        $this->setPedidosDtoArrayInSession($request);
+
+        return new Response();
+    }
+
+    /**
+     * Para crear la request levanta a mano los campos posteados
+     * @param Request $request
+     * @return CambiarEstadoDePedidoRequest
+     */
+    private function crearCambiarEstadoPedidoRequestFromRequest(Request $request) {
+        $estadoPedido = $request->request->get("pedido_estado_form_pedido_estado");
+        $abonado = $request->request->get("pedido_estado_form_abonado") == "on" ? true: false;
+        $destino = $request->request->get("pedido_estado_form_destino");
+        $comentario = $request->request->get("pedido_estado_form_comentario");
+        $destino = empty($destino) ? null : $destino;
+        $comentario = empty($comentario) ? null : $comentario;
+
+        $cambiarEstadoPedidoRequest = new CambiarEstadoDePedidoRequest();
+        $cambiarEstadoPedidoRequest->setIdPedido($request->get("pedido_id"));
+        $cambiarEstadoPedidoRequest->setComentario($comentario);
+        $cambiarEstadoPedidoRequest->setDestino($destino);
+        $cambiarEstadoPedidoRequest->setEstadoPedido($estadoPedido);
+        $cambiarEstadoPedidoRequest->setAbonado($abonado);
+
+        /** @var array $estadoItemPedidoArray */
+        $estadoItemPedidoArray = $request->request->get("pedido_estado_form_pedido_item_estado");
+
+        /** @var array $comentarioItemPedidoArray */
+        $comentarioItemPedidoArray = $request->request->get("pedido_estado_form_pedido_item_comentario");
+
+        /** @var array $abonadoItemPedidoArray */
+        $abonadoItemPedidoArray = $request->request->get("pedido_estado_form_pedido_item_abonado");
+
+        /**
+         * @var int $pedidoItemId
+         * @var string $pedidoItemEstado
+         */
+        foreach ($estadoItemPedidoArray as $pedidoItemId => $pedidoItemEstado) {
+            $cambiarEstadoItemPedidoRequest = new CambiarEstadoItemDePedidoRequest();
+            $cambiarEstadoItemPedidoRequest->setIdItemDePedido($pedidoItemId);
+            $cambiarEstadoItemPedidoRequest->setEstadoItemDePedido($pedidoItemEstado);
+            $cambiarEstadoItemPedidoRequest->setComentario($comentarioItemPedidoArray[$pedidoItemId]);
+            $cambiarEstadoItemPedidoRequest->setAbonado($abonadoItemPedidoArray[$pedidoItemId] == "on" ? true : false);
+
+            $cambiarEstadoPedidoRequest->addCambiarEstadoItem($cambiarEstadoItemPedidoRequest);
+        }
+
+        return $cambiarEstadoPedidoRequest;
     }
 
     /**
@@ -422,6 +501,28 @@ class DefaultController extends Controller
     }
 
     /**
+     * @Route("/cambiar_estado_pedido", name="_cambiar_estado_pedido")
+     * @param Request $request
+     * @return Response
+     */
+    public function cambiarEstadoPedidoAction(Request $request) {
+        if (!$this->getUsuario($request)->puedeCambiarEstadoDePedido()) {
+            return $this->sinPermisosResponse();
+        }
+
+        $pedidoId = $request->get("pedido_id");
+
+        $pedidoDto = $this->getPedidoById($request, $pedidoId);
+
+        if (!$pedidoDto) {
+            return new Response("No existe el pedido", Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->render("PedidosBundle:default:cambiar_estado_pedido.html.twig",
+            array("pedidoDto" => $pedidoDto));
+    }
+
+    /**
      * @param $sugerencias
      * @param $itemsByCategoria
      */
@@ -459,5 +560,34 @@ class DefaultController extends Controller
      */
     private function sinPermisosResponse() {
         return new Response("El usuario no posee permisos para realizar la operación", Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @param Request $request
+     * @param $pedidoId
+     * @return PedidoDto
+     */
+    private function getPedidoById(Request $request, $pedidoId) {
+        $pedidoDtoArray = $request->getSession()->get(self::PEDIDO_DTO_ARRAY_SESSION_NAME);
+
+        /** @var PedidoDto $pedidoDto */
+        foreach ($pedidoDtoArray as $pedidoDto) {
+            if ($pedidoDto->getId() == $pedidoId) {
+                return $pedidoDto;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    private function setPedidosDtoArrayInSession(Request $request) {
+        $pedidos = $this->getPedidosService()->findPedidos();
+        $request->getSession()->set(self::PEDIDO_DTO_ARRAY_SESSION_NAME, $pedidos);
+
+        return $pedidos;
     }
 }

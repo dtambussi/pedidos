@@ -19,6 +19,13 @@ h1, h2 {
   min-width: 120px;
 }
 
+.btn-secondary {
+  background-color: gray;
+  border-color: gray;
+  color: white;
+  min-width: 120px;
+}
+
 .btn-default {
   background-color: @secondary-color;
   border-color: @secondary-color;
@@ -56,6 +63,23 @@ h1, h2 {
 
 #main-header {
 
+  .navbar-default .navbar-toggle {
+    border-color: transparent;
+  }
+
+  .navbar-toggle:hover,.navbar-toggle:focus {
+    background-color: @main-color;
+  }
+
+  a {
+    color: @menu-font-color;
+    text-decoration: none;
+  }
+
+  .navbar-toggle{
+    text-align: center;
+  }
+
   .navbar {
     min-height: 80px;
   }
@@ -92,24 +116,11 @@ h1, h2 {
   }
 
   li > .dropdown-menu {
-    margin-top: 2px;
-    -webkit-transform: scale(0);
-    -moz-transform: scale(0);
-    -o-transform: scale(0);
-    -ms-transform: scale(0);
-    transform: scale(0);
-    -webkit-transition: all 370ms cubic-bezier(0.34, 1.61, 0.7, 1);
-    -moz-transition: all 370ms cubic-bezier(0.34, 1.61, 0.7, 1);
-    -o-transition: all 370ms cubic-bezier(0.34, 1.61, 0.7, 1);
-    -ms-transition: all 370ms cubic-bezier(0.34, 1.61, 0.7, 1);
-    transition: all 370ms cubic-bezier(0.34, 1.61, 0.7, 1);
     background-color: @main-color;
-    padding: 20px 0;
-    margin-top: 2px;
-    border-width: 0px;
 
     a {
       color: @menu-font-color;
+      text-align: center;
     }
     li > a:hover,
     li > a:focus {
@@ -121,21 +132,12 @@ h1, h2 {
     }
 
   }
-  li.open > .dropdown-menu {
-    -webkit-transform: scale(1);
-    -moz-transform: scale(1);
-    -o-transform: scale(1);
-    -ms-transform: scale(1);
-    transform: scale(1);
-    -webkit-transform-origin: 29px -50px;
-    -moz-transform-origin: 29px -50px;
-    -o-transform-origin: 29px -50px;
-    -ms-transform-origin: 29px -50px;
-    transform-origin: 29px -50px;
-  }
-
   .menu-icon{
     font-size:30px;
+  }
+
+  .dropdown-menu ul{
+    margin-top: 0px;
   }
 
 }
@@ -171,6 +173,8 @@ h1, h2 {
     border-radius: 7px;
   }
 }
+
+
 #main-page{
   text-align: center;
 
@@ -216,6 +220,61 @@ h1, h2 {
       background-color: #dfdfdf;
       border-color:#dfdfdf;
     }
+  }
+
+}
+
+#listado-pedidos{
+  .comentario-color i{
+    color: @main-color-light;
+  }
+
+  .abonado{
+    background-color: @abonado-color;
+    color: white;
+    border-radius: 100px;
+    padding:8px;
+    font-size: 10px;
+
+  }
+
+  .estado-pedido{
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 30px;
+    padding: 7px;
+    color: white;
+    font-size:12px;
+  }
+
+  .generado{
+    background-color: @generado-color;
+    border-color: @generado-color;
+  }
+
+  .confeccionado{
+    background-color: @confeccionado-color;
+    border-color: @confeccionado-color;
+  }
+
+  .pendiente{
+    background-color: @pendiente-color;
+    border-color: @pendiente-color;
+  }
+
+  .en_curso{
+    background-color: @pendiente-color;
+    border-color: @pendiente-color;
+  }
+
+  .entregado{
+    background-color: @entregado-color;
+    border-color: @entregado-color;
+  }
+
+  .cancelado{
+    background-color: @cancelado-color;
+    border-color: @cancelado-color;
   }
 
 }

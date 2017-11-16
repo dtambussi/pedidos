@@ -16,4 +16,9 @@ class EstadoPedidoType
     const CONFECCIONADO = "Confeccionado";
     const ENTREGADO = "Entregado";
     const CANCELADO = "Cancelado";
+    const EN_CURSO = "En_Curso";
+
+    public static function getEstados(){
+        return array(EstadoPedidoType::GENERADO,EstadoPedidoType::PENDIENTE,EstadoPedidoType::CONFECCIONADO,EstadoPedidoType::ENTREGADO,EstadoPedidoType::CANCELADO);
+    }
 }

@@ -10,7 +10,9 @@ namespace PedidosBundle\Service;
 
 
 use PedidosBundle\Dto\ItemsByCategoriaDto;
+use PedidosBundle\Dto\Request\CambiarEstadoDePedidoRequest;
 use PedidosBundle\Dto\Request\PedidoRequestDto;
+use PedidosBundle\Dto\Request\RecibirPedidoRequest;
 use PedidosBundle\Dto\Request\ReportePedidosRequestDto;
 use PedidosBundle\Dto\Request\SugerenciaRequestDto;
 use PedidosBundle\Dto\Response\PedidoDto;
@@ -83,6 +85,24 @@ class PedidosService
 
     public function generarReportePedidos(ReportePedidosRequestDto $reportePedidosRequestDto){
         return $this->pedidosApiHttpClient->generarReportePedidos($reportePedidosRequestDto);
+    }
 
+    /**
+     * @param CambiarEstadoDePedidoRequest $cambiarEstadoPedidoRequest
+     */
+    public function cambiarEstadoPedido(CambiarEstadoDePedidoRequest $cambiarEstadoPedidoRequest)
+    {
+        $this->pedidosApiHttpClient->cambiarEstadoDePedido($cambiarEstadoPedidoRequest);
+    }
+
+    /**
+     * @param RecibirPedidoRequest $recibirPedidoRequest
+     */
+    public function recibirPedido(RecibirPedidoRequest $recibirPedidoRequest) {
+        $this->pedidosApiHttpClient->recibirPedido($recibirPedidoRequest);
+    }
+
+    public function logout() {
+        $this->pedidosApiHttpClient->logout();
     }
 }

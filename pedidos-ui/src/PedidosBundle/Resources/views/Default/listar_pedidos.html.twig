@@ -11,42 +11,57 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-        function mostrarDetallePedido($pedidoId) {
-            $("#pedido-detalle-" + $pedidoId).slideToggle();
-        }
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
     </script>
 {% endblock %}
 
 {% block body %}
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12">
-                <h1>Mis Pedidos</h1>
-            </div>
-        </div>
-        {% if pedidos is empty %}
-            Aún no realizó pedidos.
-        {% else %}
-            {% for pedidoDto in pedidos %}
+    <section id="listado-pedidos">
+        <div class="container">
             <div class="row">
                 <div class="col-xs-12">
-                    <h3 onclick="mostrarDetallePedido({{ pedidoDto.id }})">
-                        Pedido #{{ pedidoDto.id }}<button type="button" class="btn btn-default btn-small pull-right">Detalle</button><br>
-                        <small>{% if pedidoDto.comentario %}{{ pedidoDto.comentario }}&nbsp;{% endif %}({{ pedidoDto.estado }})</small>
-                    </h3>
-                    <div style="display: none;" id="pedido-detalle-{{ pedidoDto.id }}">
-                        {{ pedidoListarMacro.generarListaItemsDePedido("Entradas", pedidoDto.itemsByCategoriaDto.entradaItems) }}
-                        {{ pedidoListarMacro.generarListaItemsDePedido("Platos Principales", pedidoDto.itemsByCategoriaDto.platoPrincipalItems) }}
-                        {{ pedidoListarMacro.generarListaItemsDePedido("Postres", pedidoDto.itemsByCategoriaDto.postreItems) }}
-                        {{ pedidoListarMacro.generarListaItemsDePedido("Cafetería", pedidoDto.itemsByCategoriaDto.cafeteriaItems) }}
-                        {{ pedidoListarMacro.generarListaItemsDePedido("Bebidas", pedidoDto.itemsByCategoriaDto.bebidaItems) }}
-                        {{ pedidoListarMacro.generarListaItemsDePedido("Sugerencias", pedidoDto.itemsByCategoriaDto.sugerenciaItems) }}
-                    </div>
+                    <h1>Listado Pedidos</h1>
                 </div>
             </div>
-            {% endfor %}
-        {% endif %}
-    </div>
+            {% if pedidos is empty %}
+                <p>No hay pedidos</p>
+            {% else %}
+                {% for pedidoDto in pedidos %}
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h3>Pedido #{{ pedidoDto.id }} <span class="estado-pedido {{ pedidoDto.estado | lower }}">{{ pedidoDto.estado }}</span>
+                                <span style="font-size: medium">
+                                    {% if app.session.get("usuarioDto").puedeCambiarEstadoDePedido %}
+                                        <span title="Editar Pedido" data-toggle="tooltip" class="glyphicon glyphicon-pencil"
+                                              onclick="window.open('{{ path("_cambiar_estado_pedido") }}?pedido_id={{ pedidoDto.id }}', '_self');"
+                                              style="cursor: pointer"></span>
+                                    {% endif %}
+                                </span>
+                                {% if pedidoDto.abonado %} <span class="abonado pull-right" data-toggle="tooltip" title="Abonado"> <i class=" glyphicon glyphicon-ok"> </i> </span>{% endif %}</h3>
+
+                            <p class="comentario-color">{% if pedidoDto.comentario %}<i
+                                        class="glyphicon glyphicon-comment"></i>
+                                <spany style="padding:5px">{{ pedidoDto.comentario }}{% endif %}</spany>
+                            </p>
+                        </div>
+                        <div class="col-xs-12">
+                            <div id="pedido-detalle-{{ pedidoDto.id }}">
+                                {{ pedidoListarMacro.generarListaItemsDePedido("Entradas", pedidoDto.itemsByCategoriaDto.entradaItems) }}
+                                {{ pedidoListarMacro.generarListaItemsDePedido("Platos Principales", pedidoDto.itemsByCategoriaDto.platoPrincipalItems) }}
+                                {{ pedidoListarMacro.generarListaItemsDePedido("Postres", pedidoDto.itemsByCategoriaDto.postreItems) }}
+                                {{ pedidoListarMacro.generarListaItemsDePedido("Cafetería", pedidoDto.itemsByCategoriaDto.cafeteriaItems) }}
+                                {{ pedidoListarMacro.generarListaItemsDePedido("Bebidas", pedidoDto.itemsByCategoriaDto.bebidaItems) }}
+                                {{ pedidoListarMacro.generarListaItemsDePedido("Sugerencias", pedidoDto.itemsByCategoriaDto.sugerenciaItems) }}
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </section>
 {% endblock %}
 
 {% macro generarListaItemsDePedido(categoriaTitle, items) %}
@@ -60,7 +75,8 @@
                             {{ pedidoItem.itemDeMenu.nombre }}
                         </div>
                         <div class="col-xs-4 text-right" style="color: grey;">
-                            x{{ pedidoItem.cantidad }}&nbsp;{% if pedidoItem.comentario %}({{ pedidoItem.comentario }}){% endif %}
+                            x{{ pedidoItem.cantidad }}
+                            &nbsp;{% if pedidoItem.comentario %}({{ pedidoItem.comentario }}){% endif %}
                         </div>
                     </div>
                 {% endfor %}

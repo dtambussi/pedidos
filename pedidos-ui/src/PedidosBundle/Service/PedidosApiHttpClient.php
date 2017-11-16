@@ -11,9 +11,11 @@ namespace PedidosBundle\Service;
 
 use PedidosBundle\Dto\MenuDto;
 use PedidosBundle\Dto\ReportePedidosDto;
+use PedidosBundle\Dto\Request\CambiarEstadoDePedidoRequest;
 use PedidosBundle\Dto\Request\LoginGuestRequestDto;
 use PedidosBundle\Dto\Request\LoginRequestDto;
 use PedidosBundle\Dto\Request\LoginUsuarioRegistradoRequestDto;
+use PedidosBundle\Dto\Request\RecibirPedidoRequest;
 use PedidosBundle\Dto\Request\ReportePedidosRequestDto;
 use PedidosBundle\Dto\Request\SugerenciaRequestDto;
 use PedidosBundle\Dto\Response\PedidoDto;
@@ -136,6 +138,32 @@ class PedidosApiHttpClient
         return $response[0];
     }
 
+    /**
+     * @param CambiarEstadoDePedidoRequest $cambiarEstadoPedidoRequest
+     */
+    public function cambiarEstadoDePedido(CambiarEstadoDePedidoRequest $cambiarEstadoPedidoRequest)
+    {
+        $url = "http://" . $this->pedidosapiHostname . "/pedido/" . $cambiarEstadoPedidoRequest->getIdPedido() . "/cambiarEstadoDePedidoRequest";
+        $response = $this->doPost($url, null, $cambiarEstadoPedidoRequest);
+        return $response[0];
+    }
+
+    /**
+     * @deprecated No se debe usar. Usar solo cambiarEstadoDePedido
+     * @param $recibirPedidoRequest
+     */
+    public function recibirPedido(RecibirPedidoRequest $recibirPedidoRequest)
+    {
+        $url = "http://" . $this->pedidosapiHostname . "/pedido/" . $recibirPedidoRequest->getIdPedido() . "/recibirPedidoRequest";
+        $response = $this->doPost($url, null, $recibirPedidoRequest);
+        return $response[0];
+    }
+
+    public function logout()
+    {
+        $url = "http://" . $this->pedidosapiHostname . "/logout";
+        $this->doPost($url, null, null);
+    }
 
     /**
      * @param $url
@@ -170,7 +198,7 @@ class PedidosApiHttpClient
 
 
         if (in_array($responseCode, $expectedCodes)) {
-            $this->logger->info("Ok!");
+            $this->logger->info("$url: Ok!");
         } else {
             throw new PedidosException("Error al llamar al servicio con url $url");
         }
@@ -207,8 +235,7 @@ class PedidosApiHttpClient
         /** @var UsuarioDto $usuarioDto */
         $usuarioDto = $this->session->get(UsuarioDto::SESSION_NAME);
 
-
-        if (is_object($postBody)) {
+        if ($postBody && is_object($postBody)) {
             $postJson = $this->serializer->serialize($postBody, "json");
             $headerParams = array(
                 'Content-Type: application/json',
@@ -220,17 +247,15 @@ class PedidosApiHttpClient
 
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headerParams);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $postJson);
-
         } else {
             curl_setopt($ch, CURLOPT_POSTFIELDS, $postBody);
-
         }
 
         $responseString = curl_exec($ch);
         $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         if (in_array($responseCode, $expectedCodes)) {
-            $this->logger->info("Ok!");
+            $this->logger->info("$url: Ok!");
         } else {
             throw new PedidosException("Error al llamar al servicio con url $url");
         }
