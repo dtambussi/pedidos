@@ -149,6 +149,7 @@ class PedidosApiHttpClient
     }
 
     /**
+     * @deprecated No se debe usar. Usar solo cambiarEstadoDePedido
      * @param $recibirPedidoRequest
      */
     public function recibirPedido(RecibirPedidoRequest $recibirPedidoRequest)
@@ -156,6 +157,12 @@ class PedidosApiHttpClient
         $url = "http://" . $this->pedidosapiHostname . "/pedido/" . $recibirPedidoRequest->getIdPedido() . "/recibirPedidoRequest";
         $response = $this->doPost($url, null, $recibirPedidoRequest);
         return $response[0];
+    }
+
+    public function logout()
+    {
+        $url = "http://" . $this->pedidosapiHostname . "/logout";
+        $this->doPost($url, null, null);
     }
 
     /**
@@ -191,7 +198,7 @@ class PedidosApiHttpClient
 
 
         if (in_array($responseCode, $expectedCodes)) {
-            $this->logger->info("Ok!");
+            $this->logger->info("$url: Ok!");
         } else {
             throw new PedidosException("Error al llamar al servicio con url $url");
         }
@@ -228,8 +235,7 @@ class PedidosApiHttpClient
         /** @var UsuarioDto $usuarioDto */
         $usuarioDto = $this->session->get(UsuarioDto::SESSION_NAME);
 
-
-        if (is_object($postBody)) {
+        if ($postBody && is_object($postBody)) {
             $postJson = $this->serializer->serialize($postBody, "json");
             $headerParams = array(
                 'Content-Type: application/json',
@@ -241,17 +247,15 @@ class PedidosApiHttpClient
 
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headerParams);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $postJson);
-
         } else {
             curl_setopt($ch, CURLOPT_POSTFIELDS, $postBody);
-
         }
 
         $responseString = curl_exec($ch);
         $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         if (in_array($responseCode, $expectedCodes)) {
-            $this->logger->info("Ok!");
+            $this->logger->info("$url: Ok!");
         } else {
             throw new PedidosException("Error al llamar al servicio con url $url");
         }

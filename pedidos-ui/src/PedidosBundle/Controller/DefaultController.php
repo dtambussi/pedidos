@@ -235,6 +235,8 @@ class DefaultController extends Controller
      * @Route("/logout", name="_logout")
      */
     public function logoutAction(Request $request) {
+        $this->getPedidosService()->logout();
+
         $request->getSession()->remove(UsuarioDto::SESSION_NAME);
         $request->getSession()->remove(self::PEDIDO_DTO_ARRAY_SESSION_NAME);
         $request->getSession()->invalidate(0);

@@ -101,4 +101,8 @@ class PedidosService
     public function recibirPedido(RecibirPedidoRequest $recibirPedidoRequest) {
         $this->pedidosApiHttpClient->recibirPedido($recibirPedidoRequest);
     }
+
+    public function logout() {
+        $this->pedidosApiHttpClient->logout();
+    }
 }
