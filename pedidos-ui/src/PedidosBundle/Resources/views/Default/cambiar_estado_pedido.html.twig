@@ -22,7 +22,7 @@
                 function () {
                     $("#editar-pedido-success-alert").slideToggle();
                     setTimeout(function () {
-                        location.reload();
+                        window.open("{{ path("_pedido_listar") }}", "_self");
                     }, 1000);
                 }
             );
