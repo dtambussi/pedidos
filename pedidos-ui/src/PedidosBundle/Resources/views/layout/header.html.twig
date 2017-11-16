@@ -9,7 +9,7 @@
 				</a>
                 {% if app.session.get("usuarioDto") %}
 				<div class="navbar-toggle collapsed" aria-expanded="false">
-					<a href="#"><span class="glyphicon glyphicon-user menu-icon "></span><br>{{ app.session.get('usuarioDto').nickname }}</a>
+					<a href="#"><span class="glyphicon glyphicon-user menu-icon "></span><br>{{ app.session.get('usuarioDto').nickname }} {% if 'UsuarioNoRegistrado' in app.session.get('usuarioDto').roles %}(Invitado){% endif %} </a>
 				</div>
 				{% endif %}
 			</div>
