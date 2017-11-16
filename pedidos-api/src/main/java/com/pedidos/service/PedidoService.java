@@ -81,7 +81,7 @@ public class PedidoService {
 		pedido.setAbonado(request.getAbonado());
 		pedido.setEstado(request.getEstadoPedido());
 		pedido.setFechaUltimaModificacion(currentDate());
-		if (pedido.getPersonalAsignado() == null) { pedido.setPersonalAsignado(sesionDeUsuario.getUsuario()); }
+		if (deberiaAsignarPersonalDeAtencion(pedido, sesionDeUsuario)) { pedido.setPersonalAsignado(sesionDeUsuario.getUsuario()); }
 		// modificar únicamente los items para los que se solicitó cambio de estado
 		request.getCambiosDeEstadoSobreItems().stream()
 				.map(cambioEstadoItem -> pedido.obtenerItem(cambioEstadoItem.getIdItemDePedido())
@@ -95,6 +95,11 @@ public class PedidoService {
 		itemDePedido.setEstado(request.getEstadoItemDePedido());
 		itemDePedido.setComentario(request.getComentario());
 		return itemDePedido;
+	}
+	
+	private boolean deberiaAsignarPersonalDeAtencion(final Pedido pedido, final SesionDeUsuario sesionDeUsuario) {
+		return pedido.getPersonalAsignado() == null
+				&& sesionDeUsuario.getUsuario().tieneAlgunoDeLosRoles(Roles.rolesDeAtencionAlCliente());
 	}
 	
 	private EstadoPedido resolverEstadoAsignableANuevoPedido(final SesionDeUsuario sesionDeUsuario) {
