@@ -15,9 +15,3 @@ services:
         arguments: ["@logger", "@router"]
         tags:
           - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 2 }
-
-    exception_listener:
-        class: PedidosBundle\Listener\ExceptionListener
-        arguments: ["@logger", "@session"]
-        tags:
-          - { name: kernel.event_listener, event: kernel.exception }
