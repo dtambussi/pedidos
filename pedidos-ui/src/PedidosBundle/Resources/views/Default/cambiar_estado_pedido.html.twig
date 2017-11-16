@@ -136,8 +136,7 @@
             <div class="col-xs-12">
                 <div class="row" style="font-weight: bold;">
                     <div class="col-xs-4">Item</div>
-                    <div class="col-xs-2">Cantidad</div>
-                    <div class="col-xs-2">Abonado</div>
+                    <div class="col-xs-4">Cantidad</div>
                     <div class="col-xs-4">Estado</div>
                 </div>
                 <hr>
@@ -146,12 +145,8 @@
                         <div class="col-xs-4">
                             {{ pedidoItem.itemDeMenu.nombre }}
                         </div>
-                        <div class="col-xs-2" style="color: grey;">
+                        <div class="col-xs-4" style="color: grey;">
                             {{ pedidoItem.cantidad }}
-                        </div>
-                        <div class="col-xs-2">
-                            <input type="checkbox" name="pedido_estado_form_pedido_item_abonado[{{ pedidoItem.id }}]"
-                                   {% if pedidoItem.abonado %}checked="checked"{% endif %}>
                         </div>
                         <div class="col-xs-3" style="color: grey;">
                             <select name="pedido_estado_form_pedido_item_estado[{{ pedidoItem.id }}]"
