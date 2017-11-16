@@ -374,10 +374,17 @@ class DefaultController extends Controller
      * @return Response
      */
     public function pedidoCambiarEstadoFormAction(Request $request) {
-        // var_dump($request);
+        var_dump($request);
 
         $estadoPedido = $request->request->get("pedido_estado_form_pedido_estado");
         $pedidoId = $request->get("pedido_id");
+        $comentario = $request->request->get("pedido_estado_form_comentario");
+        $comentario = empty($comentario) ? null : $comentario;
+        $abonado = $request->request->get("pedido_estado_form_abonado") == "on" ? true: false;
+        $this->get("logger")->info("**** ABNADO: $abonado");
+
+        $destino = $request->request->get("pedido_estado_form_destino");
+        $destino = empty($destino) ? null : $destino;
 
         /** @var array $estadoItemPedidoArray */
         $estadoItemPedidoArray = $request->request->get("pedido_estado_form_pedido_item_estado");
@@ -385,27 +392,26 @@ class DefaultController extends Controller
         $pedidoDto = $this->getPedidoById($request, $pedidoId);
 
         // Si pasa a pendiente por primera vez es llamar al servicio de recibir
-        if ($estadoPedido == EstadoPedidoType::PENDIENTE &&
-            $pedidoDto->getEstado() != EstadoPedidoType::PENDIENTE) {
-            $this->get("logger")->info("**** PENDIENTE");
+        if ($estadoPedido == EstadoPedidoType::EN_CURSO && $pedidoDto->getEstado() != EstadoPedidoType::EN_CURSO) {
+
+            $this->get("logger")->info("**** RECIBIR PEDIDO");
+
             $recibirPedidoRequest = new RecibirPedidoRequest();
             $recibirPedidoRequest->setIdPedido($pedidoId);
-
-            // TODO Preguntar de donde tomo estos dos campos
-            $recibirPedidoRequest->setDestino($pedidoDto->getDestino());
-            $recibirPedidoRequest->setComentario($pedidoDto->getComentario());
+            $recibirPedidoRequest->setComentario($comentario);
+            $recibirPedidoRequest->setDestino($destino);
 
             $this->getPedidosService()->recibirPedido($recibirPedidoRequest);
         } else {
-            $this->get("logger")->info("**** DEFINITIVO");
 
-            // TODO DESHARCODEAR!
+            $this->get("logger")->info("**** CAMBIAR ESTADO PEDIDO");
+
             $cambiarEstadoPedidoRequest = new CambiarEstadoDePedidoRequest();
             $cambiarEstadoPedidoRequest->setIdPedido($pedidoId);
-            $cambiarEstadoPedidoRequest->setAbonado(false);
-            // $cambiarEstadoPedidoRequest->setComentario("Comment");
-            $cambiarEstadoPedidoRequest->setDestino("Mesa destino");
+            $cambiarEstadoPedidoRequest->setComentario($comentario);
+            $cambiarEstadoPedidoRequest->setDestino($destino);
             $cambiarEstadoPedidoRequest->setEstadoPedido($estadoPedido);
+            $cambiarEstadoPedidoRequest->setAbonado($abonado);
 
             /**
              * @var int $pedidoItemId

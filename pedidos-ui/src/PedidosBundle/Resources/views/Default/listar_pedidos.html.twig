@@ -32,18 +32,19 @@
                     <div class="row">
                         <div class="col-xs-12">
                             <h3>Pedido #{{ pedidoDto.id }} <span class="estado-pedido {{ pedidoDto.estado | lower }}">{{ pedidoDto.estado }}</span>
+                                <span style="font-size: medium">
+                                    {% if app.session.get("usuarioDto").puedeCambiarEstadoDePedido %}
+                                        <span title="Editar Pedido" data-toggle="tooltip" class="glyphicon glyphicon-pencil"
+                                              onclick="window.open('{{ path("_cambiar_estado_pedido") }}?pedido_id={{ pedidoDto.id }}', '_self');"
+                                              style="cursor: pointer"></span>
+                                    {% endif %}
+                                </span>
                                 {% if pedidoDto.abonado %} <span class="abonado pull-right" data-toggle="tooltip" title="Abonado"> <i class=" glyphicon glyphicon-ok"> </i> </span>{% endif %}</h3>
 
                             <p class="comentario-color">{% if pedidoDto.comentario %}<i
                                         class="glyphicon glyphicon-comment"></i>
                                 <spany style="padding:5px">{{ pedidoDto.comentario }}{% endif %}</spany>
                             </p>
-                        </div>
-                        <div class="col-xs-4 text-right">
-                            {% if app.session.get("usuarioDto").puedeCambiarEstadoDePedido %}
-                                <a href="{{ path("_cambiar_estado_pedido") }}?pedido_id={{ pedidoDto.id }}"
-                                   type="button" class="btn btn-primary pedidos-btn">EditarPedido</a>
-                            {% endif %}
                         </div>
                         <div class="col-xs-12">
                             <div id="pedido-detalle-{{ pedidoDto.id }}">
