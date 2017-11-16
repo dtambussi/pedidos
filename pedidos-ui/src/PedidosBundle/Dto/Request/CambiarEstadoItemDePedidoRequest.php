@@ -22,6 +22,17 @@ class CambiarEstadoItemDePedidoRequest
     private $estadoItemDePedido;
 
     /**
+     * AUN NO AGREGADO EN PROYECTO API!!
+     * @var string
+     */
+    private $comentario;
+
+    /**
+     * @var boolean
+     */
+    private $abonado;
+
+    /**
      * @return string
      */
     public function getIdItemDePedido()
@@ -51,5 +62,37 @@ class CambiarEstadoItemDePedidoRequest
     public function setEstadoItemDePedido($estadoItemDePedido)
     {
         $this->estadoItemDePedido = $estadoItemDePedido;
+    }
+
+    /**
+     * @return string
+     */
+    public function getComentario()
+    {
+        return $this->comentario;
+    }
+
+    /**
+     * @param string $comentario
+     */
+    public function setComentario($comentario)
+    {
+        $this->comentario = $comentario;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isAbonado()
+    {
+        return $this->abonado;
+    }
+
+    /**
+     * @param boolean $abonado
+     */
+    public function setAbonado($abonado)
+    {
+        $this->abonado = $abonado;
     }
 }

@@ -376,59 +376,57 @@ class DefaultController extends Controller
     public function pedidoCambiarEstadoFormAction(Request $request) {
         var_dump($request);
 
-        $estadoPedido = $request->request->get("pedido_estado_form_pedido_estado");
-        $pedidoId = $request->get("pedido_id");
-        $comentario = $request->request->get("pedido_estado_form_comentario");
-        $comentario = empty($comentario) ? null : $comentario;
-        $abonado = $request->request->get("pedido_estado_form_abonado") == "on" ? true: false;
-        $this->get("logger")->info("**** ABNADO: $abonado");
+        $cambiarEstadoPedidoRequest = $this->crearCambiarEstadoPedidoRequestFromRequest($request);
+        $this->getPedidosService()->cambiarEstadoPedido($cambiarEstadoPedidoRequest);
+        $this->setPedidosDtoArrayInSession($request);
 
+        return new Response();
+    }
+
+    /**
+     * Para crear la request levanta a mano los campos posteados
+     * @param Request $request
+     * @return CambiarEstadoDePedidoRequest
+     */
+    private function crearCambiarEstadoPedidoRequestFromRequest(Request $request) {
+        $estadoPedido = $request->request->get("pedido_estado_form_pedido_estado");
+        $abonado = $request->request->get("pedido_estado_form_abonado") == "on" ? true: false;
         $destino = $request->request->get("pedido_estado_form_destino");
+        $comentario = $request->request->get("pedido_estado_form_comentario");
         $destino = empty($destino) ? null : $destino;
+        $comentario = empty($comentario) ? null : $comentario;
+
+        $cambiarEstadoPedidoRequest = new CambiarEstadoDePedidoRequest();
+        $cambiarEstadoPedidoRequest->setIdPedido($request->get("pedido_id"));
+        $cambiarEstadoPedidoRequest->setComentario($comentario);
+        $cambiarEstadoPedidoRequest->setDestino($destino);
+        $cambiarEstadoPedidoRequest->setEstadoPedido($estadoPedido);
+        $cambiarEstadoPedidoRequest->setAbonado($abonado);
 
         /** @var array $estadoItemPedidoArray */
         $estadoItemPedidoArray = $request->request->get("pedido_estado_form_pedido_item_estado");
 
-        $pedidoDto = $this->getPedidoById($request, $pedidoId);
+        /** @var array $comentarioItemPedidoArray */
+        $comentarioItemPedidoArray = $request->request->get("pedido_estado_form_pedido_item_comentario");
 
-        // Si pasa a pendiente por primera vez es llamar al servicio de recibir
-        if ($estadoPedido == EstadoPedidoType::EN_CURSO && $pedidoDto->getEstado() != EstadoPedidoType::EN_CURSO) {
+        /** @var array $abonadoItemPedidoArray */
+        $abonadoItemPedidoArray = $request->request->get("pedido_estado_form_pedido_item_abonado");
 
-            $this->get("logger")->info("**** RECIBIR PEDIDO");
+        /**
+         * @var int $pedidoItemId
+         * @var string $pedidoItemEstado
+         */
+        foreach ($estadoItemPedidoArray as $pedidoItemId => $pedidoItemEstado) {
+            $cambiarEstadoItemPedidoRequest = new CambiarEstadoItemDePedidoRequest();
+            $cambiarEstadoItemPedidoRequest->setIdItemDePedido($pedidoItemId);
+            $cambiarEstadoItemPedidoRequest->setEstadoItemDePedido($pedidoItemEstado);
+            $cambiarEstadoItemPedidoRequest->setComentario($comentarioItemPedidoArray[$pedidoItemId]);
+            $cambiarEstadoItemPedidoRequest->setAbonado($abonadoItemPedidoArray[$pedidoItemId] == "on" ? true : false);
 
-            $recibirPedidoRequest = new RecibirPedidoRequest();
-            $recibirPedidoRequest->setIdPedido($pedidoId);
-            $recibirPedidoRequest->setComentario($comentario);
-            $recibirPedidoRequest->setDestino($destino);
-
-            $this->getPedidosService()->recibirPedido($recibirPedidoRequest);
-        } else {
-
-            $this->get("logger")->info("**** CAMBIAR ESTADO PEDIDO");
-
-            $cambiarEstadoPedidoRequest = new CambiarEstadoDePedidoRequest();
-            $cambiarEstadoPedidoRequest->setIdPedido($pedidoId);
-            $cambiarEstadoPedidoRequest->setComentario($comentario);
-            $cambiarEstadoPedidoRequest->setDestino($destino);
-            $cambiarEstadoPedidoRequest->setEstadoPedido($estadoPedido);
-            $cambiarEstadoPedidoRequest->setAbonado($abonado);
-
-            /**
-             * @var int $pedidoItemId
-             * @var string $pedidoItemEstado
-             */
-            foreach ($estadoItemPedidoArray as $pedidoItemId => $pedidoItemEstado) {
-                $cambiarEstadoItemPedidoRequest = new CambiarEstadoItemDePedidoRequest();
-                $cambiarEstadoItemPedidoRequest->setIdItemDePedido($pedidoItemId);
-                $cambiarEstadoItemPedidoRequest->setEstadoItemDePedido($pedidoItemEstado);
-                $cambiarEstadoPedidoRequest->addCambiarEstadoItem($cambiarEstadoItemPedidoRequest);
-            }
-
-            $this->getPedidosService()->cambiarEstadoPedido($cambiarEstadoPedidoRequest);
+            $cambiarEstadoPedidoRequest->addCambiarEstadoItem($cambiarEstadoItemPedidoRequest);
         }
 
-        $this->setPedidosDtoArrayInSession($request);
-        return new Response();
+        return $cambiarEstadoPedidoRequest;
     }
 
     /**
