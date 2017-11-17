@@ -13,10 +13,12 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @Builder @NoArgsConstructor @AllArgsConstructor
+@EqualsAndHashCode
 @Entity
 @Table(name = "item_de_menu")
 public class ItemDeMenu {
