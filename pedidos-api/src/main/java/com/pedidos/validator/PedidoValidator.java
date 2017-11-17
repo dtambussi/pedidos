@@ -28,7 +28,7 @@ public class PedidoValidator {
 	
 	public void validarPedido(final Pedido pedido) {
 		final List<ItemDePedido> itemsDePedidoAsociadosASugerencias = pedido.obtenerItemsAsociadosASugerencias();
-		if (itemsDePedidoAsociadosASugerencias.isEmpty()) { 
+		if (!itemsDePedidoAsociadosASugerencias.isEmpty()) { 
 			validarVigenciaYStockParaSugerenciasDelPedido(itemsDePedidoAsociadosASugerencias); 
 		}
 	}
@@ -59,7 +59,8 @@ public class PedidoValidator {
 		final Map<ItemDeMenu, Integer> detalleDeSugerenciasDelPedido = new LinkedHashMap<>();
 		for(final ItemDePedido itemDePedido : itemsDePedidoAsociadosASugerencias) {
 			final ItemDeMenu itemDeMenu = itemDePedido.getItemDeMenu();
-			int cantidadSolicitada = detalleDeSugerenciasDelPedido.putIfAbsent(itemDeMenu, 0);
+			if (!detalleDeSugerenciasDelPedido.containsKey(itemDeMenu)) { detalleDeSugerenciasDelPedido.put(itemDeMenu, 0); }
+			int cantidadSolicitada = detalleDeSugerenciasDelPedido.get(itemDeMenu);
 			detalleDeSugerenciasDelPedido.put(itemDeMenu, cantidadSolicitada + itemDePedido.getCantidad());
 		}
 		return detalleDeSugerenciasDelPedido;
