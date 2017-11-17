@@ -11,8 +11,8 @@
     {{ parent() }}
     <script>
         $(function () {
-            $('#sugerencia_form_fechaInicio').datetimepicker({format: 'D/M/Y H:m'});
-            $('#sugerencia_form_fechaFin').datetimepicker({format: 'D/M/Y H:m', useCurrent: false});
+            $('#sugerencia_form_fechaInicio').datetimepicker({format: 'D/M/Y H:mm'});
+            $('#sugerencia_form_fechaFin').datetimepicker({format: 'D/M/Y H:mm', useCurrent: false});
             $("#sugerencia_form_fechaInicio").on("dp.change", function (e) {
                 $('#sugerencia_form_fechaFin').data("DateTimePicker").minDate(e.date);
             });
