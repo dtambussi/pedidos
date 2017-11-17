@@ -25,7 +25,6 @@ import com.pedidos.dto.LoginUsuarioRegistradoRequest;
 import com.pedidos.model.CategoriaItemDeMenu;
 import com.pedidos.model.EstadoItemDePedido;
 import com.pedidos.model.EstadoPedido;
-import com.pedidos.model.ItemReporteDePedidos;
 import com.pedidos.model.Menu;
 import com.pedidos.model.Pedido;
 import com.pedidos.model.ReporteDePedidos;
@@ -97,8 +96,9 @@ public class ApplicationController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/logout")
-	public void logout() {
-		
+	public void logout(final HttpServletRequest request, final HttpServletResponse response) {
+		final SesionDeUsuario sesionDeUsuario = validarSesionParaLogoutDeUsuario(request);
+		this.loginService.logout(sesionDeUsuario);
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
@@ -160,21 +160,14 @@ public class ApplicationController {
 			final @RequestBody GenerarReporteDePedidosRequest generarReporteDePedidosRequest,
 			final HttpServletRequest request, final HttpServletResponse response) {
 		validarSesionDeUsuario(request, Roles.GenerarReporteDePedidos);
-		// mocked response to allow ui development
-		final ReporteDePedidos reporte = new ReporteDePedidos();
-		final List<ItemReporteDePedidos> items = Arrays.asList(
-					new ItemReporteDePedidos(CategoriaItemDeMenu.Bebidas.name(), "Cerveza", "max", 80),
-					new ItemReporteDePedidos(CategoriaItemDeMenu.Bebidas.name(), "Coca Cola", "", 50),
-					new ItemReporteDePedidos(CategoriaItemDeMenu.Bebidas.name(), "Café", "min", 10),
-					new ItemReporteDePedidos(CategoriaItemDeMenu.PlatosPrincipales.name(), "Papas fritas", "max", 70),
-					new ItemReporteDePedidos(CategoriaItemDeMenu.PlatosPrincipales.name(), "Rabas", "", 40),
-					new ItemReporteDePedidos(CategoriaItemDeMenu.PlatosPrincipales.name(), "Pollo rebozado", "min", 30)
-				); 
-		reporte.setItems(items);
-		return reporte;
+		return this.pedidoService.generarReporteDePedidos(generarReporteDePedidosRequest);
 	}
 	
 	private SesionDeUsuario validarSesionDeUsuario(final HttpServletRequest request, final Rol... roles) {
 		return this.validadorDeSesionDeUsuarioService.validarSesionDeUsuario(request, new HashSet<>(Arrays.asList(roles)));
+	}
+	
+	private SesionDeUsuario validarSesionParaLogoutDeUsuario(final HttpServletRequest request) {
+		return this.validadorDeSesionDeUsuarioService.validarSesionDeUsuario(request, Roles.cualquierUsuario());
 	}
 }

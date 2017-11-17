@@ -11,11 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.pedidos.dto.CambiarEstadoDePedidoRequest;
 import com.pedidos.dto.CambiarEstadoItemDePedidoRequest;
 import com.pedidos.dto.GenerarPedidoRequest;
+import com.pedidos.dto.GenerarReporteDePedidosRequest;
 import com.pedidos.dto.ItemDePedidoRequest;
 import com.pedidos.model.EstadoItemDePedido;
 import com.pedidos.model.EstadoPedido;
 import com.pedidos.model.ItemDePedido;
 import com.pedidos.model.Pedido;
+import com.pedidos.model.ReporteDePedidos;
 import com.pedidos.model.Roles;
 import com.pedidos.model.SesionDeUsuario;
 import com.pedidos.model.Status;
@@ -92,6 +94,11 @@ public class PedidoService {
 		return this.pedidoRepository.save(pedido);
 	}
 
+	public ReporteDePedidos generarReporteDePedidos(final GenerarReporteDePedidosRequest request) {
+		return this.pedidoRepository.obtenerReporte(request.getFechaDesde(), request.getFechaHasta(),
+				request.getEstadoPedido());
+	}
+	
 	private ItemDePedido cambiarEstadoDeItemDePedido(final ItemDePedido itemDePedido,
 			final CambiarEstadoItemDePedidoRequest request) {
 		itemDePedido.setEstado(request.getEstadoItemDePedido());

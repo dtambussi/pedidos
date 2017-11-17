@@ -3,6 +3,8 @@ package com.pedidos.model;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,6 +26,7 @@ public class Sugerencia {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private Status status;
+	@Enumerated(EnumType.STRING)
 	private EstadoSugerencia estado;
 	@OneToOne
 	private ItemDeMenu itemDeMenu;

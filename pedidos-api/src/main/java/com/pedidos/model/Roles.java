@@ -81,6 +81,10 @@ public class Roles {
 		return roles(Camarera, Barman, Cajero, Dueño);
 	}
 	
+	public static final Set<Rol> cualquierUsuario() {
+		return roles(UsuarioRegistrado, UsuarioNoRegistrado);
+	}
+	
 	private static Set<Rol> roles(final Rol...roles) {
 		return new HashSet<>(Arrays.asList(roles));
 	}

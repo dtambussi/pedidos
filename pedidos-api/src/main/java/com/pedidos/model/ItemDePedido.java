@@ -3,6 +3,8 @@ package com.pedidos.model;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,6 +28,7 @@ public class ItemDePedido {
 	@OneToOne
 	private Pedido pedido;
 	private Status status;
+	@Enumerated(EnumType.STRING)
 	private EstadoItemDePedido estado;
 	@OneToOne
 	private ItemDeMenu itemDeMenu;

@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,6 +37,7 @@ public class Pedido {
 	private Status status;
 	@OneToOne
 	private Menu menu;
+	@Enumerated(EnumType.STRING)
 	private EstadoPedido estado;
 	private String comentario;
 	private Boolean abonado;
