@@ -8,9 +8,17 @@
 
 namespace PedidosBundle\Exception;
 
+use JMS\Serializer\Annotation\Type;
 
 class PedidosException extends \Exception
 {
+
+    /**
+     * @var string
+     * @Type("string")
+     */
+    protected $message;
+
     /**
      * PedidosException constructor.
      * @param string $message

@@ -36,12 +36,13 @@ function saveBtnComplete(buttonEl, text) {
  * @param targetDivId The div ID on which response will be rendered.
  * @returns {*}
  * @param onSuccessCallback Function to be called on post success
+ * @param onErrorCallback
  */
-function submitForm2(url, formId, targetDivId, onSuccessCallback){
-    return submitData2(url, new FormData($("#" + formId).get(0)), "#" + targetDivId, onSuccessCallback);
+function submitForm2(url, formId, targetDivId, onSuccessCallback, onErrorCallback){
+    return submitData2(url, new FormData($("#" + formId).get(0)), "#" + targetDivId, onSuccessCallback, onErrorCallback);
 }
 
-function submitData2(url, data, targetDivId, onSuccessCallback){
+function submitData2(url, data, targetDivId, onSuccessCallback, onErrorCallback){
     $('.disableable').attr("disabled", true);
     $.ajax({
         type: "POST",
@@ -56,6 +57,10 @@ function submitData2(url, data, targetDivId, onSuccessCallback){
         onSuccessCallback();
         return true;
     }).fail(function(jqXHR, textStatus, errorThrown) {
+        if (typeof onErrorCallback !== 'undefined') {
+            onErrorCallback(jqXHR);
+            return false;
+        }
         $(targetDivId).html(jqXHR.responseText);
         // $('.ip-loading').addClass('hide');
         return false;
