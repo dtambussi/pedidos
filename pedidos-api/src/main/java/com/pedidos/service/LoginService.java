@@ -57,6 +57,10 @@ public class LoginService {
 		return this.sesionDeUsuarioRepository.save(nuevaSesion);
 	}
 	
+	public void logout(final SesionDeUsuario sesionDeUsuario) {
+		this.sesionDeUsuarioRepository.delete(sesionDeUsuario);		
+	}
+	
 	private static SesionDeUsuario nuevaSesionDeUsuario(final Usuario usuario) {
 		return SesionDeUsuario.builder()
 				.id(newUUID().toString())

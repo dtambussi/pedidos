@@ -15,14 +15,14 @@ import com.pedidos.model.SesionDeUsuario;
 import com.pedidos.repository.SesionDeUsuarioRepository;
 
 @Component
-public class ValidadorDeSesionDeUsuarioService {
+public class SesionDeUsuarioValidator {
 	
 	private static final String AUTH_HEADER = "AuthorizationPedidos";
 	private static final String MISSING_AUTH_HEADER_MSG = "Missing header value: " + AUTH_HEADER + " required to validate user action.";
 	
 	private SesionDeUsuarioRepository sesionDeUsuarioRepository;
 
-	public ValidadorDeSesionDeUsuarioService(SesionDeUsuarioRepository sesionDeUsuarioRepository) {
+	public SesionDeUsuarioValidator(SesionDeUsuarioRepository sesionDeUsuarioRepository) {
 		this.sesionDeUsuarioRepository = sesionDeUsuarioRepository;
 	}
 	
@@ -41,7 +41,8 @@ public class ValidadorDeSesionDeUsuarioService {
 	 * Valor del header AuthorizationPedidos debería matchear con un session id válido para un usuario
 	 */
 	private SesionDeUsuario validarSesionDeUsuario(final HttpServletRequest request) {
-		final String sessionIdHeaderValue = StringUtils.isNullOrEmpty(request.getHeader(AUTH_HEADER)) ? null : request.getHeader(AUTH_HEADER);
+		final String sessionIdHeaderValue = StringUtils.isNullOrEmpty(request.getHeader(AUTH_HEADER)) ? null
+				: request.getHeader(AUTH_HEADER);
 		return Optional.of(sessionIdHeaderValue).map(sessionId -> obtenerSesionDeUsuarioValida(sessionId))
 				.orElseThrow(() -> new UnauthorizedUserActionException(MISSING_AUTH_HEADER_MSG));
 	}
