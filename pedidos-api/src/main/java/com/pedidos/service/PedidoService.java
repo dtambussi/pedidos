@@ -25,6 +25,7 @@ import com.pedidos.model.Usuario;
 import com.pedidos.repository.ItemDeMenuRepository;
 import com.pedidos.repository.MenuRepository;
 import com.pedidos.repository.PedidoRepository;
+import com.pedidos.utils.DateUtils;
 import com.pedidos.validator.PedidoValidator;
 
 @Component
@@ -67,7 +68,6 @@ public class PedidoService {
 				.abonado(false)
 				.cliente(sesionDeUsuario.getUsuario())
 				.fechaCreacion(currentDate()).fechaUltimaModificacion(currentDate()).status(Status.Active).build();
-		nuevoPedido.getItems().stream().forEach(itemDePedido -> itemDePedido.setPedido(nuevoPedido));
 		// Validar consistencia del pedido
 		this.pedidoValidator.validarPedido(nuevoPedido);
 		// Impactar el consumo de sugerencias efectuado por el pedido
@@ -95,8 +95,8 @@ public class PedidoService {
 	}
 
 	public ReporteDePedidos generarReporteDePedidos(final GenerarReporteDePedidosRequest request) {
-		return this.pedidoRepository.obtenerReporte(request.getFechaDesde(), request.getFechaHasta(),
-				request.getEstadoPedido());
+		return this.pedidoRepository.obtenerReporte(request.getFechaDesde(),
+				DateUtils.endOfDay(request.getFechaHasta()), request.getEstadoPedido());
 	}
 	
 	private ItemDePedido cambiarEstadoDeItemDePedido(final ItemDePedido itemDePedido,

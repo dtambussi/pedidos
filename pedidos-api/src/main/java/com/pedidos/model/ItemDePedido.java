@@ -17,7 +17,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder @NoArgsConstructor @AllArgsConstructor
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "item_de_pedido")
 public class ItemDePedido {
@@ -25,8 +27,8 @@ public class ItemDePedido {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	@OneToOne
-	private Pedido pedido;
+//	@Transient
+//	private Pedido pedido;
 	private Status status;
 	@Enumerated(EnumType.STRING)
 	private EstadoItemDePedido estado;

@@ -65,7 +65,8 @@ public class PedidoRepositoryImpl implements PedidoCustomRepository {
 		final StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append("SELECT im.categoria, im.nombre, sum(ip.cantidad) AS total_item " +
 				"FROM pedido p " +
-				"INNER JOIN item_de_pedido ip ON ip.pedido_id = p.id " +
+				"INNER JOIN pedido_items pi ON pi.pedido_id = p.id " +
+				"INNER JOIN item_de_pedido ip ON ip.id = pi.items_id " +
 				"INNER JOIN item_de_menu im ON im.id = ip.item_de_menu_id " +
 				"WHERE p.fecha_creacion BETWEEN :fechaDesde AND :fechaHasta ");
 		if (!StringUtils.isNullOrEmpty(estadoPedido)) { queryBuilder.append("AND ip.estado = '" + estadoPedido + "'"); }
@@ -79,7 +80,7 @@ public class PedidoRepositoryImpl implements PedidoCustomRepository {
 		for (final Object[] row : rows) {
 			reporte.agregarItem(new ItemReporteDePedidos(row[categoria].toString(), row[nombre].toString(), emptyTag, cantidad(row)));
 		}
-		return reporte;
+		return reporte.marcarMinYMaxPorCategorias();
 	}
 	
 	private int cantidad(final Object[] row) {

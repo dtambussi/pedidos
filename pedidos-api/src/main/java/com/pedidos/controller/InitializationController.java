@@ -92,7 +92,7 @@ public class InitializationController {
 		this.crearUsuario(this.usuarioFixture.dueño_alejandro_moneta());
 		this.crearUsuario(this.usuarioFixture.cliente_natali_perez());
 		
-		this.crearPedidosDemo(menuDefault, this.crearUsuario(this.usuarioFixture.cliente_bart_simpson()));
+		// this.crearPedidosDemo(menuDefault, this.crearUsuario(this.usuarioFixture.cliente_bart_simpson()));
 	
 		return new ResponseEntity<String>("DB initialization with test data was successful", HttpStatus.OK);
 	}

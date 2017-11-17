@@ -38,6 +38,9 @@ import com.pedidos.service.MenuService;
 import com.pedidos.service.PedidoService;
 import com.pedidos.service.SugerenciaService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 public class ApplicationController {
 	
@@ -97,8 +100,12 @@ public class ApplicationController {
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/logout")
 	public void logout(final HttpServletRequest request, final HttpServletResponse response) {
-		final SesionDeUsuario sesionDeUsuario = validarSesionParaLogoutDeUsuario(request);
-		this.loginService.logout(sesionDeUsuario);
+		try {
+			final SesionDeUsuario sesionDeUsuario = validarSesionParaLogoutDeUsuario(request);
+			this.loginService.logout(sesionDeUsuario);
+		} catch (final Throwable throwable) {
+			log.error("Logout error: " + throwable.getMessage(), throwable);
+		}
 	}
 	
 	@ResponseStatus(HttpStatus.OK)

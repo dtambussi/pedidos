@@ -34,7 +34,6 @@ public class PedidoFixture {
 			.abonado(false)
 			.cliente(cliente)
 			.fechaCreacion(currentDate()).fechaUltimaModificacion(currentDate()).status(Status.Active).build();
-		pedido.getItems().stream().forEach(itemDePedido -> itemDePedido.setPedido(pedido));
 		return pedido;
 	}
 	
