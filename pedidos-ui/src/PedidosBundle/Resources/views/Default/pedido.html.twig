@@ -12,6 +12,7 @@
     {{ parent() }}
     <script>
         function confirmarPedido() {
+            $("#confirmarButton").hide();
             var comentario = $("#comentarioPedidoText").val();
             var destino = $("#destinoPedidoText").val();
 
@@ -19,11 +20,12 @@
             $.ajax({
                 type: "POST",
                 url: "{{ path("_pedido_confirmar") }}",
-                data: data,
+                data: data
             }).then(function (view) {
                 $("#pedido-enviado-alert-danger").hide();
                 $("#pedido-enviado-alert").show();
                 setTimeout(function () {
+                    $("#confirmarButton").show();
                     window.location.href = "{{ path("_pedido_listar") }}"
                 }, 2000);
                 return true;
@@ -31,6 +33,7 @@
                 if (jqXHR.status == 418) {
                     $("#pedido-enviado-alert-danger").html(jqXHR.responseText).show();
                 }
+                $("#confirmarButton").show();
                 return false;
             });
         }
@@ -125,7 +128,7 @@
 
                             </div>
                             <div class="form-group text-center">
-                                <button type="button" class="btn btn-primary" onclick="confirmarPedido();">Confirmar</button>
+                                <button type="button" class="btn btn-primary" onclick="confirmarPedido();" id="confirmarButton">Confirmar</button>
                             </div>
                         </div>
                     </div>
