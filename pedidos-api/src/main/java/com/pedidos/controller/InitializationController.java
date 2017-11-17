@@ -14,16 +14,19 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pedidos.factory.UsuarioFactory;
 import com.pedidos.model.InfoAdicionalUsuario;
 import com.pedidos.model.Menu;
+import com.pedidos.model.Pedido;
 import com.pedidos.model.Rol;
 import com.pedidos.model.Roles;
 import com.pedidos.model.Sugerencia;
 import com.pedidos.model.Usuario;
 import com.pedidos.model.fixture.MenuFixture;
+import com.pedidos.model.fixture.PedidoFixture;
 import com.pedidos.model.fixture.SugerenciaFixture;
 import com.pedidos.model.fixture.UsuarioFixture;
 import com.pedidos.repository.InfoAdicionalUsuarioRepository;
 import com.pedidos.repository.ItemDeMenuRepository;
 import com.pedidos.repository.MenuRepository;
+import com.pedidos.repository.PedidoRepository;
 import com.pedidos.repository.RolRepository;
 import com.pedidos.repository.SugerenciaRepository;
 import com.pedidos.repository.UsuarioRepository;
@@ -40,27 +43,33 @@ public class InitializationController {
 	private InfoAdicionalUsuarioRepository infoAdicionalUsuarioRepository;
 	private SugerenciaFixture sugerenciaFixture;
 	private SugerenciaRepository sugerenciaRepository;
+	private PedidoFixture pedidoFixture;
+	private PedidoRepository pedidoRepository;
 
 	public InitializationController(
 			final MenuFixture menuFixture,
 			final SugerenciaFixture sugerenciaFixture,
 			final UsuarioFixture usuarioFixture,
+			final PedidoFixture pedidoFixture,
 			final MenuRepository menuRepository,
 			final SugerenciaRepository sugerenciaRepository,
 			final ItemDeMenuRepository itemDeMenuRepository,
 			final UsuarioRepository usuarioRepository,
 			final InfoAdicionalUsuarioRepository infoAdicionalUsuarioRepository,
 			final RolRepository rolRepository,
+			final PedidoRepository pedidoRepository,
 			final UsuarioFactory usuarioFactory) {
 		this.menuFixture = menuFixture;
 		this.sugerenciaFixture = sugerenciaFixture;
 		this.usuarioFixture = usuarioFixture;
+		this.pedidoFixture = pedidoFixture;
 		this.menuRepository = menuRepository;
 		this.sugerenciaRepository = sugerenciaRepository;
 		this.itemDeMenuRepository = itemDeMenuRepository;
 		this.usuarioRepository = usuarioRepository;
 		this.infoAdicionalUsuarioRepository = infoAdicionalUsuarioRepository;
 		this.rolRepository = rolRepository;
+		this.pedidoRepository = pedidoRepository;
 	}
 
 	@GetMapping(value = "/initDB")
@@ -82,6 +91,8 @@ public class InitializationController {
 		this.crearUsuario(this.usuarioFixture.cocinero_carlos_parrilla());
 		this.crearUsuario(this.usuarioFixture.dueño_alejandro_moneta());
 		this.crearUsuario(this.usuarioFixture.cliente_natali_perez());
+		
+		this.crearPedidosDemo(menuDefault, this.crearUsuario(this.usuarioFixture.cliente_bart_simpson()));
 	
 		return new ResponseEntity<String>("DB initialization with test data was successful", HttpStatus.OK);
 	}
@@ -98,5 +109,11 @@ public class InitializationController {
 			usuario.setInfoAdicional(infoAdicionalUsuario);
 		}
 		return this.usuarioRepository.save(usuario);
+	}
+	
+	// @SuppressWarnings("unused")
+	private void crearPedidosDemo(final Menu menu, final Usuario cliente) {
+		final List<Pedido> pedidosDemo = this.pedidoFixture.pedidosDemo(menu, cliente);
+		this.pedidoRepository.save(pedidosDemo);
 	}
 }

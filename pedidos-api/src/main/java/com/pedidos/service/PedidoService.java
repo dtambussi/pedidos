@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.pedidos.dto.CambiarEstadoDePedidoRequest;
 import com.pedidos.dto.CambiarEstadoItemDePedidoRequest;
 import com.pedidos.dto.GenerarPedidoRequest;
+import com.pedidos.dto.ItemDePedidoRequest;
 import com.pedidos.model.EstadoItemDePedido;
 import com.pedidos.model.EstadoPedido;
 import com.pedidos.model.ItemDePedido;
@@ -52,13 +53,7 @@ public class PedidoService {
 		final Usuario usuario = sesionDeUsuario.getUsuario();
 		// Crear items del pedido
 		final List<ItemDePedido> itemsDePedido = request.getItems().stream()
-				.map(itemPedido -> ItemDePedido.builder()
-						.estado(resolverEstadoParaNuevoItemDePedidoSegunUsuario(usuario))
-						.itemDeMenu(itemDeMenuRepository.findOne(itemPedido.getIdItemDeMenu()))
-						.cantidad(itemPedido.getCantidad())
-						.comentario(itemPedido.getComentario())
-						.abonado(false)
-						.fechaUltimaModificacion(currentDate()).status(Status.Active).build())
+				.map(crearItemDePedidoRequest -> crearItemDePedido(crearItemDePedidoRequest, usuario))
 				.collect(Collectors.toList());
 		// Crear el pedido asociando sus items y valores correspondientes
 		final Pedido nuevoPedido = Pedido.builder()
@@ -70,6 +65,7 @@ public class PedidoService {
 				.abonado(false)
 				.cliente(sesionDeUsuario.getUsuario())
 				.fechaCreacion(currentDate()).fechaUltimaModificacion(currentDate()).status(Status.Active).build();
+		nuevoPedido.getItems().stream().forEach(itemDePedido -> itemDePedido.setPedido(nuevoPedido));
 		// Validar consistencia del pedido
 		this.pedidoValidator.validarPedido(nuevoPedido);
 		// Impactar el consumo de sugerencias efectuado por el pedido
@@ -115,5 +111,15 @@ public class PedidoService {
 
 	private EstadoItemDePedido resolverEstadoParaNuevoItemDePedidoSegunUsuario(final Usuario usuario) {
 		return usuario.tieneRol(Roles.UsuarioRegistrado) ? EstadoItemDePedido.Pendiente : EstadoItemDePedido.Generado;
+	}
+	
+	private ItemDePedido crearItemDePedido(final ItemDePedidoRequest itemPedido, final Usuario usuario) {
+		return ItemDePedido.builder()
+			.estado(resolverEstadoParaNuevoItemDePedidoSegunUsuario(usuario))
+			.itemDeMenu(itemDeMenuRepository.findOne(itemPedido.getIdItemDeMenu()))
+			.cantidad(itemPedido.getCantidad())
+			.comentario(itemPedido.getComentario())
+			.abonado(false)
+			.fechaUltimaModificacion(currentDate()).status(Status.Active).build();
 	}
 }
