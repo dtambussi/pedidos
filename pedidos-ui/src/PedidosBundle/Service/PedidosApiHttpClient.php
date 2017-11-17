@@ -235,20 +235,23 @@ class PedidosApiHttpClient
         /** @var UsuarioDto $usuarioDto */
         $usuarioDto = $this->session->get(UsuarioDto::SESSION_NAME);
 
+        $headerParams = array();
+        if(!is_null($usuarioDto)){
+            array_push($headerParams,'AuthorizationPedidos: ' . $usuarioDto->getSessionId());
+        }
+
         if ($postBody && is_object($postBody)) {
             $postJson = $this->serializer->serialize($postBody, "json");
-            $headerParams = array(
-                'Content-Type: application/json',
-                'Content-Length: ' . strlen($postJson));
+            array_push($headerParams,'Content-Type: application/json');
+            array_push($headerParams,'Content-Length: ' . strlen($postJson));
 
-            if(!is_null($usuarioDto)){
-                array_push($headerParams,'AuthorizationPedidos: ' . $usuarioDto->getSessionId());
-            }
-
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headerParams);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $postJson);
         } else {
             curl_setopt($ch, CURLOPT_POSTFIELDS, $postBody);
+        }
+
+        if (!empty($headerParams)) {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headerParams);
         }
 
         $responseString = curl_exec($ch);
