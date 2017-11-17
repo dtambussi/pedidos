@@ -28,11 +28,6 @@ class CambiarEstadoItemDePedidoRequest
     private $comentario;
 
     /**
-     * @var boolean
-     */
-    private $abonado;
-
-    /**
      * @return string
      */
     public function getIdItemDePedido()
@@ -80,19 +75,4 @@ class CambiarEstadoItemDePedidoRequest
         $this->comentario = $comentario;
     }
 
-    /**
-     * @return boolean
-     */
-    public function isAbonado()
-    {
-        return $this->abonado;
-    }
-
-    /**
-     * @param boolean $abonado
-     */
-    public function setAbonado($abonado)
-    {
-        $this->abonado = $abonado;
-    }
 }

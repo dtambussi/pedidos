@@ -411,9 +411,6 @@ class DefaultController extends Controller
         /** @var array $comentarioItemPedidoArray */
         $comentarioItemPedidoArray = $request->request->get("pedido_estado_form_pedido_item_comentario");
 
-        /** @var array $abonadoItemPedidoArray */
-        $abonadoItemPedidoArray = $request->request->get("pedido_estado_form_pedido_item_abonado");
-
         /**
          * @var int $pedidoItemId
          * @var string $pedidoItemEstado
@@ -423,7 +420,6 @@ class DefaultController extends Controller
             $cambiarEstadoItemPedidoRequest->setIdItemDePedido($pedidoItemId);
             $cambiarEstadoItemPedidoRequest->setEstadoItemDePedido($pedidoItemEstado);
             $cambiarEstadoItemPedidoRequest->setComentario($comentarioItemPedidoArray[$pedidoItemId]);
-            $cambiarEstadoItemPedidoRequest->setAbonado($abonadoItemPedidoArray[$pedidoItemId] == "on" ? true : false);
 
             $cambiarEstadoPedidoRequest->addCambiarEstadoItem($cambiarEstadoItemPedidoRequest);
         }

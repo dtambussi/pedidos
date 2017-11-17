@@ -39,6 +39,10 @@ public class UsuarioFixture {
 		return this.clienteRegistrado(detalleUsuario("Natali", "Perez", "natali_perez@pedidos.com", "natali"));
 	}
 	
+	public Usuario cliente_bart_simpson() {
+		return this.clienteRegistrado(detalleUsuario("Bart", "Simpson", "bart_simpson@pedidos.com", "bart"));
+	}
+	
 	private Usuario clienteRegistrado(final InfoAdicionalUsuario infoUsuario) {
 		return this.usuario(infoUsuario, Roles.rolesDefaultClienteRegistrado());
 	}

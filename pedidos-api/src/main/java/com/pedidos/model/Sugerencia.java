@@ -3,6 +3,8 @@ package com.pedidos.model;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,17 +26,21 @@ public class Sugerencia {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private Status status;
+	@Enumerated(EnumType.STRING)
 	private EstadoSugerencia estado;
 	@OneToOne
 	private ItemDeMenu itemDeMenu;
 	private String nombre;
 	private String descripcion;
 	private Double precio;
-	private Integer cantidadDisponible;
+	private Integer cantidadDisponible, cantidadConsumida;
 	private Date fechaCreacion;
 	private Date fechaUltimaModificacion;
 	private Date fechaInicio;
 	private Date fechaFin;
+	
+	public Sugerencia consumir(int cantidadAConsumir) {
+		this.cantidadConsumida += cantidadAConsumir;
+		return this;
+	}
 }
-//@JsonFormat(timezone = "GMT+03:00")
-//spring.jackson.date-format=+03:00

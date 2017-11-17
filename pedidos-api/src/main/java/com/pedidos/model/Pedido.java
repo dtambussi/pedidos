@@ -1,11 +1,15 @@
 package com.pedidos.model;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -33,6 +37,7 @@ public class Pedido {
 	private Status status;
 	@OneToOne
 	private Menu menu;
+	@Enumerated(EnumType.STRING)
 	private EstadoPedido estado;
 	private String comentario;
 	private Boolean abonado;
@@ -56,5 +61,11 @@ public class Pedido {
 	public Optional<ItemDePedido> obtenerItem(final Long itemId) {
 		return this.items != null ? this.items.stream()
 				.filter(item -> item.getId() == itemId).findFirst() : Optional.empty();
+	}
+	
+	public List<ItemDePedido> obtenerItemsAsociadosASugerencias() {
+		return this.items != null ? this.items.stream()
+				.filter(item -> CategoriaItemDeMenu.Sugerencia == item.getItemDeMenu().getCategoria())
+				.collect(Collectors.toList()) : Collections.emptyList();
 	}
 }

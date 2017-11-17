@@ -41,8 +41,8 @@
                                 </span>
                                 {% if pedidoDto.abonado %} <span class="abonado pull-right" data-toggle="tooltip" title="Abonado"> <i class=" glyphicon glyphicon-ok"> </i> </span>{% endif %}</h3>
 
-                            <p class="comentario-color">{% if pedidoDto.comentario %}<i
-                                        class="glyphicon glyphicon-comment"></i>
+                            <p>{% if pedidoDto.comentario %}<i
+                                        class="glyphicon glyphicon-comment comentario-color"></i>
                                 <spany style="padding:5px">{{ pedidoDto.comentario }}{% endif %}</spany>
                             </p>
                         </div>

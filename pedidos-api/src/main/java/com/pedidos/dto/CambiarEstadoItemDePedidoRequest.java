@@ -8,5 +8,6 @@ import lombok.Data;
 public class CambiarEstadoItemDePedidoRequest {
 	
 	private Long idItemDePedido;
+	private String comentario;
 	private EstadoItemDePedido estadoItemDePedido;
 }

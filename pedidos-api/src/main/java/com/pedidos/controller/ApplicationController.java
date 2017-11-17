@@ -22,11 +22,9 @@ import com.pedidos.dto.GenerarReporteDePedidosRequest;
 import com.pedidos.dto.GenerarSugerenciaRequest;
 import com.pedidos.dto.LoginUsuarioNoRegistradoRequest;
 import com.pedidos.dto.LoginUsuarioRegistradoRequest;
-import com.pedidos.dto.RecibirPedidoRequest;
 import com.pedidos.model.CategoriaItemDeMenu;
 import com.pedidos.model.EstadoItemDePedido;
 import com.pedidos.model.EstadoPedido;
-import com.pedidos.model.ItemReporteDePedidos;
 import com.pedidos.model.Menu;
 import com.pedidos.model.Pedido;
 import com.pedidos.model.ReporteDePedidos;
@@ -34,12 +32,15 @@ import com.pedidos.model.Rol;
 import com.pedidos.model.Roles;
 import com.pedidos.model.SesionDeUsuario;
 import com.pedidos.model.Sugerencia;
-import com.pedidos.security.ValidadorDeSesionDeUsuarioService;
+import com.pedidos.security.SesionDeUsuarioValidator;
 import com.pedidos.service.LoginService;
 import com.pedidos.service.MenuService;
 import com.pedidos.service.PedidoService;
 import com.pedidos.service.SugerenciaService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 public class ApplicationController {
 	
@@ -47,14 +48,14 @@ public class ApplicationController {
 	private PedidoService pedidoService;
 	private LoginService loginService;
 	private SugerenciaService sugerenciaService;
-	private ValidadorDeSesionDeUsuarioService validadorDeSesionDeUsuarioService;
+	private SesionDeUsuarioValidator validadorDeSesionDeUsuarioService;
 
 	public ApplicationController(
 			final LoginService loginService,
 			final MenuService menuService, 
 			final PedidoService pedidoService,
 			final SugerenciaService sugerenciaService,
-			final ValidadorDeSesionDeUsuarioService validadorDeSesionDeUsuarioService) {
+			final SesionDeUsuarioValidator validadorDeSesionDeUsuarioService) {
 		this.menuService = menuService;
 		this.pedidoService = pedidoService;
 		this.loginService = loginService;
@@ -98,8 +99,13 @@ public class ApplicationController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/logout")
-	public void logout() {
-		
+	public void logout(final HttpServletRequest request, final HttpServletResponse response) {
+		try {
+			final SesionDeUsuario sesionDeUsuario = validarSesionParaLogoutDeUsuario(request);
+			this.loginService.logout(sesionDeUsuario);
+		} catch (final Throwable throwable) {
+			log.error("Logout error: " + throwable.getMessage(), throwable);
+		}
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
@@ -122,15 +128,7 @@ public class ApplicationController {
 		final SesionDeUsuario sesionDeUsuario = validarSesionDeUsuario(request, Roles.CrearPedido);
 		return this.pedidoService.generarPedido(generarPedidoRequest, sesionDeUsuario);
 	}
-	
-	@ResponseStatus(HttpStatus.OK)
-	@PostMapping("/pedido/{id}/recibirPedidoRequest")
-	public Pedido recibirPedido(@PathVariable("id") Long id, final @RequestBody RecibirPedidoRequest recibirPedidoRequest,
-			final HttpServletRequest request, final HttpServletResponse response) {
-		final SesionDeUsuario sesionDeUsuario = validarSesionDeUsuario(request, Roles.RecibirPedido);
-		return this.pedidoService.recibirPedido(recibirPedidoRequest, sesionDeUsuario);
-	}
-	
+		
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/pedido/{id}/cambiarEstadoDePedidoRequest")
 	public Pedido cambiarEstadoDePedido(@PathVariable("id") Long id,
@@ -169,21 +167,14 @@ public class ApplicationController {
 			final @RequestBody GenerarReporteDePedidosRequest generarReporteDePedidosRequest,
 			final HttpServletRequest request, final HttpServletResponse response) {
 		validarSesionDeUsuario(request, Roles.GenerarReporteDePedidos);
-		// mocked response to allow ui development
-		final ReporteDePedidos reporte = new ReporteDePedidos();
-		final List<ItemReporteDePedidos> items = Arrays.asList(
-					new ItemReporteDePedidos(CategoriaItemDeMenu.Bebidas.name(), "Cerveza", "max", 80),
-					new ItemReporteDePedidos(CategoriaItemDeMenu.Bebidas.name(), "Coca Cola", "", 50),
-					new ItemReporteDePedidos(CategoriaItemDeMenu.Bebidas.name(), "Café", "min", 10),
-					new ItemReporteDePedidos(CategoriaItemDeMenu.PlatosPrincipales.name(), "Papas fritas", "max", 70),
-					new ItemReporteDePedidos(CategoriaItemDeMenu.PlatosPrincipales.name(), "Rabas", "", 40),
-					new ItemReporteDePedidos(CategoriaItemDeMenu.PlatosPrincipales.name(), "Pollo rebozado", "min", 30)
-				); 
-		reporte.setItems(items);
-		return reporte;
+		return this.pedidoService.generarReporteDePedidos(generarReporteDePedidosRequest);
 	}
 	
 	private SesionDeUsuario validarSesionDeUsuario(final HttpServletRequest request, final Rol... roles) {
 		return this.validadorDeSesionDeUsuarioService.validarSesionDeUsuario(request, new HashSet<>(Arrays.asList(roles)));
+	}
+	
+	private SesionDeUsuario validarSesionParaLogoutDeUsuario(final HttpServletRequest request) {
+		return this.validadorDeSesionDeUsuarioService.validarSesionDeUsuario(request, Roles.cualquierUsuario());
 	}
 }

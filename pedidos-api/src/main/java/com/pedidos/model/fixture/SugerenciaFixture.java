@@ -31,6 +31,7 @@ public class SugerenciaFixture {
 				.precio(200D)
 				.estado(EstadoSugerencia.Publicado)
 				.cantidadDisponible(5)
+				.cantidadConsumida(0)
 				.fechaCreacion(currentDate())
 				.fechaInicio(currentDate())
 				.fechaFin(Date.from(Instant.now().plusSeconds(3600 * 2))) // 2 hours from now
@@ -47,6 +48,7 @@ public class SugerenciaFixture {
 				.precio(150D)
 				.estado(EstadoSugerencia.Publicado)
 				.cantidadDisponible(10)
+				.cantidadConsumida(0)
 				.fechaCreacion(currentDate())
 				.fechaInicio(currentDate())
 				.fechaFin(Date.from(Instant.now().plusSeconds(3600 * 2))) // 2 hours from now

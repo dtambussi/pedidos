@@ -11,20 +11,20 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-        $(document).ready(function(){
+        $(document).ready(function () {
             $('[data-toggle="tooltip"]').tooltip();
         });
 
         function guardarCambios() {
             submitForm2("/pedido_cambiar_estado_form?pedido_id={{ pedidoDto.id }}",
-                    "pedido_estado_form_id",
-                        "dev>null",
-                    function() {
-                        $("#editar-pedido-success-alert").slideToggle();
-                        setTimeout(function () {
-                            location.reload();
-                        }, 1000);
-                    }
+                "pedido_estado_form_id",
+                "dev>null",
+                function () {
+                    $("#editar-pedido-success-alert").slideToggle();
+                    setTimeout(function () {
+                        window.open("{{ path("_pedido_listar") }}", "_self");
+                    }, 1000);
+                }
             );
         }
     </script>
@@ -34,67 +34,98 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-12">
-                <h1>Editar Pedido</h1>
+                <h1>Editar Pedido #{{ pedidoDto.id }}</h1>
             </div>
         </div>
         <div id="formualrio">
-        <form name="pedido_estado_form" id="pedido_estado_form_id" action="/pedido_cambiar_estado_form" method="POST">
-            <div class="row">
-                <div class="col-xs-4">
-                    <label>Pedido&nbsp;</label>{{ pedidoDto.id }}
-                </div>
-                <div class="col-xs-4">
-                    <label for="pedido_estado_form_pedido_estado">Estado&nbsp;</label>
-                    <select name="pedido_estado_form_pedido_estado" class="form-control">
-                        <option value="Generado" {% if pedidoDto.estado == 'Generado' %}selected="selected"{% endif %}>Generado</option>
-                        <option value="Pendiente" {% if pedidoDto.estado == 'Pendiente' %}selected="selected"{% endif %}>Pendiente</option>
-                        <option value="En_Curso" {% if pedidoDto.estado == 'En_Curso' %}selected="selected"{% endif %}>En Curso</option>
-                        <option value="Confeccionado" {% if pedidoDto.estado == 'Confeccionado' %}selected="selected"{% endif %}>Confeccionado</option>
-                        <option value="Entregado" {% if pedidoDto.estado == 'Entregado' %}selected="selected"{% endif %}>Entregado</option>
-                        <option value="Cancelado" {% if pedidoDto.estado == 'Cancelado' %}selected="selected"{% endif %}>Cancelado</option>
-                    </select>
-                </div>
-                <div class="col-xs-4">
-                    <label>Mesera&nbsp;</label> {% if pedidoDto.personalAsignado is not null  %} {{ pedidoDto.personalAsignado.infoAdicional.nombre }}{% endif %}
-                </div>
-            </div>
-            <br>
-            <div class="row">
-                <div class="col-xs-4">
-                    <div class="checkbox">
-                        <label><input type="checkbox" name="pedido_estado_form_abonado" {% if pedidoDto.abonado %}checked="checked"{% endif %}>Abonado</label>
+            <form name="pedido_estado_form" id="pedido_estado_form_id" action="/pedido_cambiar_estado_form"
+                  method="POST">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <div class="form-group">
+                            <label for="pedido_estado_form_pedido_estado">Estado:</label>
+                            <select name="pedido_estado_form_pedido_estado" class="form-control">
+                                <option value="Generado"
+                                        {% if pedidoDto.estado == 'Generado' %}selected="selected"{% endif %}>Generado
+                                </option>
+                                <option value="Pendiente"
+                                        {% if pedidoDto.estado == 'Pendiente' %}selected="selected"{% endif %}>Pendiente
+                                </option>
+                                <option value="En_Curso"
+                                        {% if pedidoDto.estado == 'En_Curso' %}selected="selected"{% endif %}>En Curso
+                                </option>
+                                <option value="Confeccionado"
+                                        {% if pedidoDto.estado == 'Confeccionado' %}selected="selected"{% endif %}>
+                                    Confeccionado
+                                </option>
+                                <option value="Entregado"
+                                        {% if pedidoDto.estado == 'Entregado' %}selected="selected"{% endif %}>Entregado
+                                </option>
+                                <option value="Cancelado"
+                                        {% if pedidoDto.estado == 'Cancelado' %}selected="selected"{% endif %}>Cancelado
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        <div class="form-group">
+                            <label class="control-label" for="pedido_estado_form_mesera">Mesera:</label>
+                            <input class="form-control" type="text" readonly="true" disabled="true" name="pedido_estado_form_mesera" value="{% if pedidoDto.personalAsignado is not null %} {{ pedidoDto.personalAsignado.infoAdicional.nombre }}{% endif %}">
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        <div class="form-group">
+                            <label for="pedido_estado_form_destino" class="control-label">Destino:</label><input
+                                    class="form-control" type="text" name="pedido_estado_form_destino"
+                                    value="{{ pedidoDto.destino }}">
+                        </div>
                     </div>
                 </div>
-                <div class="col-xs-4">
-                    <label for="pedido_estado_form_destino" class="control-label">Destino&nbsp;</label><input class="form-control" type="text" name="pedido_estado_form_destino" value="{{ pedidoDto.destino }}">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label for="pedido_estado_form_comentario" class="control-label">Comentario:
+                                <span style="margin-left: 10px;" class="comentario-color glyphicon glyphicon-comment" title="{{ pedidoDto.comentario }}" aria-hidden="true" data-toggle="tooltip"></span>
+                            </label>
+                            <textarea class="form-control" type="text" name="pedido_estado_form_comentario"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-xs-1">
+                        <div class="form-group">
+                            {% if pedidoDto.comentario %}
+
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label><input type="checkbox" class="control-label" name="pedido_estado_form_abonado"
+                                              {% if pedidoDto.abonado %}checked="checked"{% endif %}>Abonado</label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-xs-3">
-                    <label for="pedido_estado_form_comentario" class="control-label">Comentario&nbsp;</label><textarea class="form-control" type="text" name="pedido_estado_form_comentario"></textarea>
+                <br>
+                <div class="row">
+                    <div class="col-xs-12">
+                        {{ pedidoCambiarMacro.generarListaItemsDePedido(pedidoDto.items) }}
+                    </div>
                 </div>
-                <div class="col-xs-1">
-                    {% if pedidoDto.comentario %}
-                        <span class="glyphicon glyphicon-comment" title="{{ pedidoDto.comentario }}" aria-hidden="true" data-toggle="tooltip"></span>
-                    {% endif %}
+                <br>
+                <br>
+                <div class="row">
+                    <div class="alert alert-success" id="editar-pedido-success-alert" style="display: none;">
+                        Pedido editado correctamente.
+                    </div>
+                    <div class="col-xs-12 text-center">
+                        <a href="{{ path("_pedido_listar") }}" type="button"
+                           class="btn btn-secondary pedidos-btn disableable">Volver</a>
+                        <a type="button" class="btn btn-primary pedidos-btn disableable" onclick="guardarCambios()">Guardar
+                            Cambios</a>
+                    </div>
                 </div>
-            </div>
-            <br>
-            <div class="row">
-                <div class="col-xs-12">
-                    {{ pedidoCambiarMacro.generarListaItemsDePedido(pedidoDto.items) }}
-                </div>
-            </div>
-            <br>
-            <br>
-            <div class="row">
-                <div class="alert alert-success" id="editar-pedido-success-alert" style="display: none;">
-                    Pedido editado correctamente.
-                </div>
-                <div class="col-xs-12 text-center">
-                    <a href="{{ path("_pedido_listar") }}" type="button" class="btn btn-secondary pedidos-btn disableable">Volver</a>
-                    <a type="button" class="btn btn-primary pedidos-btn disableable" onclick="guardarCambios()">Guardar Cambios</a>
-                </div>
-            </div>
-        </form>
+            </form>
         </div>
     </div>
 {% endblock %}
@@ -105,32 +136,44 @@
             <div class="col-xs-12">
                 <div class="row" style="font-weight: bold;">
                     <div class="col-xs-4">Item</div>
-                    <div class="col-xs-2">Cantidad</div>
-                    <div class="col-xs-2">Abonado</div>
+                    <div class="col-xs-4">Cantidad</div>
                     <div class="col-xs-4">Estado</div>
                 </div>
+                <hr>
                 {% for pedidoItem in items %}
                     <div class="row">
                         <div class="col-xs-4">
                             {{ pedidoItem.itemDeMenu.nombre }}
                         </div>
-                        <div class="col-xs-2" style="color: grey;">
+                        <div class="col-xs-4" style="color: grey;">
                             {{ pedidoItem.cantidad }}
                         </div>
-                        <div class="col-xs-2">
-                            <input type="checkbox" name="pedido_estado_form_pedido_item_abonado[{{ pedidoItem.id }}]" {% if pedidoItem.abonado %}checked="checked"{% endif %}>
-                        </div>
                         <div class="col-xs-3" style="color: grey;">
-                            <select name="pedido_estado_form_pedido_item_estado[{{ pedidoItem.id }}]" class="form-control">
-                                <option value="Generado" {% if pedidoItem.estado == 'Generado' %}selected="selected"{% endif %}>Generado</option>
-                                <option value="Pendiente" {% if pedidoItem.estado == 'Pendiente' %}selected="selected"{% endif %}>Pendiente</option>
-                                <option value="Confeccionado" {% if pedidoItem.estado == 'Confeccionado' %}selected="selected"{% endif %}>Confeccionado</option>
-                                <option value="Entregado" {% if pedidoItem.estado == 'Entregado' %}selected="selected"{% endif %}>Entregado</option>
-                                <option value="Cancelado" {% if pedidoItem.estado == 'Cancelado' %}selected="selected"{% endif %}>Cancelado</option>
+                            <select name="pedido_estado_form_pedido_item_estado[{{ pedidoItem.id }}]"
+                                    class="form-control">
+                                <option value="Generado"
+                                        {% if pedidoItem.estado == 'Generado' %}selected="selected"{% endif %}>Generado
+                                </option>
+                                <option value="Pendiente"
+                                        {% if pedidoItem.estado == 'Pendiente' %}selected="selected"{% endif %}>
+                                    Pendiente
+                                </option>
+                                <option value="Confeccionado"
+                                        {% if pedidoItem.estado == 'Confeccionado' %}selected="selected"{% endif %}>
+                                    Confeccionado
+                                </option>
+                                <option value="Entregado"
+                                        {% if pedidoItem.estado == 'Entregado' %}selected="selected"{% endif %}>
+                                    Entregado
+                                </option>
+                                <option value="Cancelado"
+                                        {% if pedidoItem.estado == 'Cancelado' %}selected="selected"{% endif %}>
+                                    Cancelado
+                                </option>
                             </select>
                         </div>
                         <div class="col-xs-1">
-                            <span class="glyphicon glyphicon-comment"
+                            <span class="glyphicon glyphicon-comment comentario-color"
                                   aria-hidden="true" data-toggle="tooltip"
                                   title="{{ pedidoItem.comentario }}"
                                   style="cursor: pointer"
@@ -138,20 +181,25 @@
                             </span>
                         </div>
                     </div>
+                    <hr>
 
                     <!-- Modal -->
-                    <div class="modal fade" id="editarComentarioItemPedidoModal{{ pedidoItem.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal fade" id="editarComentarioItemPedidoModal{{ pedidoItem.id }}" tabindex="-1"
+                         role="dialog" aria-labelledby="myModalLabel">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-body">
                                     <div class="row">
                                         <div class="col-xs-12">
                                             <div class="form-group">
-                                                <label for="pedido_estado_form_pedido_item_comentario" class="control-label">Comentario</label>
-                                                <textarea class="form-control" name="pedido_estado_form_pedido_item_comentario[{{ pedidoItem.id }}]">{{ pedidoItem.comentario }}</textarea>
+                                                <label for="pedido_estado_form_pedido_item_comentario"
+                                                       class="control-label">Comentario</label>
+                                                <textarea class="form-control"
+                                                          name="pedido_estado_form_pedido_item_comentario[{{ pedidoItem.id }}]">{{ pedidoItem.comentario }}</textarea>
                                             </div>
                                             <div class="form-group text-center">
-                                                <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+                                                <button type="button" class="btn btn-primary" data-dismiss="modal">Ok
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
