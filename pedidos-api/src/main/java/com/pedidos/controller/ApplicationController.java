@@ -22,7 +22,6 @@ import com.pedidos.dto.GenerarReporteDePedidosRequest;
 import com.pedidos.dto.GenerarSugerenciaRequest;
 import com.pedidos.dto.LoginUsuarioNoRegistradoRequest;
 import com.pedidos.dto.LoginUsuarioRegistradoRequest;
-import com.pedidos.dto.RecibirPedidoRequest;
 import com.pedidos.model.CategoriaItemDeMenu;
 import com.pedidos.model.EstadoItemDePedido;
 import com.pedidos.model.EstadoPedido;
@@ -34,7 +33,7 @@ import com.pedidos.model.Rol;
 import com.pedidos.model.Roles;
 import com.pedidos.model.SesionDeUsuario;
 import com.pedidos.model.Sugerencia;
-import com.pedidos.security.ValidadorDeSesionDeUsuarioService;
+import com.pedidos.security.SesionDeUsuarioValidator;
 import com.pedidos.service.LoginService;
 import com.pedidos.service.MenuService;
 import com.pedidos.service.PedidoService;
@@ -47,14 +46,14 @@ public class ApplicationController {
 	private PedidoService pedidoService;
 	private LoginService loginService;
 	private SugerenciaService sugerenciaService;
-	private ValidadorDeSesionDeUsuarioService validadorDeSesionDeUsuarioService;
+	private SesionDeUsuarioValidator validadorDeSesionDeUsuarioService;
 
 	public ApplicationController(
 			final LoginService loginService,
 			final MenuService menuService, 
 			final PedidoService pedidoService,
 			final SugerenciaService sugerenciaService,
-			final ValidadorDeSesionDeUsuarioService validadorDeSesionDeUsuarioService) {
+			final SesionDeUsuarioValidator validadorDeSesionDeUsuarioService) {
 		this.menuService = menuService;
 		this.pedidoService = pedidoService;
 		this.loginService = loginService;
@@ -122,15 +121,7 @@ public class ApplicationController {
 		final SesionDeUsuario sesionDeUsuario = validarSesionDeUsuario(request, Roles.CrearPedido);
 		return this.pedidoService.generarPedido(generarPedidoRequest, sesionDeUsuario);
 	}
-	
-	@ResponseStatus(HttpStatus.OK)
-	@PostMapping("/pedido/{id}/recibirPedidoRequest")
-	public Pedido recibirPedido(@PathVariable("id") Long id, final @RequestBody RecibirPedidoRequest recibirPedidoRequest,
-			final HttpServletRequest request, final HttpServletResponse response) {
-		final SesionDeUsuario sesionDeUsuario = validarSesionDeUsuario(request, Roles.RecibirPedido);
-		return this.pedidoService.recibirPedido(recibirPedidoRequest, sesionDeUsuario);
-	}
-	
+		
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/pedido/{id}/cambiarEstadoDePedidoRequest")
 	public Pedido cambiarEstadoDePedido(@PathVariable("id") Long id,

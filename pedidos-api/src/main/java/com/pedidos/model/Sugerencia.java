@@ -30,11 +30,14 @@ public class Sugerencia {
 	private String nombre;
 	private String descripcion;
 	private Double precio;
-	private Integer cantidadDisponible;
+	private Integer cantidadDisponible, cantidadConsumida;
 	private Date fechaCreacion;
 	private Date fechaUltimaModificacion;
 	private Date fechaInicio;
 	private Date fechaFin;
+	
+	public Sugerencia consumir(int cantidadAConsumir) {
+		this.cantidadConsumida += cantidadAConsumir;
+		return this;
+	}
 }
-//@JsonFormat(timezone = "GMT+03:00")
-//spring.jackson.date-format=+03:00

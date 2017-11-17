@@ -21,13 +21,9 @@ public class PedidoRepositoryImpl implements PedidoCustomRepository {
 
 	@Override
 	public List<Pedido> obtenerPedidosOrdenadosParaUsuario(final Usuario usuario) {
-		List<Pedido> pedidos = this.pedidoRepository.findAll();
-		if (usuario.esPersonalDeCocina()) {
-			pedidos = this.obtenerPedidosDeInteresParaCocina(pedidos);
-		} else if (usuario.esCliente()) {
-			// un cliente únicamente debe poder visualizar sus propios pedidos
-			pedidos = this.pedidoRepository.findAllByCliente(usuario);
-		}
+		// un cliente únicamente debe poder visualizar sus propios pedidos
+		List<Pedido> pedidos = usuario.esCliente() ? this.pedidoRepository.findAllByCliente(usuario)
+				: this.pedidoRepository.findAll();
 		return this.ordenarPedidosPorUrgenciaDeAtencion(pedidos);
 	}
 	
@@ -45,11 +41,6 @@ public class PedidoRepositoryImpl implements PedidoCustomRepository {
 	private List<Pedido> obtenerPedidosMasAntiguosPorEstado(final List<Pedido> pedidos, EstadoPedido estadoPedido) {
 		return pedidos.stream().filter(pedido -> estadoPedido == pedido.getEstado())
 				.sorted(Comparator.comparing(Pedido::getFechaCreacion))
-				.collect(Collectors.toList());
-	}
-	
-	private List<Pedido> obtenerPedidosDeInteresParaCocina(final List<Pedido> pedidos) {
-		return pedidos.stream().filter(pedido -> EstadoPedido.Generado != pedido.getEstado())
 				.collect(Collectors.toList());
 	}
 }

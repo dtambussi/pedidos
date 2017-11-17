@@ -2,7 +2,9 @@ package com.pedidos.service;
 
 import static com.pedidos.utils.DateUtils.currentDate;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
@@ -11,6 +13,8 @@ import com.pedidos.dto.GenerarSugerenciaRequest;
 import com.pedidos.model.CategoriaItemDeMenu;
 import com.pedidos.model.EstadoSugerencia;
 import com.pedidos.model.ItemDeMenu;
+import com.pedidos.model.ItemDePedido;
+import com.pedidos.model.Pedido;
 import com.pedidos.model.SesionDeUsuario;
 import com.pedidos.model.Status;
 import com.pedidos.model.Sugerencia;
@@ -36,6 +40,7 @@ public class SugerenciaService {
 				.descripcion(request.getDescripcion())
 				.precio(request.getPrecio())
 				.cantidadDisponible(request.getCantidadDisponible())
+				.cantidadConsumida(0)
 				.fechaInicio(request.getFechaInicio())
 				.fechaFin(request.getFechaFin())
 				.fechaCreacion(currentDate())
@@ -52,9 +57,25 @@ public class SugerenciaService {
 	}
 	
 	public List<Sugerencia> obtenerSugerenciasVigentes() {
-		// return this.sugerenciaRepository.findAllByEstadoAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(
-		//		EstadoSugerencia.Publicado, currentDate(), currentDate());
-		return this.sugerenciaRepository.findAll();
+		 // return this.sugerenciaRepository.findAll();
+		 return this.sugerenciaRepository.findAllByEstadoAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(
+				EstadoSugerencia.Publicado, currentDate(), currentDate());
+	}
+	
+	public Set<Sugerencia> registrarConsumoDeSugerencias(final Pedido pedido) {
+		final Set<Sugerencia> sugerenciasQueRegistranConsumosEnPedido = new HashSet<>();
+		final List<ItemDePedido> itemsDePedidoAsociadosASugerencias = pedido.obtenerItemsAsociadosASugerencias();
+		for(final ItemDePedido itemDePedido : itemsDePedidoAsociadosASugerencias) {
+			final Sugerencia sugerencia = this.sugerenciaRepository.findOneByItemDeMenu(itemDePedido.getItemDeMenu());
+			sugerenciasQueRegistranConsumosEnPedido.add(sugerencia);			
+			sugerencia.consumir(itemDePedido.getCantidad());
+			this.sugerenciaRepository.save(sugerencia);
+		}
+		return sugerenciasQueRegistranConsumosEnPedido;
+	}
+	
+	public Sugerencia obtenerPorItemDeMenuAsociado(final ItemDeMenu itemDeMenu) {
+		return this.sugerenciaRepository.findOneByItemDeMenu(itemDeMenu);
 	}
 	
 	private ItemDeMenu itemDeMenuAsociadoASugerencia(final GenerarSugerenciaRequest request) {
