@@ -79,6 +79,15 @@ class PedidosApiHttpClient
         return $response[0];
     }
 
+    /**
+     * @return array<string>
+     */
+    public function getEstadoPedidos() {
+        $url = "http://" . $this->pedidosapiHostname . "/estadoPedido";
+        $response = $this->doGet($url, "array<string>");
+        return $response[0];
+    }
+
 
     /**
      * @return array<PedidoDto>

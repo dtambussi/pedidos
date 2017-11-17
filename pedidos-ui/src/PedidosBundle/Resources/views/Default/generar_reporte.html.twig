@@ -80,7 +80,7 @@
                             <select class="form-control" id="pedido_estado">
                                 <option value="">Seleccionar...</option>
                                 {% for estado in estadoPedidos %}
-                                    <option value="{{ estado }}">{{ estado }}</option>
+                                    <option value="{{ estado }}">{{ estado|replace({'_': ' '}) }}</option>
                                 {% endfor %}
                             </select>
                         </div>

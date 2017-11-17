@@ -9,7 +9,6 @@
 namespace PedidosBundle\Dto\Request;
 
 
-use PedidosBundle\Dto\EstadoPedidoType;
 
 class ReportePedidosRequestDto
 {
@@ -29,7 +28,7 @@ class ReportePedidosRequestDto
     /**
      * @var string
      */
-    private $estadoDePedido;
+    private $estadoPedido;
 
     /**
      * ReportePedidosRequestDto constructor.
@@ -40,7 +39,7 @@ class ReportePedidosRequestDto
     {
         $this->fechaDesde = $fechaDesde;
         $this->fechaHasta = $fechaHasta;
-        $this->estadoDePedido = empty($estado)?null:$estado;
+        $this->estadoPedido = empty($estado)?null:$estado;
     }
 
     /**
@@ -78,17 +77,18 @@ class ReportePedidosRequestDto
     /**
      * @return string
      */
-    public function getEstadoDePedido()
+    public function getEstadoPedido()
     {
-        return $this->estadoDePedido;
+        return $this->estadoPedido;
     }
 
     /**
-     * @param string $estadoDePedido
+     * @param string $estadoPedido
      */
-    public function setEstadoDePedido($estadoDePedido)
+    public function setEstadoPedido($estadoPedido)
     {
-        $this->estadoDePedido = $estadoDePedido;
+        $this->estadoPedido = $estadoPedido;
     }
+
 
 }

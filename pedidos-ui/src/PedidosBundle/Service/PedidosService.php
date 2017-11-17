@@ -71,6 +71,11 @@ class PedidosService
         return $pedidoDtoArray;
     }
 
+    public function getEstadoPedidos() {
+        return $this->pedidosApiHttpClient->getEstadoPedidos();
+    }
+
+
     public function login($email, $password) {
         return $this->pedidosApiHttpClient->doLogin($email, $password);
     }

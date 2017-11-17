@@ -4,7 +4,6 @@ namespace PedidosBundle\Controller;
 
 use JMS\Serializer\Serializer;
 use PedidosBundle\Dto\BootstrapTableDto;
-use PedidosBundle\Dto\EstadoPedidoType;
 use PedidosBundle\Dto\ItemsByCategoriaDto;
 use PedidosBundle\Dto\MenuItemDto;
 use PedidosBundle\Dto\ReportePedidosDto;
@@ -323,7 +322,7 @@ class DefaultController extends Controller
             return $this->sinPermisosResponse();
         }
 
-        $estadoPedidos = EstadoPedidoType::getEstados();
+        $estadoPedidos = $this->getPedidosService()->getEstadoPedidos();
 
         return $this->render(
             "PedidosBundle:default:generar_reporte.html.twig",array('estadoPedidos' =>$estadoPedidos));
@@ -509,13 +508,14 @@ class DefaultController extends Controller
         $pedidoId = $request->get("pedido_id");
 
         $pedidoDto = $this->getPedidoById($request, $pedidoId);
+        $estadoPedidos = $this->getPedidosService()->getEstadoPedidos();
 
         if (!$pedidoDto) {
             return new Response("No existe el pedido", Response::HTTP_NOT_FOUND);
         }
 
         return $this->render("PedidosBundle:default:cambiar_estado_pedido.html.twig",
-            array("pedidoDto" => $pedidoDto));
+            array("pedidoDto" => $pedidoDto,'estadoPedidos'=>$estadoPedidos));
     }
 
     /**
