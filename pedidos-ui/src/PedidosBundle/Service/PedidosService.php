@@ -75,6 +75,10 @@ class PedidosService
         return $this->pedidosApiHttpClient->getEstadoPedidos();
     }
 
+    public function getEstadoItemPedidos() {
+        return $this->pedidosApiHttpClient->getEstadoItemPedidos();
+    }
+
 
     public function login($email, $password) {
         return $this->pedidosApiHttpClient->doLogin($email, $password);

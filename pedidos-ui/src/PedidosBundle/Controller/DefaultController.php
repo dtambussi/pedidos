@@ -519,13 +519,14 @@ class DefaultController extends Controller
 
         $pedidoDto = $this->getPedidoById($request, $pedidoId);
         $estadoPedidos = $this->getPedidosService()->getEstadoPedidos();
+        $estadoItemPedidos = $this->getPedidosService()->getEstadoItemPedidos();
 
         if (!$pedidoDto) {
             return new Response("No existe el pedido", Response::HTTP_NOT_FOUND);
         }
 
         return $this->render("PedidosBundle:default:cambiar_estado_pedido.html.twig",
-            array("pedidoDto" => $pedidoDto,'estadoPedidos'=>$estadoPedidos));
+            array("pedidoDto" => $pedidoDto,'estadoPedidos' => $estadoPedidos,'estadoItemPedidos' => $estadoItemPedidos));
     }
 
     /**
