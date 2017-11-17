@@ -40,6 +40,7 @@
                                     {% endif %}
                                 </span>
                                 {% if pedidoDto.abonado %} <span class="abonado pull-right" data-toggle="tooltip" title="Abonado"> <i class=" glyphicon glyphicon-ok"> </i> </span>{% endif %}</h3>
+                            <h4>Cliente: {{ pedidoDto.cliente.nickname }} - {{ pedidoDto.destino }}</h4>
 
                             <p>{% if pedidoDto.comentario %}<i
                                         class="glyphicon glyphicon-comment comentario-color"></i>

@@ -11,19 +11,6 @@
   font-family: 'Pacifico';
   src: url('../fonts/Pacifico/Pacifico-Regular.ttf');
 }
-@font-face {
-  font-family: 'Open Sans';
-  src: url('../fonts/Open_Sans/OpenSans-Regular.ttf');
-}
-@font-face {
-  font-family: 'Open Sans';
-  src: url('../fonts/Open_Sans/OpenSans-Bold.ttf');
-  font-weight: bold;
-}
-@font-face {
-  font-family: 'Pacifico';
-  src: url('../fonts/Pacifico/Pacifico-Regular.ttf');
-}
 body {
   font-family: 'Open Sans', sans-serif;
   padding-bottom: 120px;
@@ -178,6 +165,16 @@ h2 {
   border-color: #ffe57f;
   text-align: center;
 }
+@media only screen and (max-width: 500px) {
+  #main-page .menu-principal-item {
+    width: 13rem;
+    padding: 10px;
+  }
+  #main-page h4,
+  #main-page .h4 {
+    font-size: 12px;
+  }
+}
 #main-page .menu-principal-item:hover {
   background-color: #ffe57f;
 }
@@ -242,4 +239,17 @@ h2 {
 #listado-pedidos .cancelado {
   background-color: #d9534f;
   border-color: #d9534f;
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: url('../fonts/Open_Sans/OpenSans-Regular.ttf');
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: url('../fonts/Open_Sans/OpenSans-Bold.ttf');
+  font-weight: bold;
+}
+@font-face {
+  font-family: 'Pacifico';
+  src: url('../fonts/Pacifico/Pacifico-Regular.ttf');
 }
