@@ -200,7 +200,9 @@ class PedidosApiHttpClient
         if (in_array($responseCode, $expectedCodes)) {
             $this->logger->info("$url: Ok!");
         } else {
-            throw new PedidosException("Error al llamar al servicio con url $url");
+            $this->logger->info("$url: ERROR!");
+            $pedidoException = $this->serializer->deserialize($json, PedidosException::class, "json");
+            throw $pedidoException;
         }
 
         $jsonObject = $this->serializer->deserialize($json, $mappingClassName, "json");

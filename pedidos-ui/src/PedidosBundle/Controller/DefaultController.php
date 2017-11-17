@@ -198,8 +198,12 @@ class DefaultController extends Controller
         if (!$pedidoRequestDto->isEmpty()) {
             $pedidoRequestDto->setComentario($request->get("comentario"));
             $pedidoRequestDto->setDestino($request->get("destino"));
-            $this->getPedidosService()->confirmarPedido($pedidoRequestDto);
-            $this->generarNuevoPedidoRequestDto($request);
+            try {
+                $this->getPedidosService()->confirmarPedido($pedidoRequestDto);
+                $this->generarNuevoPedidoRequestDto($request);
+            } catch (PedidosException $e) {
+                return new Response($e->getMessage(), Response::HTTP_I_AM_A_TEAPOT);
+            }
         }
         // TODO agregar algo para mostrar confirmacion de pedido
         return $this->redirectToRoute("_get_menu");
@@ -266,8 +270,12 @@ class DefaultController extends Controller
                     $this->setUserInSession($request, $sessionDeUsuarioDto);
                     $form = $this->createForm(LoginForm::class, new LoginFormEntity());
                 } catch(PedidosException $e) {
-                    $response = new Response("", Response::HTTP_BAD_REQUEST);
-                    $form->get('password')->addError(new FormError('Usuario o contraseña incorrectos.'));
+                    $response = new Response("", Response::HTTP_I_AM_A_TEAPOT);
+                    $error = $e->getMessage();
+                    if (empty($error) || $error == "Invalid user credentials") {
+                        $error = "Usuario o contraseña incorrectos.";
+                    }
+                    $form->get('password')->addError(new FormError($error));
                 }
             } else {
                 $response = new Response("", Response::HTTP_BAD_REQUEST);
@@ -376,11 +384,13 @@ class DefaultController extends Controller
      * @return Response
      */
     public function pedidoCambiarEstadoFormAction(Request $request) {
-        var_dump($request);
-
         $cambiarEstadoPedidoRequest = $this->crearCambiarEstadoPedidoRequestFromRequest($request);
-        $this->getPedidosService()->cambiarEstadoPedido($cambiarEstadoPedidoRequest);
-        $this->setPedidosDtoArrayInSession($request);
+        try {
+            $this->getPedidosService()->cambiarEstadoPedido($cambiarEstadoPedidoRequest);
+            $this->setPedidosDtoArrayInSession($request);
+        } catch (PedidosException $e) {
+            return new Response($e->getMessage(), Response::HTTP_I_AM_A_TEAPOT);
+        }
 
         return new Response();
     }

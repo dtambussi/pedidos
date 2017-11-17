@@ -21,12 +21,16 @@
                 url: "{{ path("_pedido_confirmar") }}",
                 data: data,
             }).then(function (view) {
+                $("#pedido-enviado-alert-danger").hide();
                 $("#pedido-enviado-alert").show();
                 setTimeout(function () {
                     window.location.href = "{{ path("_pedido_listar") }}"
                 }, 2000);
                 return true;
             }).fail(function(jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status == 418) {
+                    $("#pedido-enviado-alert-danger").html(jqXHR.responseText).show();
+                }
                 return false;
             });
         }
@@ -116,6 +120,9 @@
                             </div>
                             <div class="alert alert-success" id="pedido-enviado-alert" style="display: none;">
                                 ¡Pedido Enviado!
+                            </div>
+                            <div class="alert alert-danger" id="pedido-enviado-alert-danger" style="display: none;">
+
                             </div>
                             <div class="form-group text-center">
                                 <button type="button" class="btn btn-primary" onclick="confirmarPedido();">Confirmar</button>
