@@ -24,8 +24,8 @@ public class ReporteDePedidos {
 			final List<ItemReporteDePedidos> itemsCategoria = this.items.stream()
 					.filter(item -> item.getCategoria().equals(categoria.name()))
 					.collect(Collectors.toList());
-			itemsCategoria.stream().findFirst().map(item -> tag(item, maxTag));
 			itemsCategoria.stream().reduce((first, next) -> next).map(lastItem -> tag(lastItem, minTag));
+			itemsCategoria.stream().findFirst().map(item -> tag(item, maxTag));
 		}
 		return this;
 	}

@@ -33,12 +33,17 @@ public class PedidoRepositoryImpl implements PedidoCustomRepository {
 	
     @PersistenceContext
     private EntityManager entityManager;
-
+	
 	@Override
 	public List<Pedido> obtenerPedidosOrdenadosParaUsuario(final Usuario usuario) {
-		// un cliente únicamente debe poder visualizar sus propios pedidos
-		List<Pedido> pedidos = usuario.esCliente() ? this.pedidoRepository.findAllByCliente(usuario)
-				: this.pedidoRepository.findAll();
+		List<Pedido> pedidos = this.pedidoRepository.findAll();
+		if (usuario.esPersonalDeCocina()) {
+			// los pedidos generados pero no aprobados por sistema/mesera no son de interés para la cocina
+			pedidos = this.obtenerPedidosDeInteresParaCocina(pedidos);
+		} else if (usuario.esCliente()) {
+			// un cliente únicamente debe poder visualizar sus propios pedidos
+			pedidos = this.pedidoRepository.findAllByCliente(usuario);
+		}
 		return this.ordenarPedidosPorUrgenciaDeAtencion(pedidos);
 	}
 	
@@ -51,6 +56,11 @@ public class PedidoRepositoryImpl implements PedidoCustomRepository {
 		pedidosEnOrden.addAll(obtenerPedidosMasAntiguosPorEstado(pedidos, EstadoPedido.Confeccionado));
 		pedidosEnOrden.addAll(obtenerPedidosMasAntiguosPorEstado(pedidos, EstadoPedido.Entregado));
 		return pedidosEnOrden;
+	}
+	
+	private List<Pedido> obtenerPedidosDeInteresParaCocina(final List<Pedido> pedidos) {
+		return pedidos.stream().filter(pedido -> EstadoPedido.Generado != pedido.getEstado())
+				.collect(Collectors.toList());
 	}
 	
 	private List<Pedido> obtenerPedidosMasAntiguosPorEstado(final List<Pedido> pedidos, final EstadoPedido estadoPedido) {
